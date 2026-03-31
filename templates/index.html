@@ -305,7 +305,7 @@
     async function reloadReplayData() {
         document.getElementById('replay-status').innerText = 'Loading '+currentReplayTF+' data from server (fetching deep history)...';
         try {
-            var url = '/api/historical_data?symbol=BTCUSDT&interval='+currentReplayTF+'&limit=1500';
+            var url = '/api/historical_data?symbol=BTCUSDT&interval='+currentReplayTF+'&limit=10000';
             if (replayStartDate) url += '&startTime=' + replayStartDate;
             var res = await fetch(url);
             var fetchData = await res.json();
@@ -450,6 +450,24 @@
             var pane=document.getElementById('replay_macd_pane');
             if(repToggles.macd){pane.style.display='block';repMacdChart=LightweightCharts.createChart(pane,{width:document.getElementById('view-replay').clientWidth,height:150,layout:{backgroundColor:'#050511',textColor:'#8b95a5'},grid:{vertLines:{color:'rgba(255,255,255,0.05)'},horzLines:{color:'rgba(255,255,255,0.05)'}},timeScale:{visible:false}});repMacdHist=repMacdChart.addHistogramSeries({priceStep:0.1});repMacdLine=repMacdChart.addLineSeries({color:'#2962FF',lineWidth:1.5,title:'MACD'});repMacdSig=repMacdChart.addLineSeries({color:'#FF6D00',lineWidth:1.5,title:'SIG'});}
             else{pane.style.display='none';if(repMacdChart){repMacdChart.remove();repMacdChart=null;repMacdLine=null;repMacdSig=null;repMacdHist=null;}}
+        }
+        if(ind === 'bot') {
+            if (repToggles.bot) {
+                if (botSignals.length === 0) {
+                    btn.innerText = '🤖 Thinking...'; btn.style.color='#ffff00';
+                    fetch('/api/bot_signals?symbol=BTCUSDT&interval=' + currentReplayTF + '&limit=10000' + (replayStartDate ? '&startTime='+replayStartDate : ''))
+                    .then(r => r.json())
+                    .then(bd => {
+                        btn.innerText = '🤖 AI Bot'; btn.style.color='';
+                        if (bd.signals) botSignals = bd.signals;
+                        var buys=botSignals.filter(function(s){return s.signal==='BUY';}).length; var sells=botSignals.filter(function(s){return s.signal==='SELL';}).length; var closes=botSignals.filter(function(s){return s.signal==='CLOSE';}).length;
+                        document.getElementById('replay-status').innerText = replayDataAll.length+' candles ('+currentReplayTF+') | AI Bot: '+botSignals.length+' trades ('+buys+' BUY, '+sells+' SHORT, '+closes+' CLOSE)';
+                        renderReplayState();
+                    }).catch(e => { btn.innerText = '🤖 AI Bot'; btn.style.color=''; });
+                }
+            } else {
+                botSignals = [];
+            }
         }
         renderReplayState();
     }

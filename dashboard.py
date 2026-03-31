@@ -117,9 +117,9 @@ def get_historical():
     limit = int(request.args.get('limit', 1000))
     start_time = request.args.get('startTime', '')
     
-    # Paginated fetch: get up to 5000 candles via multiple requests
+    # Paginated fetch: get up to 20000 candles via multiple requests
     all_data = []
-    pages = min((limit + 999) // 1000, 5)  # max 5 pages = 5000 candles
+    pages = min((limit + 999) // 1000, 20)  # max 20 pages = 20000 candles
     per_page = min(limit, 1000)
     current_start = start_time
     
@@ -231,13 +231,15 @@ def get_bot_signals():
         from data.feature_engineer import compute_live_features, get_feature_cols
         
         start_time = request.args.get('startTime', '')
+        limit = int(request.args.get('limit', 2000))
+        pages = min((limit + 999) // 1000, 20)
         
-        # Fetch more data for better feature coverage (3000 candles)
+        # Fetch more data for better feature coverage
         all_raw = []
         if start_time:
             # Paginate forward from start time
             current = start_time
-            for _ in range(2):
+            for _ in range(pages):
                 url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={current}"
                 res = http_requests.get(url, timeout=15)
                 data = res.json()
@@ -246,12 +248,13 @@ def get_bot_signals():
                 if len(data) < 1000: break
                 current = str(int(data[-1][0]) + 1)
         else:
-            # Fetch latest 3000 candles backwards
+            # Fetch latest data backwards
+            # Since Binance limit is 1000, just get the absolute latest right now using pagination if needed
             latest_url = "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1"
             latest = http_requests.get(latest_url, timeout=10).json()
             if latest:
                 end_ts = int(latest[0][0])
-                for page in range(2):
+                for page in range(pages):
                     page_end = end_ts - (page * 1000 * 900000)
                     page_start = page_end - (1000 * 900000)
                     url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={page_start}&endTime={page_end}"
