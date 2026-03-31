@@ -226,6 +226,19 @@ def get_historical():
 def get_bot_signals():
     """Run the trained AI model on historical 15m data and return buy/sell signals."""
     if not _load_bot_model():
+        # Fallback: serve pre-computed signals from local JSON
+        precomputed_path = 'data_storage/precomputed_signals.json'
+        if os.path.exists(precomputed_path):
+            try:
+                with open(precomputed_path, 'r') as f:
+                    cached = json.load(f)
+                start_time = request.args.get('startTime', '')
+                if start_time:
+                    start_ts = int(start_time) / 1000
+                    cached['signals'] = [s for s in cached['signals'] if s['time'] >= start_ts]
+                return jsonify(cached)
+            except Exception:
+                pass
         return jsonify({"error": "Model not available", "signals": []})
     
     try:
