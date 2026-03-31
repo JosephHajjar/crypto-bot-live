@@ -305,7 +305,7 @@
     async function reloadReplayData() {
         document.getElementById('replay-status').innerText = 'Loading '+currentReplayTF+' data from server (fetching deep history)...';
         try {
-            var url = '/api/historical_data?symbol=BTCUSDT&interval='+currentReplayTF+'&limit=5000';
+            var url = '/api/historical_data?symbol=BTCUSDT&interval='+currentReplayTF+'&limit=1500';
             if (replayStartDate) url += '&startTime=' + replayStartDate;
             var res = await fetch(url);
             var fetchData = await res.json();

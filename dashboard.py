@@ -237,7 +237,7 @@ def get_bot_signals():
         if start_time:
             # Paginate forward from start time
             current = start_time
-            for _ in range(5):
+            for _ in range(2):
                 url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={current}"
                 res = http_requests.get(url, timeout=15)
                 data = res.json()
@@ -251,7 +251,7 @@ def get_bot_signals():
             latest = http_requests.get(latest_url, timeout=10).json()
             if latest:
                 end_ts = int(latest[0][0])
-                for page in range(5):
+                for page in range(2):
                     page_end = end_ts - (page * 1000 * 900000)
                     page_start = page_end - (1000 * 900000)
                     url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={page_start}&endTime={page_end}"
@@ -289,7 +289,7 @@ def get_bot_signals():
             features_np = feat_df[feature_cols].values.astype(np.float32)
             
             # Batch inference
-            batch_size = 64
+            batch_size = 32
             all_probs = []
             for start in range(0, len(features_np) - SEQ_LEN + 1, batch_size):
                 end = min(start + batch_size, len(features_np) - SEQ_LEN + 1)

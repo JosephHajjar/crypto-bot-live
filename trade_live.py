@@ -33,7 +33,13 @@ class PaperTrader:
     def __init__(self):
         self.exchange = ccxt.binance({
             'enableRateLimit': True,
-            'hostname': 'data-api.binance.vision'
+            'hostname': 'data-api.binance.vision',
+            'urls': {
+                'api': {
+                    'public': 'https://data-api.binance.vision/api',
+                    'private': 'https://data-api.binance.vision/api'
+                }
+            }
         })
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
