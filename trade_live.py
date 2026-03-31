@@ -94,7 +94,7 @@ class PaperTrader:
             "entry_price": self.entry_price,
             "current_price": current_close,
             "bars_held": self.bars_held,
-            "bull_prob": round(bull_prob * 100, 1),
+            "bull_prob": round(bull_prob * 100, 2),
             "open_pnl_usd": 0.0,
             "open_pnl_pct": 0.0,
             "take_profit_target": self.entry_price * (1 + TP_PCT) if self.in_trade else 0.0,
@@ -193,7 +193,7 @@ class PaperTrader:
                         bull_prob = probabilities[0][1].item()
                         prediction = torch.argmax(logits, dim=1).item()
                     
-                    logger.info(f"AI Neural Network -> Bullish Edge Probability: {bull_prob*100:.1f}%")
+                    logger.info(f"AI Neural Network -> Bullish Edge Probability: {bull_prob*100:.2f}%")
                     
                     if prediction == 1:
                         logger.info(f"🔥🔥 AI DETECTED EDGE! ENTERING PAPER LONG @ ${current_close:.2f}")
