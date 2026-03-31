@@ -4,6 +4,7 @@ import os
 import requests as http_requests
 import pandas as pd
 import numpy as np
+import time
 from ta.trend import EMAIndicator, MACD
 from ta.volume import VolumeWeightedAveragePrice
 
@@ -232,6 +233,7 @@ def get_bot_signals():
         from data.feature_engineer import compute_live_features, get_feature_cols
         
         start_time = request.args.get('startTime', '')
+        interval = request.args.get('interval', '15m')
         limit = int(request.args.get('limit', 2000))
         pages = min((limit + 999) // 1000, 20)
         
