@@ -215,7 +215,7 @@ def get_historical():
         df['supertrend'] = st_val
         df['supertrend_dir'] = st_dir
             
-        df = df.fillna(0)
+        df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
         records = df.to_dict(orient='records')
         return jsonify(records)
     except Exception as e:

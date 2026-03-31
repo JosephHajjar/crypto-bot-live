@@ -308,7 +308,8 @@
             var url = '/api/historical_data?symbol=BTCUSDT&interval='+currentReplayTF+'&limit=10000';
             if (replayStartDate) url += '&startTime=' + replayStartDate;
             var res = await fetch(url);
-            var fetchData = await res.json();
+            var text = await res.text();
+            var fetchData; try { fetchData = JSON.parse(text); } catch(pe) { throw new Error("Invalid data from server"); }
             if (fetchData.error) { replayDataAll = []; throw new Error(fetchData.error); }
             replayDataAll = fetchData;
             replayCursor = Math.min(1000, replayDataAll.length);
@@ -321,7 +322,8 @@
                 var botUrl = '/api/bot_signals';
                 if (replayStartDate) botUrl += '?startTime=' + replayStartDate;
                 var br = await fetch(botUrl);
-                var bd = await br.json();
+                var botText = await br.text();
+                var bd; try { bd = JSON.parse(botText); } catch(pe) { bd = {signals:[]}; }
                 botSignals = bd.signals || [];
                 if (botSignals.length > 0) {
                     var buys=botSignals.filter(function(s){return s.signal==='BUY';}).length;
@@ -456,7 +458,8 @@
                 if (botSignals.length === 0) {
                     btn.innerText = '🤖 Thinking...'; btn.style.color='#ffff00';
                     fetch('/api/bot_signals?symbol=BTCUSDT&interval=' + currentReplayTF + '&limit=10000' + (replayStartDate ? '&startTime='+replayStartDate : ''))
-                    .then(r => r.json())
+                    .then(r => r.text())
+                    .then(t => { try { return JSON.parse(t); } catch(e) { return {signals:[]}; } })
                     .then(bd => {
                         btn.innerText = '🤖 AI Bot'; btn.style.color='';
                         if (bd.signals) botSignals = bd.signals;
