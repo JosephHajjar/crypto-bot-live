@@ -308,8 +308,9 @@
             var url = '/api/historical_data?symbol=BTCUSDT&interval='+currentReplayTF+'&limit=5000';
             if (replayStartDate) url += '&startTime=' + replayStartDate;
             var res = await fetch(url);
-            replayDataAll = await res.json();
-            if (replayDataAll.error) throw new Error(replayDataAll.error);
+            var fetchData = await res.json();
+            if (fetchData.error) { replayDataAll = []; throw new Error(fetchData.error); }
+            replayDataAll = fetchData;
             replayCursor = Math.min(1000, replayDataAll.length);
             renderReplayState();
             document.getElementById('replay-status').innerText = replayDataAll.length+' candles loaded ('+currentReplayTF+'). Step through or press PLAY.';
