@@ -128,20 +128,19 @@ def get_historical():
             url = f"https://data-api.binance.vision/api/v3/klines?symbol={symbol}&interval={interval}&limit={per_page}"
             if current_start:
                 url += f"&startTime={current_start}"
-            elif page == 0 and not start_time:
-                # No start time: fetch backwards by computing start from limit
-                # First request gets latest 1000, we'll paginate backwards
-                pass
             
             res = http_requests.get(url, timeout=15)
             data = res.json()
             if not data or not isinstance(data, list):
+                if isinstance(data, dict) and "code" in data:
+                    print(f"Binance API Error: {url} -> {data}")
                 break
             all_data.extend(data)
             if len(data) < per_page:
                 break  # No more data available
             # Next page starts after the last candle
             current_start = str(int(data[-1][0]) + 1)
+            time.sleep(0.2) # Prevent HTTP 429 Too Many Requests
         
         if not start_time and pages > 1:
             # Fetch backwards to get older data
@@ -163,8 +162,10 @@ def get_historical():
                     url = f"https://data-api.binance.vision/api/v3/klines?symbol={symbol}&interval={interval}&limit=1000&startTime={page_start}&endTime={page_end}"
                     res = http_requests.get(url, timeout=15)
                     data = res.json()
-                    if data and isinstance(data, list):
-                        all_data = data + all_data
+                    if not data or not isinstance(data, list):
+                        break
+                    all_data = data + all_data
+                    time.sleep(0.2)
                     if not data or len(data) < 10:
                         break
         elif start_time:
@@ -234,34 +235,41 @@ def get_bot_signals():
         limit = int(request.args.get('limit', 2000))
         pages = min((limit + 999) // 1000, 20)
         
+        # Convert interval to ms multiplier
+        interval_ms = {'1m':60000,'3m':180000,'5m':300000,'15m':900000,'30m':1800000,
+                       '1h':3600000,'2h':7200000,'4h':14400000,'6h':21600000,
+                       '8h':28800000,'12h':43200000,'1d':86400000,'3d':259200000,'1w':604800000}
+        ims = interval_ms.get(interval, 900000)
+
         # Fetch more data for better feature coverage
         all_raw = []
         if start_time:
             # Paginate forward from start time
             current = start_time
             for _ in range(pages):
-                url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={current}"
+                url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval={interval}&limit=1000&startTime={current}"
                 res = http_requests.get(url, timeout=15)
                 data = res.json()
-                if not data: break
+                if not data or not isinstance(data, list): break
                 all_raw.extend(data)
                 if len(data) < 1000: break
                 current = str(int(data[-1][0]) + 1)
+                time.sleep(0.2)
         else:
             # Fetch latest data backwards
-            # Since Binance limit is 1000, just get the absolute latest right now using pagination if needed
-            latest_url = "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1"
+            latest_url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval={interval}&limit=1"
             latest = http_requests.get(latest_url, timeout=10).json()
-            if latest:
+            if latest and isinstance(latest, list):
                 end_ts = int(latest[0][0])
                 for page in range(pages):
-                    page_end = end_ts - (page * 1000 * 900000)
-                    page_start = page_end - (1000 * 900000)
-                    url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={page_start}&endTime={page_end}"
+                    page_end = end_ts - (page * 1000 * ims)
+                    page_start = page_end - (1000 * ims)
+                    url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval={interval}&limit=1000&startTime={page_start}&endTime={page_end}"
                     res = http_requests.get(url, timeout=15)
                     data = res.json()
-                    if data and isinstance(data, list):
-                        all_raw = data + all_raw
+                    if not data or not isinstance(data, list): break
+                    all_raw = data + all_raw
+                    time.sleep(0.2)
         
         # Deduplicate
         seen = set()
