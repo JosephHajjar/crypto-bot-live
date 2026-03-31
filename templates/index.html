@@ -247,6 +247,10 @@
                     var sells=botSignals.filter(function(s){return s.signal==='SELL';}).length;
                     var closes=botSignals.filter(function(s){return s.signal==='CLOSE';}).length;
                     document.getElementById('replay-status').innerText = replayDataAll.length+' candles ('+currentReplayTF+') | AI Bot: '+botSignals.length+' trades ('+buys+' BUY, '+sells+' SHORT, '+closes+' CLOSE)';
+                    // Auto-enable bot markers so they show on the chart
+                    repToggles.bot = true;
+                    var togBtn = document.getElementById('tog-bot');
+                    if (togBtn) togBtn.className = 'active';
                 }
                 else document.getElementById('replay-status').innerText = replayDataAll.length+' candles ('+currentReplayTF+') | AI Bot: No signals (model loading or error)';
             } catch(e) { botSignals = []; }

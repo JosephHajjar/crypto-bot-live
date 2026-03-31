@@ -248,7 +248,7 @@ def get_bot_signals():
         start_time = request.args.get('startTime', '')
         interval = request.args.get('interval', '15m')
         limit = int(request.args.get('limit', 2000))
-        pages = min((limit + 999) // 1000, 20)
+        pages = min((limit + 999) // 1000, 5)  # Max 5 pages for speed
         
         # Convert interval to ms multiplier
         interval_ms = {'1m':60000,'3m':180000,'5m':300000,'15m':900000,'30m':1800000,
