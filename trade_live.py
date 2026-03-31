@@ -31,16 +31,6 @@ MAX_HOLD_BARS = 16
 
 class PaperTrader:
     def __init__(self):
-        self.exchange = ccxt.binance({
-            'enableRateLimit': True,
-            'hostname': 'data-api.binance.vision',
-            'urls': {
-                'api': {
-                    'public': 'https://data-api.binance.vision/api',
-                    'private': 'https://data-api.binance.vision/api'
-                }
-            }
-        })
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
         with open(CONFIG_PATH, 'r') as f:
@@ -80,9 +70,18 @@ class PaperTrader:
         logger.info(f"Loaded AI Trader on {self.device}. Initial Balance: ${self.paper_balance:.2f}")
 
     def fetch_recent_data(self):
-        # We need seq_len + max_hold_bars + buffer for historical indicators (e.g. SMA_50, RealVol_48)
-        # 4H indicators need at least 34 bars (34*16 = 544 15m candles). 1000 is perfectly safe.
-        candles = self.exchange.fetch_ohlcv(SYMBOL, TIMEFRAME, limit=1000)
+        import requests
+        symbol_fmt = SYMBOL.replace('/', '')
+        url = f"https://data-api.binance.vision/api/v3/klines?symbol={symbol_fmt}&interval={TIMEFRAME}&limit=1000"
+        res = requests.get(url, timeout=15)
+        raw_candles = res.json()
+        
+        # CCXT format: [[timestamp, open, high, low, close, volume], ...]
+        candles = [
+            [int(c[0]), float(c[1]), float(c[2]), float(c[3]), float(c[4]), float(c[5])]
+            for c in raw_candles
+        ]
+        
         df = pd.DataFrame(candles, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
         return df
