@@ -318,26 +318,30 @@ def get_bot_signals():
                     can_trade = not (13 <= utc_hour <= 16)
 
                     if position == 'flat':
-                        if prob > 0.55 and can_trade:
+                        if prob > 0.50 and can_trade:
                             signals.append({'time': time_val, 'prob': round(prob*100,1), 'signal': 'BUY', 'price': round(close_price, 2)})
                             position = 'long'
                             entry_price = close_price
-                        elif prob < 0.35 and can_trade:
+                            bars_held = 0
+                        elif prob < 0.45 and can_trade:
                             signals.append({'time': time_val, 'prob': round(prob*100,1), 'signal': 'SELL', 'price': round(close_price, 2)})
                             position = 'short'
                             entry_price = close_price
-                    elif position == 'long':
-                        if prob < 0.40:
-                            pnl = round((close_price - entry_price) / entry_price * 100, 2) if entry_price > 0 else 0
-                            signals.append({'time': time_val, 'prob': round(prob*100,1), 'signal': 'CLOSE', 'price': round(close_price, 2), 'pnl': pnl})
-                            position = 'flat'
-                            entry_price = 0
-                    elif position == 'short':
-                        if prob > 0.60:
-                            pnl = round((entry_price - close_price) / entry_price * 100, 2) if entry_price > 0 else 0
-                            signals.append({'time': time_val, 'prob': round(prob*100,1), 'signal': 'CLOSE', 'price': round(close_price, 2), 'pnl': pnl})
-                            position = 'flat'
-                            entry_price = 0
+                            bars_held = 0
+                    else:
+                        bars_held += 1
+                        if position == 'long':
+                            if prob < 0.50 or bars_held >= 16:
+                                pnl = round((close_price - entry_price) / entry_price * 100, 2) if entry_price > 0 else 0
+                                signals.append({'time': time_val, 'prob': round(prob*100,1), 'signal': 'CLOSE', 'price': round(close_price, 2), 'pnl': pnl})
+                                position = 'flat'
+                                entry_price = 0
+                        elif position == 'short':
+                            if prob > 0.50 or bars_held >= 16:
+                                pnl = round((entry_price - close_price) / entry_price * 100, 2) if entry_price > 0 else 0
+                                signals.append({'time': time_val, 'prob': round(prob*100,1), 'signal': 'CLOSE', 'price': round(close_price, 2), 'pnl': pnl})
+                                position = 'flat'
+                                entry_price = 0
         
         return jsonify({"signals": signals})
     except Exception as e:
