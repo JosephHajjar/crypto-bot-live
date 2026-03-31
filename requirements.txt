@@ -1,0 +1,7 @@
+ccxt
+pandas
+ta
+scikit-learn
+torch
+tqdm
+matplotlib

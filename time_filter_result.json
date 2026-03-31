@@ -1,0 +1,35 @@
+{
+  "unrestricted_24_7": {
+    "roi": 35.38,
+    "final": 13538.48,
+    "trades": 164,
+    "wins": 92,
+    "losses": 72,
+    "winrate": 56.1,
+    "tp": 51,
+    "sl": 53,
+    "time": 60
+  },
+  "1pm_to_230pm_utc4": {
+    "roi": 7.85,
+    "final": 10784.98,
+    "trades": 15,
+    "wins": 11,
+    "losses": 4,
+    "winrate": 73.3,
+    "tp": 6,
+    "sl": 2,
+    "time": 7
+  },
+  "1pm_to_230am_utc4": {
+    "roi": 22.86,
+    "final": 12285.51,
+    "trades": 127,
+    "wins": 70,
+    "losses": 57,
+    "winrate": 55.1,
+    "tp": 39,
+    "sl": 42,
+    "time": 46
+  }
+}

@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+mlruns/
+optuna_db.sqlite
+.env
+
+# Ignore all trained models except the verified production trial
+models/*
+!models/trial_255.pth
+!models/trial_255_config.json
+
+# Exclude UI test artifacts and old images
+*.png
+*.jpg
+*.webp
+
+# Ignore temp scripts
+/tmp/

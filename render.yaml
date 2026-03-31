@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: ai-trading-bot
+    env: python
+    buildCommand: "pip install -r requirements.txt && pip install gunicorn"
+    startCommand: "bash run.sh"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12

@@ -1,0 +1,163 @@
+{
+  "top_10_overall": [
+    {
+      "window": "00:00-12:00 (12h)",
+      "roi": 25.58,
+      "trades": 72,
+      "wins": 46,
+      "losses": 26,
+      "winrate": 63.9
+    },
+    {
+      "window": "01:00-13:00 (12h)",
+      "roi": 22.91,
+      "trades": 61,
+      "wins": 37,
+      "losses": 24,
+      "winrate": 60.7
+    },
+    {
+      "window": "18:00-06:00 (12h)",
+      "roi": 22.77,
+      "trades": 126,
+      "wins": 68,
+      "losses": 58,
+      "winrate": 54.0
+    },
+    {
+      "window": "05:00-17:00 (12h)",
+      "roi": 22.13,
+      "trades": 64,
+      "wins": 39,
+      "losses": 25,
+      "winrate": 60.9
+    },
+    {
+      "window": "21:00-09:00 (12h)",
+      "roi": 21.76,
+      "trades": 90,
+      "wins": 54,
+      "losses": 36,
+      "winrate": 60.0
+    },
+    {
+      "window": "06:00-18:00 (12h)",
+      "roi": 21.29,
+      "trades": 70,
+      "wins": 41,
+      "losses": 29,
+      "winrate": 58.6
+    },
+    {
+      "window": "17:00-05:00 (12h)",
+      "roi": 19.67,
+      "trades": 122,
+      "wins": 65,
+      "losses": 57,
+      "winrate": 53.3
+    },
+    {
+      "window": "03:00-15:00 (12h)",
+      "roi": 17.89,
+      "trades": 59,
+      "wins": 35,
+      "losses": 24,
+      "winrate": 59.3
+    },
+    {
+      "window": "13:00-01:00 (12h)",
+      "roi": 17.35,
+      "trades": 118,
+      "wins": 63,
+      "losses": 55,
+      "winrate": 53.4
+    },
+    {
+      "window": "21:00-05:00 (8h)",
+      "roi": 16.68,
+      "trades": 74,
+      "wins": 45,
+      "losses": 29,
+      "winrate": 60.8
+    }
+  ],
+  "top_10_efficiency": [
+    {
+      "window": "13:00-13:59 (1h)",
+      "roi": 8.0,
+      "roi_per_trade": 0.667,
+      "trades": 12,
+      "winrate": 83.3
+    },
+    {
+      "window": "10:00-10:59 (1h)",
+      "roi": 3.65,
+      "roi_per_trade": 0.608,
+      "trades": 6,
+      "winrate": 83.3
+    },
+    {
+      "window": "10:00-14:00 (4h)",
+      "roi": 7.94,
+      "roi_per_trade": 0.467,
+      "trades": 17,
+      "winrate": 70.6
+    },
+    {
+      "window": "10:00-12:00 (2h)",
+      "roi": 4.4,
+      "roi_per_trade": 0.44,
+      "trades": 10,
+      "winrate": 70.0
+    },
+    {
+      "window": "06:00-14:00 (8h)",
+      "roi": 15.97,
+      "roi_per_trade": 0.432,
+      "trades": 37,
+      "winrate": 67.6
+    },
+    {
+      "window": "09:00-09:59 (1h)",
+      "roi": 3.71,
+      "roi_per_trade": 0.412,
+      "trades": 9,
+      "winrate": 66.7
+    },
+    {
+      "window": "09:00-13:00 (4h)",
+      "roi": 6.5,
+      "roi_per_trade": 0.406,
+      "trades": 16,
+      "winrate": 68.8
+    },
+    {
+      "window": "09:00-11:00 (2h)",
+      "roi": 4.05,
+      "roi_per_trade": 0.405,
+      "trades": 10,
+      "winrate": 70.0
+    },
+    {
+      "window": "13:00-17:00 (4h)",
+      "roi": 11.66,
+      "roi_per_trade": 0.402,
+      "trades": 29,
+      "winrate": 65.5
+    },
+    {
+      "window": "06:00-12:00 (6h)",
+      "roi": 11.58,
+      "roi_per_trade": 0.399,
+      "trades": 29,
+      "winrate": 65.5
+    }
+  ],
+  "baseline_24_7": {
+    "roi": 35.38,
+    "trades": 164,
+    "wins": 92,
+    "losses": 72,
+    "winrate": 56.1
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-03-31T06:00:05.510301Z",
+  "paper_balance": 10000.0,
+  "in_trade": false,
+  "entry_price": 0.0,
+  "current_price": 67706.95,
+  "bars_held": 0,
+  "bull_prob": 0.0,
+  "open_pnl_usd": 0.0,
+  "open_pnl_pct": 0.0,
+  "take_profit_target": 0.0,
+  "stop_loss_target": 0.0,
+  "trade_amount_btc": 0.0,
+  "trade_amount_usd": 0.0
+}

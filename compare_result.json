@@ -1,0 +1,23 @@
+{
+  "trial_4_old": {
+    "roi": -3.85,
+    "final": 9614.93,
+    "trades": 23,
+    "wins": 7,
+    "losses": 16,
+    "tp": 4,
+    "sl": 10,
+    "time": 9
+  },
+  "trial_255_new": {
+    "roi": 2.56,
+    "final": 10255.57,
+    "trades": 11,
+    "wins": 6,
+    "losses": 5,
+    "tp": 3,
+    "sl": 3,
+    "time": 5
+  },
+  "roi_diff": 6.41
+}
