@@ -137,79 +137,19 @@
     </div>
 
     <script src="https://unpkg.com/lightweight-charts@3.8.0/dist/lightweight-charts.standalone.production.js"></script>
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+
     <script>
     // ===========================
-    // LIVE VIEW LOGIC
+    // LIVE VIEW REMOVED — runs locally only
     // ===========================
-    function switchChart(view) {
-        var btnLw=document.getElementById('btn-lw'),btnTv=document.getElementById('btn-tv'),vLw=document.getElementById('chart-view-lw'),vTv=document.getElementById('chart-view-tv');
-        if(view==='tv'){btnTv.style.cssText='background:rgba(0,255,200,0.2);color:#00ffc8;border:1px solid rgba(0,255,200,0.4);padding:6px 16px;border-radius:6px;font-family:Inter;font-weight:600;font-size:0.8rem;cursor:pointer;';btnLw.style.cssText='background:transparent;color:#8b95a5;border:1px solid transparent;padding:6px 16px;border-radius:6px;font-family:Inter;font-weight:600;font-size:0.8rem;cursor:pointer;';vTv.style.display='block';vLw.style.display='none';}
-        else{btnLw.style.cssText='background:rgba(0,255,200,0.2);color:#00ffc8;border:1px solid rgba(0,255,200,0.4);padding:6px 16px;border-radius:6px;font-family:Inter;font-weight:600;font-size:0.8rem;cursor:pointer;';btnTv.style.cssText='background:transparent;color:#8b95a5;border:1px solid transparent;padding:6px 16px;border-radius:6px;font-family:Inter;font-weight:600;font-size:0.8rem;cursor:pointer;';vLw.style.display='block';vTv.style.display='none';}
-    }
-
-    new TradingView.widget({"autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"15","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","enable_publishing":false,"backgroundColor":"rgba(5,5,17,1)","gridColor":"rgba(255,255,255,0.05)","hide_top_toolbar":false,"hide_legend":false,"hide_side_toolbar":false,"allow_symbol_change":true,"save_image":false,"details":true,"container_id":"tradingview_btc"});
-
-    var domElement = document.getElementById('lightweight_btc');
-    var chart = LightweightCharts.createChart(domElement, {
-        width: domElement.clientWidth, height: 500,
-        layout: { backgroundColor: '#050511', textColor: '#8b95a5' },
-        grid: { vertLines: { color: 'rgba(255,255,255,0.05)' }, horzLines: { color: 'rgba(255,255,255,0.05)' } },
-        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-        rightPriceScale: { borderColor: 'rgba(255,255,255,0.1)' },
-        timeScale: { borderColor: 'rgba(255,255,255,0.1)', timeVisible: true }
-    });
-    var candleSeries = chart.addCandlestickSeries({ upColor:'#00ffc8', downColor:'#ff3366', borderVisible:false, wickUpColor:'#00ffc8', wickDownColor:'#ff3366' });
-    window.addEventListener('resize', function(){ if(document.getElementById('chart-view-lw').style.display!=='none') chart.resize(domElement.clientWidth, 500); });
-    (async function(){try{var r=await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=200');var d=await r.json();candleSeries.setData(d.map(function(x){return{time:x[0]/1000,open:+x[1],high:+x[2],low:+x[3],close:+x[4]};}));}catch(e){}})();
-    var activePositionLines = { tp: null, sl: null };
-
-    // ===========================
-    // LIVE STATE SYNC
-    // ===========================
-    async function fetchState() {
-        try {
-            var res = await fetch('/api/state'); var state = await res.json(); if (state.error) return;
-            var live_btc_price = state.current_price;
-            try { var b = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'); live_btc_price = parseFloat((await b.json()).price); } catch(e){}
-            document.getElementById('paper-balance').innerText = '$' + state.paper_balance.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-            document.getElementById('current-price').innerText = '$' + live_btc_price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-            document.getElementById('bull-prob').innerText = state.bull_prob + '%';
-            var sb = document.getElementById('trade-status');
-            if (state.in_trade) { sb.innerText = 'LONG (Bar '+state.bars_held+'/16)'; sb.className = 'status-badge status-long'; document.getElementById('pulse-indicator').style.background = '#00ffc8'; }
-            else { sb.innerText = 'FLAT (Hunting Edge)'; sb.className = 'status-badge status-flat'; document.getElementById('pulse-indicator').style.background = '#8b95a5'; }
-            document.getElementById('entry-price').innerText = state.in_trade ? '$' + state.entry_price.toLocaleString(undefined,{minimumFractionDigits:2}) : '$0.00';
-            var ts = document.getElementById('trade-size');
-            if(ts) ts.innerText = state.in_trade ? 'Size: ' + state.trade_amount_btc.toFixed(4) + ' BTC ($' + state.trade_amount_usd.toLocaleString(undefined,{minimumFractionDigits:2}) + ')' : '';
-            document.getElementById('targets').innerText = state.in_trade ? 'TP: $'+state.take_profit_target.toFixed(2)+' | SL: $'+state.stop_loss_target.toFixed(2) : 'Waiting for next setup...';
-            var pnlEl = document.getElementById('open-pnl');
-            if (state.in_trade) { var nr=(live_btc_price-state.entry_price)/state.entry_price-0.002; var usd=state.paper_balance*nr; pnlEl.innerText=(usd>=0?'+':'')+'$'+usd.toFixed(2)+' ('+(nr*100).toFixed(3)+'%)'; pnlEl.className='value '+(usd>=0?'positive':'negative'); }
-            else { pnlEl.innerText='$0.00'; pnlEl.className='value neutral'; }
-            document.getElementById('last-update').innerText = new Date().toLocaleTimeString()+' (Live)';
-            if (state.in_trade) {
-                if (!activePositionLines.tp) { activePositionLines.tp=candleSeries.createPriceLine({price:state.take_profit_target,color:'#00ffc8',lineWidth:1,lineStyle:LightweightCharts.LineStyle.Dotted,axisLabelVisible:true,title:'TP'});activePositionLines.sl=candleSeries.createPriceLine({price:state.stop_loss_target,color:'#ff3366',lineWidth:1,lineStyle:LightweightCharts.LineStyle.Dashed,axisLabelVisible:true,title:'SL'}); }
-                try{var mr=await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit='+(state.bars_held+1));var md=await mr.json();candleSeries.setMarkers([{time:md[0][0]/1000,position:'belowBar',color:'#00ffc8',shape:'arrowUp',text:'AI ENTRY @ $'+state.entry_price}]);}catch(e){}
-            } else { if(activePositionLines.tp){candleSeries.removePriceLine(activePositionLines.tp);candleSeries.removePriceLine(activePositionLines.sl);activePositionLines.tp=null;candleSeries.setMarkers([]);} }
-            try{var tr=await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1');var td=await tr.json();candleSeries.update({time:td[0][0]/1000,open:+td[0][1],high:+td[0][2],low:+td[0][3],close:+td[0][4]});}catch(e){}
-        } catch(err){}
-    }
-    // Live state polling disabled - live engine runs locally
-    // fetchState(); setInterval(fetchState, 2500);
 
     // Auto-init replay engine on page load
-    initReplayEngine();
+    var replayAutoStarted = false;
 
     // =======================================
     // REPLAY SIMULATOR ENGINE
     // =======================================
-    function switchMainView(view) {
-        document.getElementById('view-live').style.display = view==='live' ? 'flex' : 'none';
-        document.getElementById('view-replay').style.display = view==='replay' ? 'block' : 'none';
-        document.getElementById('tab-btn-live').className = view==='live' ? 'nav-tab active' : 'nav-tab';
-        document.getElementById('tab-btn-replay').className = view==='replay' ? 'nav-tab active' : 'nav-tab';
-        if (view==='replay' && !replayInitialized) initReplayEngine();
-        else if (view==='replay' && repChart) repChart.resize(document.getElementById('replay_chart').clientWidth, 480);
-    }
+
 
     var replayInitialized=false, replayDataAll=[], replayCursor=1000;
     var repChart, repCandles;
@@ -992,6 +932,9 @@
         if(total===0){logEl.innerHTML='<div style="color:#4a5568;">No trades yet.</div>';}
         else{logEl.innerHTML=simTrades.map(function(t,i){return'<div class="'+(t.pnl>=0?'win':'loss')+'">#'+(i+1)+' '+t.type+' | $'+t.entry.toFixed(2)+' → $'+t.exit.toFixed(2)+' | '+(t.pnl>=0?'+':'')+' $'+t.pnl.toFixed(2)+' ('+(t.ret*100).toFixed(2)+'%) | '+t.bars+' bars</div>';}).reverse().join('');}
     }
+
+    // Auto-start replay on page load
+    initReplayEngine();
     </script>
 </body>
 </html>
