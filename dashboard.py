@@ -125,7 +125,7 @@ def get_historical():
     
     try:
         for page in range(pages):
-            url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={per_page}"
+            url = f"https://data-api.binance.vision/api/v3/klines?symbol={symbol}&interval={interval}&limit={per_page}"
             if current_start:
                 url += f"&startTime={current_start}"
             elif page == 0 and not start_time:
@@ -147,7 +147,7 @@ def get_historical():
             # Fetch backwards to get older data
             all_data = []
             # Start by getting the latest candle timestamp
-            latest_url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=1"
+            latest_url = f"https://data-api.binance.vision/api/v3/klines?symbol={symbol}&interval={interval}&limit=1"
             latest_res = http_requests.get(latest_url, timeout=10)
             latest = latest_res.json()
             if latest:
@@ -160,7 +160,7 @@ def get_historical():
                 for page in range(pages):
                     page_end = end_time - (page * 1000 * ims)
                     page_start = page_end - (1000 * ims)
-                    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=1000&startTime={page_start}&endTime={page_end}"
+                    url = f"https://data-api.binance.vision/api/v3/klines?symbol={symbol}&interval={interval}&limit=1000&startTime={page_start}&endTime={page_end}"
                     res = http_requests.get(url, timeout=15)
                     data = res.json()
                     if data and isinstance(data, list):
@@ -238,7 +238,7 @@ def get_bot_signals():
             # Paginate forward from start time
             current = start_time
             for _ in range(5):
-                url = f"https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={current}"
+                url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={current}"
                 res = http_requests.get(url, timeout=15)
                 data = res.json()
                 if not data: break
@@ -247,14 +247,14 @@ def get_bot_signals():
                 current = str(int(data[-1][0]) + 1)
         else:
             # Fetch latest 3000 candles backwards
-            latest_url = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1"
+            latest_url = "https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1"
             latest = http_requests.get(latest_url, timeout=10).json()
             if latest:
                 end_ts = int(latest[0][0])
                 for page in range(5):
                     page_end = end_ts - (page * 1000 * 900000)
                     page_start = page_end - (1000 * 900000)
-                    url = f"https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={page_start}&endTime={page_end}"
+                    url = f"https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1000&startTime={page_start}&endTime={page_end}"
                     res = http_requests.get(url, timeout=15)
                     data = res.json()
                     if data and isinstance(data, list):
