@@ -64,39 +64,12 @@
 </head>
 <body>
     <h1>Deep Learning execution Terminal</h1>
-    <div class="nav-tabs">
-        <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live')">● Live Execution Engine</div>
-        <div class="nav-tab" id="tab-btn-replay" onclick="switchMainView('replay')">◁ AI Simulator Replay</div>
-    </div>
 
-    <!-- ===== MAIN VIEW 1: LIVE ===== -->
-    <div id="view-live" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-        <div class="dashboard-grid">
-            <div class="card balance-card">
-                <div><h3>Paper Portfolio (Trial 255 Deep Learning Engine)</h3><div class="value" id="paper-balance">$---</div></div>
-                <div><span id="trade-status" class="status-badge status-flat">FLAT (Hunting...)</span></div>
-            </div>
-            <div class="card"><h3>BTC Live Feed</h3><div class="value" id="current-price">$---</div></div>
-            <div class="card"><h3>AI Neural Edge</h3><div class="value" id="bull-prob">---%</div></div>
-            <div class="card"><h3>Active Paper Position</h3><div class="value" id="entry-price">$0.00</div><div style="font-size:0.85rem;color:#00ffc8;margin-top:8px;font-weight:600;" id="trade-size"></div><div style="font-size:0.85rem;color:#8b95a5;margin-top:4px;" id="targets">TP: $0.00 | SL: $0.00</div></div>
-            <div class="card"><h3>Live Mathematical P&L</h3><div class="value neutral" id="open-pnl">$0.00</div></div>
-        </div>
-        <div style="max-width:900px;width:100%;display:flex;justify-content:space-between;align-items:flex-end;margin-top:30px;margin-bottom:20px;">
-            <h3 style="font-size:1rem;color:#fff;margin:0;font-family:'Outfit';letter-spacing:0.5px;">Live Execution Array</h3>
-            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:4px;display:flex;gap:4px;">
-                <button id="btn-lw" onclick="switchChart('lw')" style="background:rgba(0,255,200,0.2);color:#00ffc8;border:1px solid rgba(0,255,200,0.4);padding:6px 16px;border-radius:6px;font-family:'Inter';font-weight:600;font-size:0.8rem;cursor:pointer;">AI Engine (Native)</button>
-                <button id="btn-tv" onclick="switchChart('tv')" style="background:transparent;color:#8b95a5;border:1px solid transparent;padding:6px 16px;border-radius:6px;font-family:'Inter';font-weight:600;font-size:0.8rem;cursor:pointer;">TradingView Pro</button>
-            </div>
-        </div>
-        <div style="position:relative;max-width:900px;width:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 30px rgba(0,0,0,0.5);">
-            <div id="chart-view-lw" style="display:block;"><div id="lightweight_btc" style="height:500px;"></div></div>
-            <div id="chart-view-tv" style="display:none;height:500px;"><div id="tradingview_btc" style="height:100%;"></div></div>
-        </div>
-        <div class="footer"><div class="pulse" id="pulse-indicator"></div>Last Heartbeat: <span id="last-update">Connecting...</span></div>
-    </div>
+    <!-- Live view hidden - runs locally only -->
+    <div id="view-live" style="display:none;"></div>
 
     <!-- ===== MAIN VIEW 2: REPLAY ENGINE ===== -->
-    <div id="view-replay" style="display:none;width:100%;max-width:960px;">
+    <div id="view-replay" style="display:block;width:100%;max-width:960px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
             <div class="tf-sel" style="display:flex;gap:6px;">
                 <button onclick="setReplayTF('1m')">1m</button>
@@ -220,7 +193,11 @@
             try{var tr=await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=1');var td=await tr.json();candleSeries.update({time:td[0][0]/1000,open:+td[0][1],high:+td[0][2],low:+td[0][3],close:+td[0][4]});}catch(e){}
         } catch(err){}
     }
-    fetchState(); setInterval(fetchState, 2500);
+    // Live state polling disabled - live engine runs locally
+    // fetchState(); setInterval(fetchState, 2500);
+
+    // Auto-init replay engine on page load
+    initReplayEngine();
 
     // =======================================
     // REPLAY SIMULATOR ENGINE
