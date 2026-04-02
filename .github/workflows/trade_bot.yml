@@ -1,6 +1,8 @@
 name: Hyperliquid AI execution Daemon
 
 on:
+  push:
+    branches: [ "main" ]
   schedule:
     - cron: '*/15 * * * *'  # Runs exactly every 15 minutes physically
   workflow_dispatch:        # Allows manual execution from the GitHub Web UI
