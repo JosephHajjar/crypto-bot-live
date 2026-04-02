@@ -9,6 +9,10 @@ optuna_db.sqlite
 models/*
 !models/trial_255.pth
 !models/trial_255_config.json
+!models/holy_grail.pth
+!models/holy_grail_config.json
+!models_short/holy_grail_short.pth
+!models_short/holy_grail_short_config.json
 
 # Exclude UI test artifacts and old images
 *.png
