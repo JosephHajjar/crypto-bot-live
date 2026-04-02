@@ -402,9 +402,13 @@ class LiveHyperliquidTrader:
                 time.sleep(5)
 
 if __name__ == "__main__":
+    import sys
     trader = LiveHyperliquidTrader()
     # Run once immediately on startup
     trader.step()
     
-    # Begin infinite loop on 15m physical candle clock
-    trader.run_forever()
+    # If standard run, begin infinite loop on 15m physical candle clock
+    if "--cron" not in sys.argv:
+        trader.run_forever()
+    else:
+        logger.info("Cron cycle complete. Exiting stateless runner.")
