@@ -91,7 +91,16 @@ class LiveHyperliquidTrader:
         self.trade_type = None # "LONG" or "SHORT"
         self.entry_price = 0.0
         self.entry_time = None
+        
         self.bars_held = 0
+        if os.path.exists("data_storage/live_state.json"):
+            try:
+                with open("data_storage/live_state.json", "r") as f:
+                    old_state = json.load(f)
+                    self.bars_held = old_state.get("bars_held", 0)
+            except Exception:
+                pass
+                
         self.trade_amount_btc = 0.0
         
         self._sync_state()
