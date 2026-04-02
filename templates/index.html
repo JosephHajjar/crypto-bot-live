@@ -31,6 +31,7 @@
         .status-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         .status-flat { background: rgba(139,149,165,0.1); color: #8b95a5; border: 1px solid rgba(139,149,165,0.2); }
         .status-long { background: rgba(0,255,200,0.1); color: #00ffc8; border: 1px solid rgba(0,255,200,0.2); box-shadow: 0 0 15px rgba(0,255,200,0.2); }
+        .status-short { background: rgba(255,51,102,0.1); color: #ff3366; border: 1px solid rgba(255,51,102,0.2); box-shadow: 0 0 15px rgba(255,51,102,0.2); }
         .positive { color: #00ffc8; text-shadow: 0 0 10px rgba(0,255,200,0.3); }
         .negative { color: #ff3366; text-shadow: 0 0 10px rgba(255,51,102,0.3); }
         .neutral { color: #ffffff; }
@@ -65,11 +66,99 @@
 <body>
     <h1>Deep Learning execution Terminal</h1>
 
-    <!-- Live view hidden - runs locally only -->
-    <div id="view-live" style="display:none;"></div>
+    <div class="nav-tabs">
+        <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live')">Autonomous Live Trader</div>
+        <div class="nav-tab" id="tab-btn-replay" onclick="switchMainView('replay')">AI Simulator Replay</div>
+    </div>
+
+    <!-- ===== MAIN VIEW 1: AUTONOMOUS AI LIVE TRADER ===== -->
+    <div id="view-live" style="display:block;width:100%;max-width:960px;">
+        <!-- OVERVIEW METRICS GRID -->
+        <div class="dashboard-grid" style="grid-template-columns: repeat(6, 1fr); margin-bottom:20px; margin-top:0;">
+            <div class="card" style="display:flex;flex-direction:column;justify-content:center;">
+                <h3>Total Bankroll</h3>
+                <div class="value" id="live-total-bankroll" style="font-size:1.6rem; margin-top:4px;">$--</div>
+            </div>
+            <div class="card">
+                <h3>Total Net P&L</h3>
+                <div class="value" id="live-total-pnl">$0.00</div>
+            </div>
+            <div class="card">
+                <h3>Realized / Closed P&L</h3>
+                <div class="value neutral" id="live-realized-pnl">$0.00</div>
+            </div>
+            <div class="card">
+                <h3>Open P&L</h3>
+                <div class="value neutral" id="live-pnl">$0.00</div>
+            </div>
+            <div class="card">
+                <h3 id="live-winrate-header">Win Rate (0 Trades)</h3>
+                <div class="value neutral" id="live-winrate">0.0%</div>
+            </div>
+            <div class="card" style="padding-bottom:12px;">
+                <h3>AI Edge</h3>
+                <div style="display:flex;justify-content:space-between;margin-top:4px;">
+                    <div>
+                        <div style="font-size:0.75rem;color:#00ffc8;font-weight:700;">LONG (BULL)</div>
+                        <div class="value neutral" id="live-bull-edge" style="font-size:1.4rem;">--%</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.75rem;color:#ff3366;font-weight:700;text-align:right;">SHORT (BEAR)</div>
+                        <div class="value neutral" id="live-bear-edge" style="font-size:1.4rem;text-align:right;">--%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CHART & LOG ZONE -->
+        <div style="display: grid; grid-template-columns: 1fr 3fr 1.2fr; gap: 16px;">
+            <!-- BTC MARKET PERFORMANCE SIDEPANEL -->
+            <div class="card" style="height:480px; display:flex; flex-direction:column; padding:0; overflow:hidden;">
+                <h3 style="padding:16px 16px 12px 16px; margin:0; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:700; color:#fff;">Live BTC Market</h3>
+                <div style="padding:16px; display:flex; flex-direction:column; justify-content:space-between; flex:1;">
+                    <div>
+                        <h4 style="color:#8b95a5;font-size:0.85rem;margin-bottom:4px;text-transform:uppercase;">Current Price</h4>
+                        <div id="live-price" style="font-size:1.8rem;font-weight:700;font-family:'Outfit';">$--</div>
+                    </div>
+                    <div>
+                        <h4 style="color:#8b95a5;font-size:0.85rem;margin-bottom:4px;text-transform:uppercase;">15m Perf</h4>
+                        <div class="value neutral" id="live-btc-15m" style="font-size:1.4rem;">--%</div>
+                    </div>
+                    <div>
+                        <h4 style="color:#8b95a5;font-size:0.85rem;margin-bottom:4px;text-transform:uppercase;">1H Perf</h4>
+                        <div class="value neutral" id="live-btc-1h" style="font-size:1.4rem;">--%</div>
+                    </div>
+                    <div>
+                        <h4 style="color:#8b95a5;font-size:0.85rem;margin-bottom:4px;text-transform:uppercase;">4H Perf</h4>
+                        <div class="value neutral" id="live-btc-4h" style="font-size:1.4rem;">--%</div>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <h4 style="color:#8b95a5;font-size:0.85rem;margin-bottom:4px;text-transform:uppercase;">24H Perf</h4>
+                        <div class="value neutral" id="live-btc-24h" style="font-size:1.4rem;">--%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 30px rgba(0,0,0,0.5);position:relative;">
+                <div id="live_chart" style="height:480px;width:100%;"></div>
+            </div>
+            
+            <div class="card" style="height:480px; display:flex; flex-direction:column; padding:0; overflow:hidden;">
+                <h3 style="padding:16px 16px 12px 16px; margin:0; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:700; color:#fff;">Live Trade Log</h3>
+                <div id="live-trade-log" style="flex:1; overflow-y:auto; padding:16px; font-size:0.85rem; color:#8b95a5;">
+                    <div style="color:#4a5568;">No completed trades yet.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align:center;margin-top:20px;font-size:0.85rem;color:#8b95a5;" id="live-update-status">
+            <span class="pulse" style="display:inline-block;vertical-align:middle;margin-right:6px;"></span>
+            Connecting to background live execution engine...
+        </div>
+    </div>
 
     <!-- ===== MAIN VIEW 2: REPLAY ENGINE ===== -->
-    <div id="view-replay" style="display:block;width:100%;max-width:960px;">
+    <div id="view-replay" style="display:none;width:100%;max-width:960px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
             <div class="tf-sel" style="display:flex;gap:6px;">
                 <button onclick="setReplayTF('1m')">1m</button>
@@ -110,11 +199,13 @@
             <div id="replay_macd_pane" style="height:150px;width:100%;display:none;border-top:1px solid rgba(255,255,255,0.1);"></div>
         </div>
         <div class="replay-controls" style="display:flex;justify-content:center;gap:12px;margin-top:20px;">
+            <button onclick="replaySkipSignal(-1)" style="color:#bb86fc;border-color:rgba(138,43,226,0.3);background:rgba(138,43,226,0.1);" title="Previous Signal">⏪ Signal</button>
             <button onclick="replayTargetEvent(-10)" style="width:70px;">◁ -10</button>
             <button onclick="replayTargetEvent(-1)">◁ Prev</button>
             <button id="replay-play-btn" onclick="toggleReplayPlay()" style="background:rgba(0,255,200,0.1);border-color:#00ffc8;color:#00ffc8;width:110px;font-weight:900;letter-spacing:1px;">▶ PLAY</button>
             <button onclick="replayTargetEvent(1)">Next ▷</button>
             <button onclick="replayTargetEvent(10)" style="width:70px;">+10 ▷</button>
+            <button onclick="replaySkipSignal(1)" style="color:#bb86fc;border-color:rgba(138,43,226,0.3);background:rgba(138,43,226,0.1);" title="Next Signal">Signal ⏩</button>
         </div>
         <div class="sim-panel">
             <div class="sim-card"><h4>Simulator Balance</h4><div class="sim-val" id="sim-balance">$10,000.00</div></div>
@@ -139,9 +230,254 @@
     <script src="https://unpkg.com/lightweight-charts@3.8.0/dist/lightweight-charts.standalone.production.js"></script>
 
     <script>
-    // ===========================
-    // LIVE VIEW REMOVED — runs locally only
-    // ===========================
+    // =======================================
+    // LIVE PAPER TRADER ENGINE
+    // =======================================
+    var liveChart, liveCandles, liveMarkers = [];
+    var liveUpdateInterval = null;
+    var liveTPLine = null, liveSLLine = null;
+
+    function switchMainView(viewId) {
+        if(viewId === 'live') {
+            document.getElementById('view-live').style.display = 'block';
+            document.getElementById('view-replay').style.display = 'none';
+            document.getElementById('tab-btn-live').classList.add('active');
+            document.getElementById('tab-btn-replay').classList.remove('active');
+            if(!liveChart) setTimeout(initLiveEngine, 100);
+            else setTimeout(() => liveChart.resize(document.getElementById('live_chart').clientWidth, 480), 100);
+        } else {
+            document.getElementById('view-live').style.display = 'none';
+            document.getElementById('view-replay').style.display = 'block';
+            document.getElementById('tab-btn-live').classList.remove('active');
+            document.getElementById('tab-btn-replay').classList.add('active');
+            if(repChart) setTimeout(() => { repChart.resize(document.getElementById('replay_chart').clientWidth, 480); }, 100);
+            else setTimeout(initReplayEngine, 100);
+        }
+    }
+
+    async function initLiveEngine() {
+        var dp = document.getElementById('live_chart');
+        liveChart = LightweightCharts.createChart(dp, {
+            width: dp.clientWidth, height: 480,
+            layout: {backgroundColor: '#050511', textColor: '#8b95a5'},
+            grid: {vertLines: {color: 'rgba(255,255,255,0.05)'}, horzLines: {color: 'rgba(255,255,255,0.05)'}},
+            crosshair: {mode: LightweightCharts.CrosshairMode.Normal},
+            rightPriceScale: {borderColor: 'rgba(255,255,255,0.1)'},
+            timeScale: {borderColor: 'rgba(255,255,255,0.1)', timeVisible: true}
+        });
+        liveCandles = liveChart.addCandlestickSeries({upColor: '#00ffc8', downColor: '#ff3366', borderVisible: false, wickUpColor: '#00ffc8', wickDownColor: '#ff3366'});
+        window.addEventListener('resize', function() {
+            if(document.getElementById('view-live').style.display !== 'none') liveChart.resize(dp.clientWidth, 480);
+        });
+
+        await fetchLiveState();
+        if(!liveUpdateInterval) {
+            liveUpdateInterval = setInterval(fetchLiveState, 5000); // 5 sec background refresh
+        }
+    }
+
+    async function fetchLiveState() {
+        try {
+            var res = await fetch('/api/state');
+            var state = await res.json();
+            
+            if (state.error || state.timestamp === undefined) {
+                document.getElementById('live-update-status').innerText = 'State: ' + (state.error || 'Offline');
+                return;
+            }
+
+            // Fetch latest 200 candles directly from Binance explicitly for Live Context
+            var histRes = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=200');
+            var histData = await histRes.json();
+            var cData = [];
+            var live_price = state.current_price;
+            
+            if(histData && histData.length > 0) {
+                cData = histData.map(d => ({
+                    time: Math.floor(d[0] / 1000), // Lightweight Charts uses seconds
+                    open: parseFloat(d[1]),
+                    high: parseFloat(d[2]),
+                    low: parseFloat(d[3]),
+                    close: parseFloat(d[4])
+                }));
+                live_price = cData[cData.length - 1].close;
+            }
+
+            // Determine Trade Direction
+            var isLong = true;
+            if (state.in_trade && state.entry_price > 0) {
+                // Determine direction geometrically from the old Python backend JSON logs
+                if ((state.current_price > state.entry_price && state.open_pnl_usd < 0) || 
+                    (state.current_price < state.entry_price && state.open_pnl_usd > 0)) {
+                    isLong = false;
+                }
+            }
+
+            // Recalculate Live Real-Time P&L mathematically using our newly fetched live_price
+            var live_pnl = 0;
+            if (state.in_trade && state.entry_price > 0 && state.trade_amount_usd > 0) {
+                var ret = (live_price - state.entry_price) / state.entry_price;
+                if (!isLong) ret = -ret;
+                live_pnl = state.trade_amount_usd * ret;
+            }
+
+            // Sync original DOM stat badges
+            var pnlEl = document.getElementById('live-pnl');
+            if(state.in_trade) {
+                pnlEl.innerText = (live_pnl >= 0 ? '+$' : '-$') + Math.abs(live_pnl).toFixed(2);
+                pnlEl.className = 'value ' + (live_pnl > 0 ? 'positive' : (live_pnl < 0 ? 'negative' : 'neutral'));
+            } else {
+                pnlEl.innerText = '$0.00';
+                pnlEl.className = 'value neutral';
+            }
+
+            // Sync Multi-Timeframe UI & Total Equity
+            var totalEquity = state.paper_balance + live_pnl;
+            var bankEl = document.getElementById('live-total-bankroll');
+            if(bankEl) bankEl.innerText = '$' + totalEquity.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            
+            var priceEl = document.getElementById('live-price');
+            if(priceEl) priceEl.innerText = '$' + live_price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            
+            // Calculate multi-timeframe performance metrics directly from trailing context data
+            if (cData.length > 0) {
+                var cP = cData[cData.length-1].close;
+                
+                if (cData.length > 1) {
+                    var p15m = cData[cData.length-1-1].close;
+                    var d15m = ((cP - p15m) / p15m) * 100;
+                    var el15m = document.getElementById('live-btc-15m');
+                    if(el15m) {
+                        el15m.innerText = (d15m > 0 ? '+' : '') + d15m.toFixed(2) + '%';
+                        el15m.className = 'value ' + (d15m > 0 ? 'positive' : (d15m < 0 ? 'negative' : 'neutral'));
+                    }
+                }
+                if (cData.length > 4) {
+                    var p1h = cData[cData.length-1-4].close;
+                    var d1h = ((cP - p1h) / p1h) * 100;
+                    var el1h = document.getElementById('live-btc-1h');
+                    if(el1h) {
+                        el1h.innerText = (d1h > 0 ? '+' : '') + d1h.toFixed(2) + '%';
+                        el1h.className = 'value ' + (d1h > 0 ? 'positive' : (d1h < 0 ? 'negative' : 'neutral'));
+                    }
+                }
+                if (cData.length > 16) {
+                    var p4h = cData[cData.length-1-16].close;
+                    var d4h = ((cP - p4h) / p4h) * 100;
+                    var el4h = document.getElementById('live-btc-4h');
+                    if(el4h) {
+                        el4h.innerText = (d4h > 0 ? '+' : '') + d4h.toFixed(2) + '%';
+                        el4h.className = 'value ' + (d4h > 0 ? 'positive' : (d4h < 0 ? 'negative' : 'neutral'));
+                    }
+                }
+                if (cData.length > 96) {
+                    var p24h = cData[cData.length-1-96].close;
+                    var d24h = ((cP - p24h) / p24h) * 100;
+                    var el24h = document.getElementById('live-btc-24h');
+                    if(el24h) {
+                        el24h.innerText = (d24h > 0 ? '+' : '') + d24h.toFixed(2) + '%';
+                        el24h.className = 'value ' + (d24h > 0 ? 'positive' : (d24h < 0 ? 'negative' : 'neutral'));
+                    }
+                }
+            }
+
+            // Fetch explicitly global Historic Live Ledger
+            var tradesRes = await fetch('/api/live_trades');
+            var tradesList = [];
+            try { tradesList = await tradesRes.json(); } catch(e) {}
+            
+            var totalTrades = tradesList.length || 0;
+            var wins = tradesList.filter(t => t.pnl_usd > 0).length;
+            var winRate = totalTrades > 0 ? (wins / totalTrades * 100).toFixed(1) + '%' : '0.0%';
+            var realizedPnl = tradesList.reduce((acc, t) => acc + (t.pnl_usd || 0), 0);
+            var totalPnl = realizedPnl + live_pnl;
+
+            // Apply Total Metrics to UI Grid
+            var totPnlEl = document.getElementById('live-total-pnl');
+            totPnlEl.innerText = (totalPnl >= 0 ? '+$' : '-$') + Math.abs(totalPnl).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            totPnlEl.className = 'value ' + (totalPnl > 0 ? 'positive' : (totalPnl < 0 ? 'negative' : 'neutral'));
+            
+            var realPnlEl = document.getElementById('live-realized-pnl');
+            realPnlEl.innerText = (realizedPnl >= 0 ? '+$' : '-$') + Math.abs(realizedPnl).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            realPnlEl.className = 'value ' + (realizedPnl > 0 ? 'positive' : (realizedPnl < 0 ? 'negative' : 'neutral'));
+            
+            var winH = document.getElementById('live-winrate-header');
+            if(winH) winH.innerText = 'Win Rate (' + totalTrades + ' Trades)';
+            var winE = document.getElementById('live-winrate');
+            if(winE) winE.innerText = winRate;
+            
+            var bullEl = document.getElementById('live-bull-edge');
+            var bearEl = document.getElementById('live-bear-edge');
+            if (bullEl && bearEl && state.bull_prob !== undefined && state.bear_prob !== undefined) {
+                if (state.bull_prob > 0 || state.bear_prob > 0) {
+                    bullEl.innerText = state.bull_prob.toFixed(1) + '%';
+                    bullEl.className = 'value ' + (state.bull_prob >= 60 ? 'positive' : 'neutral');
+                    bearEl.innerText = state.bear_prob.toFixed(1) + '%';
+                    bearEl.className = 'value ' + (state.bear_prob >= 50 ? 'negative' : 'neutral');
+                } else {
+                    bullEl.innerText = '--%';
+                    bullEl.className = 'value neutral';
+                    bearEl.innerText = '--%';
+                    bearEl.className = 'value neutral';
+                }
+            }
+            
+            // Build the scrolling explicit Trade Log
+            var logEl = document.getElementById('live-trade-log');
+            if (totalTrades === 0) {
+                logEl.innerHTML = '<div style="color:#4a5568;">No completed trades yet.</div>';
+            } else {
+                logEl.innerHTML = tradesList.map((t, i) => {
+                    var isWin = t.pnl_usd >= 0;
+                    return '<div class="'+(isWin?'win':'loss')+'" style="margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.04); padding-bottom:8px;">' +
+                           '<b style="color:#fff;">#' + (i+1) + '</b> | Entry: $' + t.entry_price.toFixed(2) + ' → Exit: $' + t.exit_price.toFixed(2) + '<br>' +
+                           '<span style="font-weight:700;">' + (isWin?'+':'') + '$' + t.pnl_usd.toFixed(2) + ' (' + t.return_pct.toFixed(2) + '%)</span> | ' + t.bars_held + ' bars<br>' +
+                           '<span style="font-size:0.75rem;opacity:0.6;font-family:\'Inter\';">' + t.reason + '</span>' +
+                           '</div>';
+                }).reverse().join('');
+            }
+
+            // Sync visual chart
+            if(cData.length > 0) {
+                liveCandles.setData(cData);
+                
+                // Add marker for entry
+                if(state.in_trade && state.entry_price > 0 && cData.length >= (state.bars_held+1)) {
+                    var mIdx = cData.length - 1 - (state.bars_held || 0);
+                    if (mIdx >= 0 && mIdx < cData.length) {
+                        liveCandles.setMarkers([{
+                            time: cData[mIdx].time,
+                            position: isLong ? 'belowBar' : 'aboveBar',
+                            color: isLong ? '#00ffc8' : '#ff3366',
+                            shape: isLong ? 'arrowUp' : 'arrowDown',
+                            text: (isLong ? 'LONG @ ' : 'SHORT @ ') + state.entry_price.toFixed(2)
+                        }]);
+                    } else {
+                        liveCandles.setMarkers([]);
+                    }
+                } else {
+                    liveCandles.setMarkers([]);
+                }
+            }
+
+            // Sync visual chart
+            if(state.take_profit_target > 0 && state.in_trade) {
+                if(!liveTPLine) liveTPLine = liveCandles.createPriceLine({price: state.take_profit_target, color: '#00ffc8', lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, title: 'TP'});
+                else liveTPLine.applyOptions({price: state.take_profit_target});
+            } else if(liveTPLine) { liveCandles.removePriceLine(liveTPLine); liveTPLine = null; }
+
+            if(state.stop_loss_target > 0 && state.in_trade) {
+                if(!liveSLLine) liveSLLine = liveCandles.createPriceLine({price: state.stop_loss_target, color: '#ff3366', lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, title: 'SL'});
+                else liveSLLine.applyOptions({price: state.stop_loss_target});
+            } else if(liveSLLine) { liveCandles.removePriceLine(liveSLLine); liveSLLine = null; }
+            
+            var ts = new Date(state.timestamp).toLocaleTimeString();
+            document.getElementById('live-update-status').innerHTML = '<span class="pulse" style="display:inline-block;vertical-align:middle;margin-right:6px;"></span> Last Sync: ' + ts;
+
+        } catch (err) {
+            document.getElementById('live-update-status').innerText = 'Sync error: ' + err.message;
+        }
+    }
 
     // Auto-init replay engine on page load
     var replayAutoStarted = false;
@@ -236,8 +572,8 @@
         if (currentReplayTF === '15m') {
             document.getElementById('replay-status').innerText += ' | Loading AI Bot predictions...';
             try {
-                var botUrl = '/api/bot_signals';
-                if (replayStartDate) botUrl += '?startTime=' + replayStartDate;
+                var botUrl = '/api/bot_signals?_cb=' + new Date().getTime();
+                if (replayStartDate) botUrl += '&startTime=' + replayStartDate;
                 var br = await fetch(botUrl);
                 var botText = await br.text();
                 var bd; try { bd = JSON.parse(botText); } catch(pe) { bd = {signals:[]}; }
@@ -353,6 +689,44 @@
 
     function replayTargetEvent(delta){replayCursor+=delta;renderReplayState();}
 
+    function replaySkipSignal(dir) {
+        if (!botSignals || botSignals.length === 0) {
+            document.getElementById('replay-status').innerText = "Click 🤖 AI Bot first to load signals.";
+            return;
+        }
+        
+        var curT = replayDataAll[replayCursor - 1].timestamp;
+        var foundTime = -1;
+        
+        if (dir > 0) {
+            for (var i = 0; i < botSignals.length; i++) {
+                if (botSignals[i].time > curT) {
+                    foundTime = botSignals[i].time;
+                    break;
+                }
+            }
+        } else {
+            for (var i = botSignals.length - 1; i >= 0; i--) {
+                if (botSignals[i].time < curT) {
+                    foundTime = botSignals[i].time;
+                    break;
+                }
+            }
+        }
+        
+        if (foundTime !== -1) {
+            for (var k = 0; k < replayDataAll.length; k++) {
+                if (replayDataAll[k].timestamp >= foundTime) {
+                    replayCursor = k + 1;
+                    renderReplayState();
+                    return;
+                }
+            }
+        } else {
+            document.getElementById('replay-status').innerText = "No " + (dir > 0 ? "next" : "previous") + " signal found.";
+        }
+    }
+
     function toggleReplayPlay(){
         isReplaying=!isReplaying;var btn=document.getElementById('replay-play-btn');
         if(isReplaying){btn.innerText="⏸ PAUSE";btn.style.background="rgba(255,51,102,0.1)";btn.style.color="#ff3366";btn.style.borderColor="#ff3366";replayTimer=setInterval(function(){replayTargetEvent(1);},250);}
@@ -378,7 +752,7 @@
             if (repToggles.bot) {
                 if (botSignals.length === 0) {
                     btn.innerText = '🤖 Thinking...'; btn.style.color='#ffff00';
-                    fetch('/api/bot_signals?symbol=BTCUSDT&interval=' + currentReplayTF + '&limit=10000' + (replayStartDate ? '&startTime='+replayStartDate : ''))
+                    fetch('/api/bot_signals?symbol=BTCUSDT&interval=' + currentReplayTF + '&limit=10000' + '&_cb=' + new Date().getTime() + (replayStartDate ? '&startTime='+replayStartDate : ''))
                     .then(r => r.text())
                     .then(t => { try { return JSON.parse(t); } catch(e) { return {signals:[]}; } })
                     .then(bd => {
@@ -937,8 +1311,8 @@
         else{logEl.innerHTML=simTrades.map(function(t,i){return'<div class="'+(t.pnl>=0?'win':'loss')+'">#'+(i+1)+' '+t.type+' | $'+t.entry.toFixed(2)+' → $'+t.exit.toFixed(2)+' | '+(t.pnl>=0?'+':'')+' $'+t.pnl.toFixed(2)+' ('+(t.ret*100).toFixed(2)+'%) | '+t.bars+' bars</div>';}).reverse().join('');}
     }
 
-    // Auto-start replay on page load
-    initReplayEngine();
+    // Auto-start Live Engine on page load as default tab
+    initLiveEngine();
     </script>
 </body>
 </html>

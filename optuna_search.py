@@ -102,8 +102,9 @@ def backtest_triple_barrier(df_slice, model, seq_length, device,
         for i in range(0, len(seq_tensor), 2048):
             batch = seq_tensor[i:i+2048]
             out = model(batch)
-            _, pred = torch.max(out, 1)
-            signals.extend(pred.cpu().tolist())
+            probs = torch.softmax(out, dim=1)
+            bull_probs = probs[:, 1].cpu().tolist()
+            signals.extend(bull_probs)
     
     # Simulate trading
     capital = 10000.0
@@ -120,61 +121,66 @@ def backtest_triple_barrier(df_slice, model, seq_length, device,
         if sig_idx + max_bars >= len(close):
             break
             
-        if signals[i] == 1 and capital > 0:
-            # ENTER TRADE
-            entry_price = close[sig_idx]
-            entry_capital = capital
-            position_size = capital * (1 - fee_pct)  # Pay entry fee
-            
-            tp_price = entry_price * (1 + tp)
-            sl_price = entry_price * (1 - sl)
-            
-            exit_price = None
-            exit_reason = None
-            
-            # Walk forward bar by bar
-            for j in range(1, max_bars + 1):
-                idx = sig_idx + j
-                if idx >= len(close):
-                    break
-                    
-                # Check SL first (conservative)
-                if low[idx] <= sl_price:
-                    exit_price = sl_price
-                    exit_reason = 'SL'
-                    break
-                # Check TP
-                if high[idx] >= tp_price:
-                    exit_price = tp_price
-                    exit_reason = 'TP'
-                    break
-            
-            # Time barrier — exit at close of last bar
-            if exit_price is None:
-                exit_price = close[sig_idx + max_bars]
-                exit_reason = 'TIME'
-            
-            # Calculate P&L
-            price_return = (exit_price - entry_price) / entry_price
-            net_return = price_return - (fee_pct * 2)  # Round-trip fee
-            capital = entry_capital * (1 + net_return)
-            
-            if capital > max_capital:
-                max_capital = capital
-            drawdown = ((capital - max_capital) / max_capital) * 100
-            if drawdown < max_drawdown:
-                max_drawdown = drawdown
-            
-            trade_returns.append(net_return)
-            trades.append({
-                'entry_idx': sig_idx,
-                'exit_reason': exit_reason,
-                'return': net_return * 100,
-                'win': net_return > 0
-            })
-            
-            # Skip ahead past the trade duration (can't re-enter while in trade)
-            i += max_bars
+        if capital > 0:
+            prob = signals[i]
+            if prob > 0.50:
+                # ENTER LONG
+                entry_price = close[sig_idx]
+                entry_capital = capital
+                position_size = capital * (1 - fee_pct)  # Pay entry fee
+                
+                tp_price = entry_price * (1 + tp)
+                sl_price = entry_price * (1 - sl)
+                
+                exit_price = None
+                exit_reason = None
+                
+                # Walk forward bar by bar
+                for j in range(1, max_bars + 1):
+                    idx = sig_idx + j
+                    if idx >= len(close):
+                        break
+                        
+                    # Check SL first (conservative)
+                    if low[idx] <= sl_price:
+                        exit_price = sl_price
+                        exit_reason = 'SL'
+                        break
+                    # Check TP
+                    if high[idx] >= tp_price:
+                        exit_price = tp_price
+                        exit_reason = 'TP'
+                        break
+                
+                # Time barrier — exit at close of last bar
+                if exit_price is None:
+                    exit_price = close[sig_idx + max_bars]
+                    exit_reason = 'TIME'
+                
+                # Calculate P&L
+                price_return = (exit_price - entry_price) / entry_price
+                net_return = price_return - (fee_pct * 2)  # Round-trip fee
+                capital = entry_capital * (1 + net_return)
+                
+                if capital > max_capital:
+                    max_capital = capital
+                drawdown = ((capital - max_capital) / max_capital) * 100
+                if drawdown < max_drawdown:
+                    max_drawdown = drawdown
+                
+                trade_returns.append(net_return)
+                trades.append({
+                    'entry_idx': sig_idx,
+                    'exit_reason': exit_reason,
+                    'return': net_return * 100,
+                    'win': net_return > 0,
+                    'type': 'LONG'
+                })
+                
+                # Skip ahead past the trade duration (can't re-enter while in trade)
+                i += max_bars
+            else:
+                i += 1
         else:
             i += 1
     

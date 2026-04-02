@@ -85,8 +85,9 @@ def backtest_model(model, df_feat, df_raw, seq_len, device):
         for i in range(0, len(seq_tensor), 2048):
             batch = seq_tensor[i:i+2048]
             out = model(batch)
-            _, pred = torch.max(out, 1)
-            signals.extend(pred.cpu().tolist())
+            probs = torch.softmax(out, dim=1)
+            bull_probs = probs[:, 1].cpu().tolist()
+            signals.extend(bull_probs)
 
     capital = 10000.0
     initial = capital
@@ -99,30 +100,34 @@ def backtest_model(model, df_feat, df_raw, seq_len, device):
         idx = i + seq_len
         if idx + MAX_BARS >= len(close):
             break
-        if signals[i] == 1 and capital > 0:
-            entry = close[idx]
-            entry_cap = capital
-            pos = capital * (1 - FEE)
-            tp_price = entry * (1 + TP)
-            sl_price = entry * (1 - SL)
-            exit_p = None
-            reason = None
-            for j in range(1, MAX_BARS + 1):
-                jdx = idx + j
-                if jdx >= len(close): break
-                if low[jdx] <= sl_price:
-                    exit_p = sl_price; reason = 'SL'; break
-                if high[jdx] >= tp_price:
-                    exit_p = tp_price; reason = 'TP'; break
-            if exit_p is None:
-                exit_p = close[idx + MAX_BARS]; reason = 'TIME'
-            ret = (exit_p - entry) / entry - FEE * 2
-            capital = entry_cap * (1 + ret)
-            if capital > max_cap: max_cap = capital
-            dd = (capital - max_cap) / max_cap * 100
-            if dd < max_dd: max_dd = dd
-            trades.append({'win': ret > 0, 'ret': ret, 'reason': reason})
-            i += MAX_BARS
+        if capital > 0:
+            prob = signals[i]
+            if prob > 0.60:
+                # LONG
+                entry = close[idx]
+                entry_cap = capital
+                tp_price = entry * (1 + TP)
+                sl_price = entry * (1 - SL)
+                exit_p = None
+                reason = None
+                for j in range(1, MAX_BARS + 1):
+                    jdx = idx + j
+                    if jdx >= len(close): break
+                    if low[jdx] <= sl_price:
+                        exit_p = sl_price; reason = 'SL'; break
+                    if high[jdx] >= tp_price:
+                        exit_p = tp_price; reason = 'TP'; break
+                if exit_p is None:
+                    exit_p = close[idx + MAX_BARS]; reason = 'TIME'
+                ret = (exit_p - entry) / entry - FEE * 2
+                capital = entry_cap * (1 + ret)
+                if capital > max_cap: max_cap = capital
+                dd = (capital - max_cap) / max_cap * 100
+                if dd < max_dd: max_dd = dd
+                trades.append({'win': ret > 0, 'ret': ret, 'reason': reason, 'type': 'LONG'})
+                i += MAX_BARS
+            else:
+                i += 1
         else:
             i += 1
 

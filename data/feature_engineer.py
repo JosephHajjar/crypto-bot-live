@@ -82,7 +82,38 @@ def _triple_barrier_label(df, take_profit=0.015, stop_loss=0.0075, max_hold_bars
     
     return labels
 
-def engineer_features(csv_path, take_profit=0.015, stop_loss=0.0075, max_hold_bars=16):
+def _triple_barrier_label_short(df, take_profit=0.015, stop_loss=0.0075, max_hold_bars=16):
+    """
+    Triple Barrier Method labeling for SCHORTS.
+    For each bar, look forward up to max_hold_bars:
+      - If price hits take_profit first (down) -> label 1 (profitable short)
+      - If price hits stop_loss first (up) -> label 0 (losing short)
+      - If neither hit within max_hold_bars -> label 0
+    """
+    close = df['close'].values
+    labels = np.zeros(len(close), dtype=int)
+    
+    for i in range(len(close) - max_hold_bars):
+        entry = close[i]
+        tp_price = entry * (1 - take_profit)
+        sl_price = entry * (1 + stop_loss)
+        
+        for j in range(1, max_hold_bars + 1):
+            future_high = df['high'].values[i + j]
+            future_low = df['low'].values[i + j]
+            
+            # Check stop loss first
+            if future_high >= sl_price:
+                labels[i] = 0
+                break
+            # Check take profit
+            if future_low <= tp_price:
+                labels[i] = 1
+                break
+    
+    return labels
+
+def engineer_features(csv_path, take_profit=0.015, stop_loss=0.0075, max_hold_bars=16, mode='long'):
     """
     Multi-timeframe feature engineering with Triple Barrier labeling.
     
@@ -163,8 +194,11 @@ def engineer_features(csv_path, take_profit=0.015, stop_loss=0.0075, max_hold_ba
     # ================================================================
     # 4. TRIPLE BARRIER LABELING
     # ================================================================
-    print(f"Labeling with Triple Barrier (TP={take_profit*100:.1f}%, SL={stop_loss*100:.2f}%, MaxBars={max_hold_bars})...")
-    df['Target'] = _triple_barrier_label(df, take_profit, stop_loss, max_hold_bars)
+    print(f"Labeling with Triple Barrier (TP={take_profit*100:.1f}%, SL={stop_loss*100:.2f}%, MaxBars={max_hold_bars}, mode={mode})...")
+    if mode == 'short':
+        df['Target'] = _triple_barrier_label_short(df, take_profit, stop_loss, max_hold_bars)
+    else:
+        df['Target'] = _triple_barrier_label(df, take_profit, stop_loss, max_hold_bars)
     
     # ================================================================
     # 5. CLEANUP AND NORMALIZE
@@ -194,7 +228,13 @@ def engineer_features(csv_path, take_profit=0.015, stop_loss=0.0075, max_hold_ba
     df[feature_cols] = (df[feature_cols] - feature_means) / feature_stds
     
     # Save
-    save_path = csv_path.replace('.csv', '_processed.csv')
+    if mode == 'short':
+        save_path = csv_path.replace('.csv', '_short_processed.csv')
+        scaler_save = csv_path.replace('.csv', '_short_scaler.json')
+    else:
+        save_path = csv_path.replace('.csv', '_processed.csv')
+        scaler_save = csv_path.replace('.csv', '_scaler.json')
+        
     df.to_csv(save_path)
     
     # Save scalars to disk
@@ -203,7 +243,7 @@ def engineer_features(csv_path, take_profit=0.015, stop_loss=0.0075, max_hold_ba
         'mean': feature_means.to_dict(),
         'std': feature_stds.to_dict()
     }
-    with open(csv_path.replace('.csv', '_scaler.json'), 'w') as f:
+    with open(scaler_save, 'w') as f:
         json.dump(stats, f)
         
     # Print class distribution

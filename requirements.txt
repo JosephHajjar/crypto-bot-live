@@ -9,3 +9,6 @@ matplotlib
 flask
 requests
 gunicorn
+hyperliquid-python-sdk
+python-dotenv
+eth-account

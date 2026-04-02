@@ -16,20 +16,45 @@ def fetch_klines(symbol='BTC/USDT', timeframe='5m', days_back=90, save_dir='data
         'enableRateLimit': True,
     })
 
-    # Calculate timestamps
-    now = datetime.utcnow()
-    since_dt = now - timedelta(days=days_back)
-    since_ts = int(since_dt.timestamp() * 1000)
-
-    all_ohlcv = []
+    filename = f"{symbol.replace('/', '_')}_{timeframe}.csv"
+    filepath = os.path.join(save_dir, filename)
     
-    # Simple progress bar based on expected number of candles approx
+    existing_df = None
+    if os.path.exists(filepath):
+        print(f"Loading existing data from {filepath} to resume fetching...")
+        try:
+            existing_df = pd.read_csv(filepath)
+            if not existing_df.empty and 'timestamp' in existing_df.columns:
+                # Convert timestamps safely
+                if existing_df['timestamp'].dtype == 'O':
+                    existing_ts = pd.to_datetime(existing_df['timestamp']).astype(np.int64) // 10**6
+                else:
+                    existing_ts = pd.to_datetime(existing_df['timestamp'], unit='s' if existing_df['timestamp'].max() < 1e11 else 'ms').astype(np.int64) // 10**6
+                
+                last_ts = int(existing_ts.max())
+                since_ts = last_ts + 1  # start from the very next ms
+                print(f"Resuming fetch from {pd.to_datetime(last_ts, unit='ms')}")
+            else:
+                existing_df = None
+        except Exception as e:
+            print(f"Could not read existing file: {e}. Fetching {days_back} days.")
+            existing_df = None
+
+    if existing_df is None:
+        now = datetime.utcnow()
+        since_dt = now - timedelta(days=days_back)
+        since_ts = int(since_dt.timestamp() * 1000)
+
+    # Simple progress bar based on approx expected number of new candles
+    now_ts = int(datetime.utcnow().timestamp() * 1000)
     if 'h' in timeframe:
         mins = int(timeframe.replace('h', '')) * 60
     else:
         mins = int(timeframe.replace('m', ''))
-    expected_candles = days_back * 24 * 60 // mins
+        
+    expected_candles = max(1, (now_ts - since_ts) // (mins * 60 * 1000))
     pbar = tqdm(total=expected_candles)
+    all_ohlcv = []
 
     while since_ts < int(now.timestamp() * 1000):
         try:
@@ -58,22 +83,27 @@ def fetch_klines(symbol='BTC/USDT', timeframe='5m', days_back=90, save_dir='data
     pbar.close()
 
     if not all_ohlcv:
-        print("No data fetched.")
-        return None
+        print("No new data fetched.")
+        return filepath
 
     # Convert to DataFrame
     df = pd.DataFrame(all_ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
     
-    # Remove duplicates if any
+    if existing_df is not None:
+        if existing_df['timestamp'].dtype == 'O':
+            existing_df['timestamp'] = pd.to_datetime(existing_df['timestamp'])
+        df = pd.concat([existing_df, df], ignore_index=True)
+    
+    # Remove duplicates if any and sort exactly
     df = df.drop_duplicates(subset=['timestamp']).reset_index(drop=True)
+    df.sort_values('timestamp', inplace=True)
     
     # Ensure save directory exists
     os.makedirs(save_dir, exist_ok=True)
     
     # Save to CSV
-    filename = f"{symbol.replace('/', '_')}_{timeframe}.csv"
-    filepath = os.path.join(save_dir, filename)
+    # filename and filepath are already defined at the top
     df.to_csv(filepath, index=False)
     
     print(f"Successfully saved {len(df)} candles to {filepath}")
