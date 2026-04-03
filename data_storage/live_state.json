@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-04-03T03:28:41.664774Z",
+  "timestamp": "2026-04-03T05:22:54.718222Z",
   "paper_balance": 6.61,
   "in_trade": false,
   "trade_type": null,
   "entry_price": 0.0,
-  "current_price": 66626.58,
+  "current_price": 66514.55,
   "bars_held": 0,
   "bull_prob": 0.0,
   "bear_prob": 0.07,
