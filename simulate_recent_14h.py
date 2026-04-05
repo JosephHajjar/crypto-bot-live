@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 
 from ml.model import AttentionLSTMModel
-from data.feature_engineer import get_feature_cols
+from data.feature_engineer_btc import get_feature_cols
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

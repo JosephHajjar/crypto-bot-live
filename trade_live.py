@@ -182,8 +182,8 @@ class LiveHyperliquidTrader:
             "entry_price": self.entry_price,
             "current_price": current_close,
             "bars_held": self.bars_held,
-            "bull_prob": round(bull_prob * 100, 4),
-            "bear_prob": round(bear_prob * 100, 4),
+            "bull_prob": round(bull_prob * 100, 6),
+            "bear_prob": round(bear_prob * 100, 6),
             "open_pnl_usd": 0.0,
             "open_pnl_pct": 0.0,
             "take_profit_target": tp_target,
@@ -299,16 +299,17 @@ class LiveHyperliquidTrader:
         try:
             df = self.fetch_recent_data()
             current_close = df['close'].iloc[-1]
-            current_high = df['high'].iloc[-1]
-            current_low  = df['low'].iloc[-1]
+            # Use the COMPLETED (second-to-last) candle for TP/SL to avoid partial candle noise
+            completed_high = df['high'].iloc[-2] if len(df) >= 2 else df['high'].iloc[-1]
+            completed_low  = df['low'].iloc[-2] if len(df) >= 2 else df['low'].iloc[-1]
             current_time = df['timestamp'].iloc[-1]
             
             self._sync_state() # Fetch latest real positions
             
             logger.info(f"Live Market Heartbeat: {current_time} | BTC Price: ${current_close:.2f} | Balance: ${self.live_balance:.2f}")
             
-            # 1. Manage active live positions dynamically
-            self.manage_position(current_close, current_high, current_low)
+            # 1. Manage active live positions dynamically (use completed candle for TP/SL)
+            self.manage_position(current_close, completed_high, completed_low)
             
             bull_prob = 0.0
             bear_prob = 0.0
@@ -333,7 +334,7 @@ class LiveHyperliquidTrader:
                     logits_short = self.model_short(tensor_short)
                     bear_prob = torch.softmax(logits_short, dim=1)[0][1].item()
                     
-                logger.info(f"AI Models -> Bullish Edge: {bull_prob*100:.3f}% | Bearish Edge: {bear_prob*100:.3f}%")
+                logger.info(f"AI Models -> Bullish Edge: {bull_prob*100:.4f}% | Bearish Edge: {bear_prob*100:.4f}%")
 
             # 3. Enter trade if flat
             if not self.in_trade and len(live_df) >= max(self.seq_len_long, self.seq_len_short):
@@ -400,14 +401,19 @@ class LiveHyperliquidTrader:
             minutes = now.minute
             seconds = now.second
             
-            next_15m = 15 - (minutes % 15)
+            remainder = minutes % 15
             
-            if next_15m == 15 and seconds < 10:
+            if remainder == 0 and seconds < 60:
                 logger.info(f"Execution Barrier Reached (Minute: {minutes}, Second: {seconds}). Running step...")
                 self.step()
-                time.sleep(20)
+                # Sleep past the current candle boundary to avoid double-execution
+                sleep_secs = max(30, 65 - seconds)
+                time.sleep(sleep_secs)
             else:
-                time.sleep(5)
+                # Calculate seconds until next 15m boundary + 5s buffer for candle close
+                secs_to_next = (15 - remainder) * 60 - seconds + 5
+                sleep_time = max(1, min(secs_to_next, 60))  # Sleep at most 60s at a time
+                time.sleep(sleep_time)
 
 if __name__ == "__main__":
     import sys

@@ -112,7 +112,7 @@ def index():
 @app.route('/api/state')
 def get_state():
     symbol = request.args.get('symbol', 'BTCUSDT')
-    file_name = 'data_storage/live_state_gold.json' if symbol == 'PAXGUSDT' else 'data_storage/live_state.json'
+    file_name = 'data_storage/live_state.json'
     if os.path.exists(file_name):
         try:
             with open(file_name, 'r') as f:
@@ -181,7 +181,7 @@ def get_historical():
 @app.route('/api/live_trades')
 def get_live_trades():
     symbol = request.args.get('symbol', 'BTCUSDT')
-    file_name = 'data_storage/live_trades_gold.json' if symbol == 'PAXGUSDT' else 'data_storage/live_trades.json'
+    file_name = 'data_storage/live_trades.json'
     if os.path.exists(file_name):
         try:
             with open(file_name, "r") as f:

@@ -419,9 +419,9 @@
             var bearEl = document.getElementById('live-bear-edge');
             if (bullEl && bearEl && state.bull_prob !== undefined && state.bear_prob !== undefined) {
                 if (state.bull_prob > 0 || state.bear_prob > 0) {
-                    bullEl.innerText = state.bull_prob.toFixed(4) + '%';
+                    bullEl.innerText = state.bull_prob.toFixed(6) + '%';
                     bullEl.className = 'value ' + (state.bull_prob >= 60 ? 'positive' : 'neutral');
-                    bearEl.innerText = state.bear_prob.toFixed(4) + '%';
+                    bearEl.innerText = state.bear_prob.toFixed(6) + '%';
                     bearEl.className = 'value ' + (state.bear_prob >= 50 ? 'negative' : 'neutral');
                 } else {
                     bullEl.innerText = '--%';

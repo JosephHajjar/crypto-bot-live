@@ -1,4 +1,4 @@
-﻿import pandas as pd
+import pandas as pd
 import ta
 import numpy as np
 import os
@@ -308,7 +308,10 @@ def compute_live_features(df, scaler_path="data_storage/BTC_USDT_15m_scaler.json
     
     df['Dist_SMA50'] = (df['close'] - df['SMA_50']) / (df['SMA_50'] + 1e-10)
     
-    df = df.dropna()
+    # Forward-fill then zero-fill remaining NaNs from indicator warmup periods.
+    # CRITICAL: Do NOT use dropna() here — it can destroy recent candles needed
+    # for live inference when multi-timeframe JOIN alignment creates gaps.
+    df = df.ffill().fillna(0)
     
     # NORMALIZATION
     feature_cols = get_feature_cols()
