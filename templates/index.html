@@ -66,13 +66,37 @@
 <body>
     <h1>Deep Learning execution Terminal</h1>
 
-    <div class="nav-tabs">
-        <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live')">Autonomous Live Trader</div>
-        <!-- <div class="nav-tab" id="tab-btn-replay" onclick="switchMainView('replay')">AI Simulator Replay</div> -->
+    <div class="nav-tabs" style="justify-content: space-between; align-items: center;">
+        <div style="display:flex; gap:30px;">
+            <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live')">Autonomous Live Trader</div>
+            <!-- <div class="nav-tab" id="tab-btn-replay" onclick="switchMainView('replay')">AI Simulator Replay</div> -->
+        </div>
+        <div style="display:flex; gap:10px; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+            <button id="asset-btc" onclick="switchAsset('BTCUSDT')" style="background: rgba(0,255,200,0.15); color: #00ffc8; border: 1px solid #00ffc8; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;">BTC / USDT</button>
+            <button id="asset-paxg" onclick="switchAsset('PAXGUSDT')" style="background: transparent; color: #8b95a5; border: 1px solid transparent; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;">PAXG / USDT</button>
+        </div>
     </div>
 
     <!-- ===== MAIN VIEW 1: AUTONOMOUS AI LIVE TRADER ===== -->
     <div id="view-live" style="display:block;width:100%;max-width:960px;">
+        <script>
+            // Master Live Asset State
+            var _activeSymbol = 'BTCUSDT';
+            function switchAsset(sym) {
+                _activeSymbol = sym;
+                if(sym === 'BTCUSDT') {
+                    document.getElementById('asset-btc').style = "background: rgba(0,255,200,0.15); color: #00ffc8; border: 1px solid #00ffc8; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;";
+                    document.getElementById('asset-paxg').style = "background: transparent; color: #8b95a5; border: 1px solid transparent; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;";
+                    document.getElementById('live-market-title').innerText = "Live BTC Market";
+                } else {
+                    document.getElementById('asset-paxg').style = "background: rgba(255,215,0,0.15); color: #FFD700; border: 1px solid #FFD700; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;";
+                    document.getElementById('asset-btc').style = "background: transparent; color: #8b95a5; border: 1px solid transparent; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;";
+                    document.getElementById('live-market-title').innerText = "Live PAXG Market";
+                }
+                document.getElementById('live-trade-log').innerHTML = '<div style="color:#4a5568;">Loading Asset Context...</div>';
+                fetchLiveState(); // Force sync master context
+            }
+        </script>
         <!-- OVERVIEW METRICS GRID -->
         <div class="dashboard-grid" style="grid-template-columns: repeat(6, 1fr); margin-bottom:20px; margin-top:0;">
             <div class="card" style="display:flex;flex-direction:column;justify-content:center;">
@@ -114,7 +138,7 @@
         <div style="display: grid; grid-template-columns: 1fr 3fr 1.2fr; gap: 16px;">
             <!-- BTC MARKET PERFORMANCE SIDEPANEL -->
             <div class="card" style="height:480px; display:flex; flex-direction:column; padding:0; overflow:hidden;">
-                <h3 style="padding:16px 16px 12px 16px; margin:0; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:700; color:#fff;">Live BTC Market</h3>
+                <h3 id="live-market-title" style="padding:16px 16px 12px 16px; margin:0; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:700; color:#fff;">Live BTC Market</h3>
                 <div style="padding:16px; display:flex; flex-direction:column; justify-content:space-between; flex:1;">
                     <div>
                         <h4 style="color:#8b95a5;font-size:0.85rem;margin-bottom:4px;text-transform:uppercase;">Current Price</h4>
@@ -278,7 +302,7 @@
 
     async function fetchLiveState() {
         try {
-            var res = await fetch('/api/state');
+            var res = await fetch(`/api/state?symbol=${_activeSymbol}`);
             var state = await res.json();
             
             if (state.error || state.timestamp === undefined) {
@@ -287,7 +311,7 @@
             }
 
             // Fetch latest 200 candles directly from Binance explicitly for Live Context
-            var histRes = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=200');
+            var histRes = await fetch(`https://api.binance.com/api/v3/klines?symbol=${_activeSymbol}&interval=15m&limit=200`);
             var histData = await histRes.json();
             var cData = [];
             var live_price = state.current_price;
@@ -303,14 +327,10 @@
                 live_price = cData[cData.length - 1].close;
             }
 
-            // Determine Trade Direction
+            // Determine Trade Direction natively from strict backend string
             var isLong = true;
-            if (state.in_trade && state.entry_price > 0) {
-                // Determine direction geometrically from the old Python backend JSON logs
-                if ((state.current_price > state.entry_price && state.open_pnl_usd < 0) || 
-                    (state.current_price < state.entry_price && state.open_pnl_usd > 0)) {
-                    isLong = false;
-                }
+            if (state.in_trade && state.entry_price > 0 && state.trade_type === "SHORT") {
+                isLong = false;
             }
 
             // Recalculate Live Real-Time P&L mathematically using our newly fetched live_price
@@ -382,7 +402,7 @@
             }
 
             // Fetch explicitly global Historic Live Ledger
-            var tradesRes = await fetch('/api/live_trades');
+            var tradesRes = await fetch(`/api/live_trades?symbol=${_activeSymbol}`);
             var tradesList = [];
             try { tradesList = await tradesRes.json(); } catch(e) {}
             
@@ -410,9 +430,9 @@
             var bearEl = document.getElementById('live-bear-edge');
             if (bullEl && bearEl && state.bull_prob !== undefined && state.bear_prob !== undefined) {
                 if (state.bull_prob > 0 || state.bear_prob > 0) {
-                    bullEl.innerText = state.bull_prob.toFixed(1) + '%';
+                    bullEl.innerText = state.bull_prob.toFixed(3) + '%';
                     bullEl.className = 'value ' + (state.bull_prob >= 60 ? 'positive' : 'neutral');
-                    bearEl.innerText = state.bear_prob.toFixed(1) + '%';
+                    bearEl.innerText = state.bear_prob.toFixed(3) + '%';
                     bearEl.className = 'value ' + (state.bear_prob >= 50 ? 'negative' : 'neutral');
                 } else {
                     bullEl.innerText = '--%';

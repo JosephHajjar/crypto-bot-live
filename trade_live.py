@@ -182,8 +182,8 @@ class LiveHyperliquidTrader:
             "entry_price": self.entry_price,
             "current_price": current_close,
             "bars_held": self.bars_held,
-            "bull_prob": round(bull_prob * 100, 2),
-            "bear_prob": round(bear_prob * 100, 2),
+            "bull_prob": round(bull_prob * 100, 4),
+            "bear_prob": round(bear_prob * 100, 4),
             "open_pnl_usd": 0.0,
             "open_pnl_pct": 0.0,
             "take_profit_target": tp_target,
@@ -333,7 +333,7 @@ class LiveHyperliquidTrader:
                     logits_short = self.model_short(tensor_short)
                     bear_prob = torch.softmax(logits_short, dim=1)[0][1].item()
                     
-                logger.info(f"AI Models -> Bullish Edge: {bull_prob*100:.1f}% | Bearish Edge: {bear_prob*100:.1f}%")
+                logger.info(f"AI Models -> Bullish Edge: {bull_prob*100:.3f}% | Bearish Edge: {bear_prob*100:.3f}%")
 
             # 3. Enter trade if flat
             if not self.in_trade and len(live_df) >= max(self.seq_len_long, self.seq_len_short):

@@ -9,8 +9,8 @@ class AttentionLSTMModel(nn.Module):
     The LSTM captures temporal dependencies, then attention lets the model
     focus on the most relevant timesteps in the sequence for its prediction.
     """
-    def __init__(self, input_dim, hidden_dim=128, num_layers=2, output_dim=2, 
-                 dropout=0.2, num_heads=4):
+    def __init__(self, input_dim, hidden_dim=128, num_layers=2, output_dim=3, 
+                 dropout=0.2, num_heads=4, activation_fn='relu'):
         super(AttentionLSTMModel, self).__init__()
         
         self.hidden_dim = hidden_dim
@@ -36,10 +36,19 @@ class AttentionLSTMModel(nn.Module):
         )
         self.layer_norm2 = nn.LayerNorm(hidden_dim)
         
+        
+        # Configure activation function
+        if activation_fn == 'tanh':
+            act = nn.Tanh()
+        elif activation_fn == 'leaky_relu':
+            act = nn.LeakyReLU()
+        else:
+            act = nn.ReLU()
+            
         # Classification head
         self.fc = nn.Sequential(
             nn.Linear(hidden_dim, hidden_dim // 2),
-            nn.GELU(),
+            act,
             nn.Dropout(dropout),
             nn.Linear(hidden_dim // 2, output_dim)
         )
@@ -84,8 +93,8 @@ def load_model(model, filepath='models/best_model.pth', device='cpu'):
     return model
 
 if __name__ == "__main__":
-    model = AttentionLSTMModel(input_dim=41, hidden_dim=128, num_layers=2, output_dim=2)
-    dummy_x = torch.randn(32, 60, 41)
+    model = AttentionLSTMModel(input_dim=28, hidden_dim=128, num_layers=2, output_dim=3, activation_fn='leaky_relu')
+    dummy_x = torch.randn(32, 60, 28)
     dummy_y = model(dummy_x)
     print(f"Model output shape: {dummy_y.shape}")
     total_params = sum(p.numel() for p in model.parameters())

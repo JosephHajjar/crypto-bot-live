@@ -1,0 +1,2806 @@
+============================================================
+OPTUNA BAYESIAN SEARCH FOR SHORT ONLY MODEL (DYNAMIC TP/SL)
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Could not read existing file: name 'np' is not defined. Fetching 365 days.
+Successfully saved 35056 candles to data_storage\BTC_USDT_15m.csv
+Generating base multi-timeframe features...
+============================================================
+OPTUNA BAYESIAN SEARCH FOR SHORT ONLY MODEL (DYNAMIC TP/SL)
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Could not read existing file: name 'np' is not defined. Fetching 365 days.
+Successfully saved 35056 candles to data_storage\BTC_USDT_15m.csv
+Generating base multi-timeframe features...
+Loading data from data_storage\BTC_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.5%, SL=0.75%, MaxBars=16, mode=short)...
+Normalizing features (train-only statistics)...
+Saved 34271 samples to data_storage\BTC_USDT_15m_short_processed.csv
+Target distribution: {0: 31322, 1: 2949} (8.6% positive)
+
+Data size -> Train: 23989 | Val: 5141 | Test: 5141
+Device: cuda
+
+============================================================
+COMMENCING BAYESIAN SEARCH (DYNAMIC TARGETING)
+============================================================
+
+
+[Trial #0] TP=1.75%, SL=4.00%, Bars=8 | seq=128, hidden=64, layers=1, heads=4, drop=0.22, lr=0.00080, batch=256, epochs=21, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 7116.0% | WorstFold: 11.0% | Sharpe: 11.97 | MaxDD: -1.2% | Trades: 39 | W/L: 25/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -28.7% | Sharpe: -0.80 | Trades: 204 | W/L: 95/109
+
+[Trial #1] TP=1.00%, SL=2.25%, Bars=16 | seq=48, hidden=64, layers=2, heads=4, drop=0.37, lr=0.00029, batch=128, epochs=35, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 1092.7% | WorstFold: 54.2% | Sharpe: 5.09 | MaxDD: -6.3% | Trades: 90 | W/L: 60/30
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -14.8% | Sharpe: -0.35 | Trades: 159 | W/L: 91/68
+
+[Trial #2] TP=4.00%, SL=3.75%, Bars=12 | seq=96, hidden=128, layers=3, heads=4, drop=0.18, lr=0.00010, batch=64, epochs=30, class_w=2.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #3] TP=1.75%, SL=0.75%, Bars=8 | seq=96, hidden=256, layers=2, heads=2, drop=0.27, lr=0.00011, batch=256, epochs=18, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 2553.8% | WorstFold: -1.6% | Sharpe: 5.51 | MaxDD: -2.8% | Trades: 39 | W/L: 23/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 21.2% | Sharpe: 0.98 | Trades: 90 | W/L: 43/47
+  ** SHORT MODEL SAVED: models_short/trial_3.pth **
+
+[Trial #4] TP=3.75%, SL=1.25%, Bars=12 | seq=48, hidden=256, layers=2, heads=4, drop=0.14, lr=0.00022, batch=256, epochs=10, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 31.7% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 1 | W/L: 1/0
+  REJECTED: Only 1 trades (need 30+)
+
+[Trial #5] TP=2.00%, SL=1.25%, Bars=16 | seq=64, hidden=64, layers=1, heads=2, drop=0.21, lr=0.00220, batch=256, epochs=35, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 835.3% | WorstFold: -1.7% | Sharpe: 7.33 | MaxDD: -3.4% | Trades: 38 | W/L: 25/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 149.9% | Sharpe: 6.03 | Trades: 34 | W/L: 22/12
+  ** SHORT MODEL SAVED: models_short/trial_5.pth **
+
+============================================================
+============================================================
+OPTUNA BAYESIAN SEARCH FOR SHORT ONLY MODEL (DYNAMIC TP/SL)
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Could not read existing file: name 'np' is not defined. Fetching 365 days.
+Successfully saved 35056 candles to data_storage\BTC_USDT_15m.csv
+Generating base multi-timeframe features...
+Loading data from data_storage\BTC_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.5%, SL=0.75%, MaxBars=16, mode=short)...
+Normalizing features (train-only statistics)...
+Saved 34271 samples to data_storage\BTC_USDT_15m_short_processed.csv
+Target distribution: {0: 31322, 1: 2949} (8.6% positive)
+
+Data size -> Train: 23989 | Val: 5141 | Test: 5141
+Device: cuda
+
+============================================================
+COMMENCING BAYESIAN SEARCH (DYNAMIC TARGETING)
+============================================================
+
+
+[Trial #0] TP=1.75%, SL=4.00%, Bars=8 | seq=128, hidden=64, layers=1, heads=4, drop=0.22, lr=0.00080, batch=256, epochs=21, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 2274.3% | WorstFold: -20.5% | Sharpe: 5.16 | MaxDD: -1.5% | Trades: 38 | W/L: 20/18
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 60.6% | Sharpe: 3.29 | Trades: 48 | W/L: 28/20
+  ** SHORT MODEL SAVED: models_short/trial_0.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 60.6% | Sharpe: 3.29 | TP=1.75% | SL=4.00%
+============================================================
+
+[Trial #1] TP=1.00%, SL=2.25%, Bars=16 | seq=48, hidden=64, layers=2, heads=4, drop=0.37, lr=0.00029, batch=128, epochs=35, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: -18.1% | WorstFold: -56.8% | Sharpe: -1.24 | MaxDD: -7.4% | Trades: 97 | W/L: 55/42
+  REJECTED: Max Drawdown of -7.4% exceeded -7.0% limit
+
+[Trial #2] TP=4.00%, SL=3.75%, Bars=12 | seq=96, hidden=128, layers=3, heads=4, drop=0.18, lr=0.00010, batch=64, epochs=30, class_w=2.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 15.9% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 1 | W/L: 1/0
+  REJECTED: Only 1 trades (need 30+)
+
+[Trial #3] TP=1.75%, SL=0.75%, Bars=8 | seq=96, hidden=256, layers=2, heads=2, drop=0.27, lr=0.00011, batch=256, epochs=18, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 168.1% | WorstFold: -29.4% | Sharpe: -4.89 | MaxDD: -2.8% | Trades: 26 | W/L: 14/12
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #4] TP=3.75%, SL=1.25%, Bars=12 | seq=48, hidden=256, layers=2, heads=4, drop=0.14, lr=0.00022, batch=256, epochs=10, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #5] TP=2.00%, SL=1.25%, Bars=16 | seq=64, hidden=64, layers=1, heads=2, drop=0.21, lr=0.00220, batch=256, epochs=35, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 2087.7% | WorstFold: 16.0% | Sharpe: 6.99 | MaxDD: -3.1% | Trades: 40 | W/L: 27/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 53.0% | Sharpe: 2.30 | Trades: 42 | W/L: 23/19
+  ** SHORT MODEL SAVED: models_short/trial_5.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 53.0% | Sharpe: 2.30 | TP=2.00% | SL=1.25%
+============================================================
+
+[Trial #6] TP=3.00%, SL=3.25%, Bars=12 | seq=64, hidden=256, layers=1, heads=8, drop=0.17, lr=0.00105, batch=128, epochs=18, class_w=2.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 26.4% | WorstFold: 0.0% | Sharpe: 1.57 | MaxDD: -0.6% | Trades: 2 | W/L: 1/1
+  REJECTED: Only 2 trades (need 30+)
+
+[Trial #7] TP=3.75%, SL=3.75%, Bars=16 | seq=96, hidden=256, layers=3, heads=2, drop=0.13, lr=0.00017, batch=64, epochs=12, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #8] TP=0.50%, SL=1.00%, Bars=32 | seq=128, hidden=64, layers=2, heads=8, drop=0.26, lr=0.00208, batch=128, epochs=24, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: -43.3% | WorstFold: -77.6% | Sharpe: -4.09 | MaxDD: -6.5% | Trades: 105 | W/L: 68/37
+
+[Trial #9] TP=1.00%, SL=3.00%, Bars=32 | seq=32, hidden=128, layers=3, heads=8, drop=0.23, lr=0.00018, batch=128, epochs=24, class_w=2.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: -25.3% | WorstFold: -82.2% | Sharpe: -2.84 | MaxDD: -8.3% | Trades: 47 | W/L: 26/21
+  REJECTED: Max Drawdown of -8.3% exceeded -7.0% limit
+
+[Trial #10] TP=2.75%, SL=4.00%, Bars=16 | seq=128, hidden=128, layers=2, heads=2, drop=0.42, lr=0.00206, batch=128, epochs=25, class_w=2.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+
+[Trial #11] TP=2.00%, SL=2.50%, Bars=32 | seq=96, hidden=64, layers=2, heads=8, drop=0.49, lr=0.00058, batch=128, epochs=21, class_w=2.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 205.1% | WorstFold: 11.7% | Sharpe: 2.51 | MaxDD: -5.2% | Trades: 24 | W/L: 16/8
+  REJECTED: Only 24 trades (need 30+)
+
+[Trial #12] TP=0.50%, SL=4.00%, Bars=8 | seq=64, hidden=64, layers=2, heads=2, drop=0.40, lr=0.00011, batch=64, epochs=32, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: -92.4% | WorstFold: -98.2% | Sharpe: -11.99 | MaxDD: -13.9% | Trades: 289 | W/L: 151/138
+  REJECTED: Max Drawdown of -13.9% exceeded -7.0% limit
+
+[Trial #13] TP=2.25%, SL=0.75%, Bars=8 | seq=48, hidden=128, layers=1, heads=4, drop=0.33, lr=0.00245, batch=256, epochs=21, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+
+[Trial #14] TP=4.00%, SL=1.75%, Bars=8 | seq=64, hidden=64, layers=1, heads=4, drop=0.45, lr=0.00122, batch=64, epochs=29, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+
+[Trial #15] TP=1.50%, SL=1.50%, Bars=24 | seq=128, hidden=64, layers=1, heads=2, drop=0.22, lr=0.00064, batch=256, epochs=14, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 107.6% | WorstFold: 63.0% | Sharpe: 13.58 | MaxDD: -3.1% | Trades: 26 | W/L: 17/9
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #16] TP=2.50%, SL=1.75%, Bars=24 | seq=32, hidden=64, layers=1, heads=2, drop=0.10, lr=0.00119, batch=256, epochs=17, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 174.2% | WorstFold: 3.7% | Sharpe: 5.08 | MaxDD: -2.5% | Trades: 19 | W/L: 13/6
+  REJECTED: Only 19 trades (need 30+)
+
+[Trial #17] TP=1.50%, SL=2.75%, Bars=16 | seq=64, hidden=64, layers=1, heads=4, drop=0.31, lr=0.00082, batch=256, epochs=27, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 842.9% | WorstFold: 67.9% | Sharpe: 8.76 | MaxDD: -7.3% | Trades: 43 | W/L: 30/13
+  REJECTED: Max Drawdown of -7.3% exceeded -7.0% limit
+
+[Trial #18] TP=3.25%, SL=0.50%, Bars=16 | seq=128, hidden=64, layers=1, heads=4, drop=0.22, lr=0.00038, batch=256, epochs=35, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+
+[Trial #19] TP=1.25%, SL=2.00%, Bars=8 | seq=64, hidden=64, layers=1, heads=2, drop=0.28, lr=0.00288, batch=256, epochs=27, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 139.4% | WorstFold: 1.3% | Sharpe: 3.40 | MaxDD: -10.0% | Trades: 88 | W/L: 47/41
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #20] TP=2.00%, SL=3.50%, Bars=24 | seq=128, hidden=64, layers=1, heads=2, drop=0.19, lr=0.00150, batch=256, epochs=32, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 75.5% | WorstFold: 3.8% | Sharpe: 10.70 | MaxDD: -2.9% | Trades: 12 | W/L: 8/4
+  REJECTED: Only 12 trades (need 30+)
+
+[Trial #21] TP=0.50%, SL=1.25%, Bars=32 | seq=128, hidden=64, layers=3, heads=8, drop=0.25, lr=0.00166, batch=128, epochs=22, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: -69.8% | WorstFold: -93.3% | Sharpe: -7.56 | MaxDD: -9.4% | Trades: 102 | W/L: 59/43
+  REJECTED: Max Drawdown of -9.4% exceeded -7.0% limit
+
+[Trial #22] TP=0.75%, SL=1.00%, Bars=32 | seq=128, hidden=64, layers=2, heads=8, drop=0.31, lr=0.00176, batch=256, epochs=15, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: -58.1% | WorstFold: -83.7% | Sharpe: -4.55 | MaxDD: -6.5% | Trades: 76 | W/L: 43/33
+
+[Trial #23] TP=2.25%, SL=0.50%, Bars=32 | seq=128, hidden=64, layers=1, heads=8, drop=0.25, lr=0.00084, batch=128, epochs=24, class_w=4.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 466.3% | WorstFold: -8.5% | Sharpe: 9.33 | MaxDD: -0.7% | Trades: 15 | W/L: 11/4
+  REJECTED: Only 15 trades (need 30+)
+
+[Trial #24] TP=1.75%, SL=1.25%, Bars=32 | seq=128, hidden=64, layers=1, heads=8, drop=0.34, lr=0.00232, batch=256, epochs=19, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 164.0% | WorstFold: -30.1% | Sharpe: 5.71 | MaxDD: -2.2% | Trades: 19 | W/L: 12/7
+  REJECTED: Only 19 trades (need 30+)
+
+[Trial #25] TP=1.25%, SL=2.00%, Bars=8 | seq=32, hidden=64, layers=2, heads=8, drop=0.23, lr=0.00037, batch=128, epochs=26, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 347.2% | WorstFold: 32.0% | Sharpe: 8.15 | MaxDD: -9.5% | Trades: 74 | W/L: 45/29
+  REJECTED: Max Drawdown of -9.5% exceeded -7.0% limit
+
+[Trial #26] TP=2.50%, SL=1.00%, Bars=16 | seq=64, hidden=64, layers=1, heads=4, drop=0.20, lr=0.00299, batch=256, epochs=29, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 203.2% | WorstFold: 0.0% | Sharpe: 5.63 | MaxDD: -5.9% | Trades: 24 | W/L: 13/11
+  REJECTED: Only 24 trades (need 30+)
+
+[Trial #27] TP=3.25%, SL=2.50%, Bars=16 | seq=128, hidden=64, layers=3, heads=8, drop=0.15, lr=0.00078, batch=256, epochs=20, class_w=4.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+
+[Trial #28] TP=1.75%, SL=1.50%, Bars=8 | seq=128, hidden=128, layers=2, heads=2, drop=0.10, lr=0.00146, batch=64, epochs=33, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+
+[Trial #29] TP=1.00%, SL=2.25%, Bars=32 | seq=48, hidden=256, layers=2, heads=4, drop=0.36, lr=0.00046, batch=128, epochs=15, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: -32.2% | WorstFold: -62.1% | Sharpe: -2.24 | MaxDD: -5.0% | Trades: 70 | W/L: 38/32
+
+[Trial #30] TP=1.00%, SL=2.25%, Bars=16 | seq=48, hidden=256, layers=1, heads=4, drop=0.37, lr=0.00028, batch=128, epochs=15, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 267.5% | WorstFold: 29.4% | Sharpe: 3.24 | MaxDD: -7.1% | Trades: 86 | W/L: 54/32
+  REJECTED: Max Drawdown of -7.1% exceeded -7.0% limit
+
+[Trial #31] TP=0.75%, SL=3.00%, Bars=32 | seq=48, hidden=256, layers=2, heads=4, drop=0.29, lr=0.00045, batch=128, epochs=12, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 116.1% | WorstFold: -83.8% | Sharpe: -2.03 | MaxDD: -7.4% | Trades: 84 | W/L: 50/34
+  REJECTED: Max Drawdown of -7.4% exceeded -7.0% limit
+
+[Trial #32] TP=0.75%, SL=1.00%, Bars=32 | seq=48, hidden=256, layers=2, heads=4, drop=0.36, lr=0.00047, batch=128, epochs=35, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: -25.6% | WorstFold: -39.6% | Sharpe: -1.71 | MaxDD: -5.3% | Trades: 67 | W/L: 38/29
+
+[Trial #33] TP=1.25%, SL=0.75%, Bars=32 | seq=48, hidden=256, layers=2, heads=4, drop=0.38, lr=0.00047, batch=128, epochs=33, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: -1.1% | WorstFold: -36.8% | Sharpe: -0.05 | MaxDD: -3.7% | Trades: 40 | W/L: 18/22
+
+[Trial #34] TP=1.50%, SL=0.75%, Bars=12 | seq=48, hidden=256, layers=3, heads=4, drop=0.38, lr=0.00027, batch=128, epochs=35, class_w=4.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 64.8% | WorstFold: -23.3% | Sharpe: 3.48 | MaxDD: -5.6% | Trades: 50 | W/L: 21/29
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 70.3% | Sharpe: 2.70 | Trades: 69 | W/L: 35/34
+  ** SHORT MODEL SAVED: models_short/trial_34.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 70.3% | Sharpe: 2.70 | TP=1.50% | SL=0.75%
+============================================================
+
+[Trial #35] TP=1.50%, SL=0.75%, Bars=12 | seq=48, hidden=256, layers=3, heads=4, drop=0.41, lr=0.00026, batch=128, epochs=33, class_w=4.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 56.2% | WorstFold: 25.1% | Sharpe: 4.42 | MaxDD: -3.1% | Trades: 48 | W/L: 22/26
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 148.8% | Sharpe: 5.27 | Trades: 62 | W/L: 36/26
+  ** SHORT MODEL SAVED: models_short/trial_35.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 148.8% | Sharpe: 5.27 | TP=1.50% | SL=0.75%
+============================================================
+
+[Trial #36] TP=2.00%, SL=0.50%, Bars=12 | seq=48, hidden=256, layers=3, heads=4, drop=0.41, lr=0.00028, batch=256, epochs=31, class_w=4.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+
+[Trial #37] TP=1.50%, SL=0.75%, Bars=12 | seq=48, hidden=256, layers=3, heads=4, drop=0.45, lr=0.00015, batch=64, epochs=33, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 471.3% | WorstFold: 83.4% | Sharpe: 8.02 | MaxDD: -2.8% | Trades: 50 | W/L: 30/20
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 61.4% | Sharpe: 2.79 | Trades: 51 | W/L: 27/24
+  ** SHORT MODEL SAVED: models_short/trial_37.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 61.4% | Sharpe: 2.79 | TP=1.50% | SL=0.75%
+============================================================
+
+[Trial #38] TP=1.75%, SL=1.50%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.46, lr=0.00013, batch=64, epochs=35, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 525.3% | WorstFold: 46.9% | Sharpe: 6.37 | MaxDD: -3.4% | Trades: 36 | W/L: 25/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 89.8% | Sharpe: 4.19 | Trades: 28 | W/L: 19/9
+  ** SHORT MODEL SAVED: models_short/trial_38.pth **
+
+[Trial #39] TP=1.75%, SL=1.50%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.47, lr=0.00014, batch=64, epochs=30, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 1161.4% | WorstFold: -7.5% | Sharpe: 8.10 | MaxDD: -3.4% | Trades: 31 | W/L: 22/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 53.3% | Sharpe: 3.09 | Trades: 22 | W/L: 12/10
+  ** SHORT MODEL SAVED: models_short/trial_39.pth **
+
+[Trial #40] TP=2.50%, SL=1.50%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.50, lr=0.00014, batch=64, epochs=30, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+
+[Trial #41] TP=1.75%, SL=1.75%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.45, lr=0.00014, batch=64, epochs=34, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 2306.0% | WorstFold: -33.0% | Sharpe: 7.85 | MaxDD: -4.3% | Trades: 40 | W/L: 27/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 2.2% | Sharpe: 0.21 | Trades: 27 | W/L: 14/13
+  ** SHORT MODEL SAVED: models_short/trial_41.pth **
+
+[Trial #42] TP=2.00%, SL=1.75%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.47, lr=0.00021, batch=64, epochs=35, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 6560.1% | WorstFold: -24.7% | Sharpe: 10.33 | MaxDD: -1.3% | Trades: 26 | W/L: 18/8
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #43] TP=1.75%, SL=2.00%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.44, lr=0.00014, batch=64, epochs=34, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 2226.7% | WorstFold: 11.8% | Sharpe: 11.87 | MaxDD: -2.2% | Trades: 36 | W/L: 26/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -37.3% | Sharpe: -2.18 | Trades: 44 | W/L: 19/25
+
+[Trial #44] TP=1.75%, SL=2.00%, Bars=12 | seq=96, hidden=128, layers=3, heads=4, drop=0.48, lr=0.00018, batch=64, epochs=31, class_w=4.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 2056.8% | WorstFold: -10.3% | Sharpe: 9.78 | MaxDD: -2.0% | Trades: 34 | W/L: 23/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 41.6% | Sharpe: 2.82 | Trades: 16 | W/L: 9/7
+  ** SHORT MODEL SAVED: models_short/trial_44.pth **
+
+[Trial #45] TP=2.25%, SL=2.00%, Bars=12 | seq=96, hidden=128, layers=3, heads=2, drop=0.43, lr=0.00019, batch=64, epochs=34, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+
+[Trial #46] TP=2.00%, SL=2.50%, Bars=12 | seq=96, hidden=128, layers=3, heads=4, drop=0.44, lr=0.00012, batch=64, epochs=31, class_w=2.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+
+[Trial #47] TP=2.75%, SL=2.00%, Bars=12 | seq=96, hidden=128, layers=3, heads=2, drop=0.48, lr=0.00016, batch=64, epochs=28, class_w=2.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+
+[Trial #48] TP=1.75%, SL=1.75%, Bars=8 | seq=96, hidden=128, layers=3, heads=4, drop=0.39, lr=0.00010, batch=64, epochs=32, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+
+[Trial #49] TP=2.25%, SL=2.75%, Bars=24 | seq=96, hidden=128, layers=3, heads=4, drop=0.43, lr=0.00022, batch=64, epochs=23, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 1386.2% | WorstFold: 0.0% | Sharpe: 9.45 | MaxDD: -2.0% | Trades: 24 | W/L: 17/7
+  REJECTED: Only 24 trades (need 30+)
+
+[Trial #50] TP=1.25%, SL=2.50%, Bars=16 | seq=64, hidden=128, layers=1, heads=2, drop=0.17, lr=0.00032, batch=64, epochs=34, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 764.2% | WorstFold: 25.3% | Sharpe: 6.82 | MaxDD: -5.9% | Trades: 50 | W/L: 36/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 154.1% | Sharpe: 3.82 | Trades: 81 | W/L: 50/31
+  ** SHORT MODEL SAVED: models_short/trial_50.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 154.1% | Sharpe: 3.82 | TP=1.25% | SL=2.50%
+============================================================
+
+[Trial #51] TP=2.00%, SL=1.75%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.47, lr=0.00012, batch=64, epochs=30, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 7450.6% | WorstFold: 7.4% | Sharpe: 9.30 | MaxDD: -0.5% | Trades: 26 | W/L: 17/9
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #52] TP=1.75%, SL=3.75%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.50, lr=0.00016, batch=64, epochs=31, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 4910.4% | WorstFold: -14.4% | Sharpe: 10.12 | MaxDD: -0.9% | Trades: 30 | W/L: 22/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 45.9% | Sharpe: 2.33 | Trades: 38 | W/L: 19/19
+  ** SHORT MODEL SAVED: models_short/trial_52.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 45.9% | Sharpe: 2.33 | TP=1.75% | SL=3.75%
+============================================================
+
+[Trial #53] TP=1.50%, SL=3.75%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.49, lr=0.00016, batch=64, epochs=31, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 2807.9% | WorstFold: 57.8% | Sharpe: 75.90 | MaxDD: -4.0% | Trades: 30 | W/L: 27/3
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 131.7% | Sharpe: 4.57 | Trades: 38 | W/L: 25/13
+  ** SHORT MODEL SAVED: models_short/trial_53.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 131.7% | Sharpe: 4.57 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #54] TP=1.50%, SL=3.75%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.50, lr=0.00016, batch=64, epochs=31, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 433.5% | WorstFold: 37.7% | Sharpe: 9.21 | MaxDD: -9.7% | Trades: 40 | W/L: 25/15
+  REJECTED: Max Drawdown of -9.7% exceeded -7.0% limit
+
+[Trial #55] TP=1.75%, SL=3.25%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.45, lr=0.00023, batch=64, epochs=34, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 996.2% | WorstFold: 33.4% | Sharpe: 4.41 | MaxDD: -9.8% | Trades: 44 | W/L: 29/15
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #56] TP=2.00%, SL=3.75%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.46, lr=0.00012, batch=64, epochs=32, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 243.8% | WorstFold: 6.6% | Sharpe: 7.35 | MaxDD: -1.2% | Trades: 16 | W/L: 10/6
+  REJECTED: Only 16 trades (need 30+)
+
+[Trial #57] TP=1.25%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.50, lr=0.00020, batch=64, epochs=29, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 9500.8% | WorstFold: -19.6% | Sharpe: 8.84 | MaxDD: -2.5% | Trades: 61 | W/L: 41/20
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 238.3% | Sharpe: 5.47 | Trades: 94 | W/L: 55/39
+  ** SHORT MODEL SAVED: models_short/trial_57.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 238.3% | Sharpe: 5.47 | TP=1.25% | SL=3.25%
+============================================================
+
+[Trial #58] TP=1.25%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=4, drop=0.49, lr=0.00020, batch=64, epochs=28, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2131.9% | WorstFold: -0.8% | Sharpe: 8.31 | MaxDD: -2.8% | Trades: 54 | W/L: 33/21
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 301.2% | Sharpe: 5.94 | Trades: 109 | W/L: 70/39
+  ** SHORT MODEL SAVED: models_short/trial_58.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 301.2% | Sharpe: 5.94 | TP=1.25% | SL=3.50%
+============================================================
+
+[Trial #59] TP=1.50%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.50, lr=0.00016, batch=64, epochs=29, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 9495.6% | WorstFold: 32.0% | Sharpe: 11.95 | MaxDD: -1.1% | Trades: 40 | W/L: 30/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 212.9% | Sharpe: 4.36 | Trades: 88 | W/L: 51/37
+  ** SHORT MODEL SAVED: models_short/trial_59.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 212.9% | Sharpe: 4.36 | TP=1.50% | SL=4.00%
+============================================================
+
+[Trial #60] TP=1.00%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.44, lr=0.00016, batch=64, epochs=29, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 699.4% | WorstFold: 115.6% | Sharpe: 9.21 | MaxDD: -4.9% | Trades: 77 | W/L: 53/24
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 546.4% | Sharpe: 7.39 | Trades: 130 | W/L: 90/40
+  ** SHORT MODEL SAVED: models_short/trial_60.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 546.4% | Sharpe: 7.39 | TP=1.00% | SL=4.00%
+============================================================
+
+[Trial #61] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00018, batch=64, epochs=28, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 10844.6% | WorstFold: -2.7% | Sharpe: 30.61 | MaxDD: -3.2% | Trades: 38 | W/L: 30/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 84.2% | Sharpe: 4.12 | Trades: 37 | W/L: 22/15
+  ** SHORT MODEL SAVED: models_short/trial_61.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 84.2% | Sharpe: 4.12 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #62] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.50, lr=0.00016, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2686.2% | WorstFold: 10.5% | Sharpe: 11.31 | MaxDD: -3.1% | Trades: 38 | W/L: 26/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 233.8% | Sharpe: 6.14 | Trades: 48 | W/L: 32/16
+  ** SHORT MODEL SAVED: models_short/trial_62.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 233.8% | Sharpe: 6.14 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #63] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.50, lr=0.00024, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3939.5% | WorstFold: -7.3% | Sharpe: 11.51 | MaxDD: -1.8% | Trades: 37 | W/L: 29/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 153.5% | Sharpe: 4.16 | Trades: 71 | W/L: 41/30
+  ** SHORT MODEL SAVED: models_short/trial_63.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 153.5% | Sharpe: 4.16 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #64] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.50, lr=0.00024, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3399.0% | WorstFold: 40.3% | Sharpe: 8.85 | MaxDD: -5.7% | Trades: 42 | W/L: 28/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 159.4% | Sharpe: 4.54 | Trades: 57 | W/L: 35/22
+  ** SHORT MODEL SAVED: models_short/trial_64.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 159.4% | Sharpe: 4.54 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #65] TP=1.25%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00025, batch=64, epochs=25, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4346.1% | WorstFold: 58.4% | Sharpe: 15.22 | MaxDD: -7.6% | Trades: 59 | W/L: 43/16
+  REJECTED: Max Drawdown of -7.6% exceeded -7.0% limit
+
+[Trial #66] TP=1.00%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.50, lr=0.00032, batch=64, epochs=27, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1023.5% | WorstFold: 113.5% | Sharpe: 9.40 | MaxDD: -5.3% | Trades: 80 | W/L: 56/24
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 758.4% | Sharpe: 8.27 | Trades: 146 | W/L: 101/45
+  ** SHORT MODEL SAVED: models_short/trial_66.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 758.4% | Sharpe: 8.27 | TP=1.00% | SL=3.25%
+============================================================
+
+[Trial #67] TP=1.50%, SL=4.00%, Bars=24 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00024, batch=64, epochs=28, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1517.7% | WorstFold: 74.5% | Sharpe: 10.89 | MaxDD: -3.7% | Trades: 35 | W/L: 26/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 224.3% | Sharpe: 6.56 | Trades: 40 | W/L: 29/11
+  ** SHORT MODEL SAVED: models_short/trial_67.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 224.3% | Sharpe: 6.56 | TP=1.50% | SL=4.00%
+============================================================
+
+[Trial #68] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.47, lr=0.00019, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 9733.7% | WorstFold: -29.3% | Sharpe: 9.44 | MaxDD: -3.5% | Trades: 50 | W/L: 35/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 95.3% | Sharpe: 3.08 | Trades: 77 | W/L: 40/37
+  ** SHORT MODEL SAVED: models_short/trial_68.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 95.3% | Sharpe: 3.08 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #69] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.47, lr=0.00020, batch=64, epochs=29, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3931.0% | WorstFold: 75.8% | Sharpe: 18.17 | MaxDD: -4.5% | Trades: 54 | W/L: 39/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 121.4% | Sharpe: 3.46 | Trades: 78 | W/L: 47/31
+  ** SHORT MODEL SAVED: models_short/trial_69.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 121.4% | Sharpe: 3.46 | TP=1.25% | SL=3.75%
+============================================================
+
+[Trial #70] TP=1.25%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00019, batch=64, epochs=29, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4953.5% | WorstFold: 9.0% | Sharpe: 10.80 | MaxDD: -6.4% | Trades: 57 | W/L: 41/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 366.7% | Sharpe: 9.24 | Trades: 62 | W/L: 43/19
+  ** SHORT MODEL SAVED: models_short/trial_70.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 366.7% | Sharpe: 9.24 | TP=1.25% | SL=4.00%
+============================================================
+
+[Trial #71] TP=1.25%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00020, batch=64, epochs=29, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5818.1% | WorstFold: 43.6% | Sharpe: 10.94 | MaxDD: -2.1% | Trades: 58 | W/L: 39/19
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 392.7% | Sharpe: 6.53 | Trades: 112 | W/L: 70/42
+  ** SHORT MODEL SAVED: models_short/trial_71.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 392.7% | Sharpe: 6.53 | TP=1.25% | SL=4.00%
+============================================================
+
+[Trial #72] TP=0.75%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.42, lr=0.00019, batch=64, epochs=29, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 672.1% | WorstFold: 15.8% | Sharpe: 7.08 | MaxDD: -3.1% | Trades: 124 | W/L: 80/44
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 78.6% | Sharpe: 2.03 | Trades: 243 | W/L: 152/91
+  ** SHORT MODEL SAVED: models_short/trial_72.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 78.6% | Sharpe: 2.03 | TP=0.75% | SL=4.00%
+============================================================
+
+[Trial #73] TP=1.25%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00021, batch=64, epochs=28, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1378.2% | WorstFold: -15.5% | Sharpe: 6.62 | MaxDD: -6.9% | Trades: 61 | W/L: 36/25
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 673.7% | Sharpe: 9.55 | Trades: 91 | W/L: 63/28
+  ** SHORT MODEL SAVED: models_short/trial_73.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 673.7% | Sharpe: 9.55 | TP=1.25% | SL=4.00%
+============================================================
+
+[Trial #74] TP=1.00%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.47, lr=0.00018, batch=64, epochs=29, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1962.4% | WorstFold: 27.6% | Sharpe: 11.76 | MaxDD: -2.4% | Trades: 75 | W/L: 51/24
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 382.7% | Sharpe: 7.02 | Trades: 100 | W/L: 71/29
+  ** SHORT MODEL SAVED: models_short/trial_74.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 382.7% | Sharpe: 7.02 | TP=1.00% | SL=3.25%
+============================================================
+
+[Trial #75] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.45, lr=0.00032, batch=64, epochs=27, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3570.3% | WorstFold: -10.0% | Sharpe: 10.57 | MaxDD: -4.6% | Trades: 63 | W/L: 42/21
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 403.0% | Sharpe: 16.77 | Trades: 37 | W/L: 31/6
+  ** SHORT MODEL SAVED: models_short/trial_75.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 403.0% | Sharpe: 16.77 | TP=1.25% | SL=3.75%
+============================================================
+
+[Trial #76] TP=1.25%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00011, batch=64, epochs=25, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3936.8% | WorstFold: 70.0% | Sharpe: 15.28 | MaxDD: -3.6% | Trades: 54 | W/L: 40/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 536.9% | Sharpe: 8.26 | Trades: 95 | W/L: 64/31
+  ** SHORT MODEL SAVED: models_short/trial_76.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 536.9% | Sharpe: 8.26 | TP=1.25% | SL=4.00%
+============================================================
+
+[Trial #77] TP=1.00%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00018, batch=64, epochs=30, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2342.1% | WorstFold: 3.9% | Sharpe: 11.28 | MaxDD: -3.3% | Trades: 69 | W/L: 49/20
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 87.8% | Sharpe: 2.31 | Trades: 149 | W/L: 89/60
+  ** SHORT MODEL SAVED: models_short/trial_77.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 87.8% | Sharpe: 2.31 | TP=1.00% | SL=3.50%
+============================================================
+
+[Trial #78] TP=0.75%, SL=3.75%, Bars=24 | seq=32, hidden=256, layers=3, heads=2, drop=0.42, lr=0.00013, batch=64, epochs=27, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 18.1% | WorstFold: -54.5% | Sharpe: -1.39 | MaxDD: -7.5% | Trades: 92 | W/L: 55/37
+  REJECTED: Max Drawdown of -7.5% exceeded -7.0% limit
+
+[Trial #79] TP=1.00%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00022, batch=64, epochs=28, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4055.5% | WorstFold: 31.5% | Sharpe: 18.28 | MaxDD: -2.2% | Trades: 63 | W/L: 45/18
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 153.7% | Sharpe: 3.34 | Trades: 182 | W/L: 109/73
+  ** SHORT MODEL SAVED: models_short/trial_79.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 153.7% | Sharpe: 3.34 | TP=1.00% | SL=4.00%
+============================================================
+
+[Trial #80] TP=1.00%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.45, lr=0.00022, batch=64, epochs=28, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 243.7% | WorstFold: 39.5% | Sharpe: 7.03 | MaxDD: -6.4% | Trades: 84 | W/L: 54/30
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 473.5% | Sharpe: 6.38 | Trades: 155 | W/L: 107/48
+  ** SHORT MODEL SAVED: models_short/trial_80.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 473.5% | Sharpe: 6.38 | TP=1.00% | SL=3.75%
+============================================================
+
+[Trial #81] TP=1.25%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00019, batch=64, epochs=29, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1534.4% | WorstFold: 31.7% | Sharpe: 11.96 | MaxDD: -4.3% | Trades: 63 | W/L: 42/21
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 582.9% | Sharpe: 10.04 | Trades: 90 | W/L: 63/27
+  ** SHORT MODEL SAVED: models_short/trial_81.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 582.9% | Sharpe: 10.04 | TP=1.25% | SL=4.00%
+============================================================
+
+[Trial #82] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00030, batch=64, epochs=30, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 96.6% | WorstFold: 13.5% | Sharpe: 30.58 | MaxDD: -10.1% | Trades: 43 | W/L: 28/15
+  REJECTED: Max Drawdown of -10.1% exceeded -7.0% limit
+
+[Trial #83] TP=1.00%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00015, batch=64, epochs=28, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 262.8% | WorstFold: 27.7% | Sharpe: 6.27 | MaxDD: -7.2% | Trades: 74 | W/L: 48/26
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #84] TP=0.75%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00018, batch=64, epochs=29, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 15.8% | WorstFold: -16.1% | Sharpe: 1.31 | MaxDD: -9.4% | Trades: 126 | W/L: 77/49
+  REJECTED: Max Drawdown of -9.4% exceeded -7.0% limit
+
+[Trial #85] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00020, batch=64, epochs=24, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 34779.2% | WorstFold: -15.9% | Sharpe: 10.90 | MaxDD: -1.5% | Trades: 39 | W/L: 28/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 106.2% | Sharpe: 3.21 | Trades: 76 | W/L: 48/28
+  ** SHORT MODEL SAVED: models_short/trial_85.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 106.2% | Sharpe: 3.21 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #86] TP=1.50%, SL=3.00%, Bars=8 | seq=32, hidden=256, layers=3, heads=2, drop=0.44, lr=0.00021, batch=64, epochs=25, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4445.3% | WorstFold: -35.3% | Sharpe: 10.95 | MaxDD: -2.0% | Trades: 46 | W/L: 33/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 11.8% | Sharpe: 0.62 | Trades: 64 | W/L: 32/32
+  ** SHORT MODEL SAVED: models_short/trial_86.pth **
+
+[Trial #87] TP=0.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.49, lr=0.00017, batch=64, epochs=23, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: -58.7% | WorstFold: -75.9% | Sharpe: -4.35 | MaxDD: -7.2% | Trades: 219 | W/L: 136/83
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #88] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.45, lr=0.00026, batch=64, epochs=27, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 13450.9% | WorstFold: -26.0% | Sharpe: 13.79 | MaxDD: -3.5% | Trades: 42 | W/L: 29/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 182.5% | Sharpe: 5.16 | Trades: 61 | W/L: 40/21
+  ** SHORT MODEL SAVED: models_short/trial_88.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 182.5% | Sharpe: 5.16 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #89] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.33, lr=0.00026, batch=64, epochs=24, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 29654.0% | WorstFold: 7.7% | Sharpe: 11.97 | MaxDD: -2.8% | Trades: 42 | W/L: 29/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 370.1% | Sharpe: 7.27 | Trades: 71 | W/L: 48/23
+  ** SHORT MODEL SAVED: models_short/trial_89.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 370.1% | Sharpe: 7.27 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #90] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.34, lr=0.00030, batch=64, epochs=22, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5632.3% | WorstFold: 98.1% | Sharpe: 22.62 | MaxDD: -3.5% | Trades: 42 | W/L: 32/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 168.2% | Sharpe: 4.11 | Trades: 76 | W/L: 48/28
+  ** SHORT MODEL SAVED: models_short/trial_90.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 168.2% | Sharpe: 4.11 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #91] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.33, lr=0.00026, batch=64, epochs=22, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 17320.3% | WorstFold: 31.1% | Sharpe: 692538819195759.25 | MaxDD: -1.5% | Trades: 36 | W/L: 27/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 201.4% | Sharpe: 5.86 | Trades: 41 | W/L: 29/12
+  ** SHORT MODEL SAVED: models_short/trial_91.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 201.4% | Sharpe: 5.86 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #92] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.33, lr=0.00040, batch=64, epochs=22, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2580.9% | WorstFold: 39.1% | Sharpe: 10.86 | MaxDD: -2.8% | Trades: 44 | W/L: 32/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 84.3% | Sharpe: 2.88 | Trades: 61 | W/L: 36/25
+  ** SHORT MODEL SAVED: models_short/trial_92.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 84.3% | Sharpe: 2.88 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #93] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.32, lr=0.00030, batch=64, epochs=24, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 957.8% | WorstFold: 6.8% | Sharpe: 7.96 | MaxDD: -6.8% | Trades: 40 | W/L: 27/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 128.1% | Sharpe: 4.13 | Trades: 46 | W/L: 32/14
+  ** SHORT MODEL SAVED: models_short/trial_93.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 128.1% | Sharpe: 4.13 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #94] TP=1.50%, SL=3.50%, Bars=12 | seq=64, hidden=256, layers=3, heads=8, drop=0.34, lr=0.00026, batch=64, epochs=20, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 2309.0% | WorstFold: -3.7% | Sharpe: 4.49 | MaxDD: -8.5% | Trades: 53 | W/L: 37/16
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #95] TP=1.75%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.32, lr=0.00036, batch=64, epochs=24, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4265.8% | WorstFold: 40.3% | Sharpe: 16.75 | MaxDD: -1.7% | Trades: 28 | W/L: 22/6
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #96] TP=1.50%, SL=3.00%, Bars=16 | seq=32, hidden=256, layers=3, heads=8, drop=0.30, lr=0.00056, batch=64, epochs=22, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 6382.4% | WorstFold: -46.6% | Sharpe: 7.26 | MaxDD: -5.1% | Trades: 39 | W/L: 30/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -29.1% | Sharpe: -1.50 | Trades: 34 | W/L: 17/17
+
+[Trial #97] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.35, lr=0.00028, batch=256, epochs=21, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 11609.7% | WorstFold: 28.2% | Sharpe: 14.72 | MaxDD: -1.7% | Trades: 41 | W/L: 29/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 63.5% | Sharpe: 2.49 | Trades: 33 | W/L: 18/15
+  ** SHORT MODEL SAVED: models_short/trial_97.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 63.5% | Sharpe: 2.49 | TP=1.75% | SL=3.50%
+============================================================
+
+[Trial #98] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.36, lr=0.00027, batch=256, epochs=21, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1213.9% | WorstFold: -20.2% | Sharpe: 1.89 | MaxDD: -7.3% | Trades: 63 | W/L: 37/26
+  REJECTED: Max Drawdown of -7.3% exceeded -7.0% limit
+
+[Trial #99] TP=2.00%, SL=3.50%, Bars=24 | seq=32, hidden=256, layers=2, heads=8, drop=0.34, lr=0.00034, batch=256, epochs=19, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 196.4% | WorstFold: -22.5% | Sharpe: 2.34 | MaxDD: -4.2% | Trades: 36 | W/L: 20/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 9.4% | Sharpe: 1.00 | Trades: 10 | W/L: 6/4
+  ** SHORT MODEL SAVED: models_short/trial_99.pth **
+
+[Trial #100] TP=1.75%, SL=3.75%, Bars=8 | seq=32, hidden=256, layers=3, heads=8, drop=0.28, lr=0.00041, batch=256, epochs=23, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #101] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.35, lr=0.00029, batch=256, epochs=20, class_w=4.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: -2.1% | WorstFold: -62.1% | Sharpe: 1.68 | MaxDD: -13.2% | Trades: 48 | W/L: 23/25
+  REJECTED: Max Drawdown of -13.2% exceeded -7.0% limit
+
+[Trial #102] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.32, lr=0.00025, batch=256, epochs=22, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1461.0% | WorstFold: 15.9% | Sharpe: 7.59 | MaxDD: -6.7% | Trades: 55 | W/L: 33/22
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 124.7% | Sharpe: 3.07 | Trades: 99 | W/L: 62/37
+  ** SHORT MODEL SAVED: models_short/trial_102.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 124.7% | Sharpe: 3.07 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #103] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.35, lr=0.00023, batch=64, epochs=24, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5230.8% | WorstFold: 11.1% | Sharpe: 9.55 | MaxDD: -4.0% | Trades: 42 | W/L: 29/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 215.8% | Sharpe: 6.58 | Trades: 39 | W/L: 27/12
+  ** SHORT MODEL SAVED: models_short/trial_103.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 215.8% | Sharpe: 6.58 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #104] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.31, lr=0.00067, batch=64, epochs=23, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: -0.0% | WorstFold: -0.0% | Sharpe: 0.06 | MaxDD: -7.9% | Trades: 14 | W/L: 8/6
+  REJECTED: Only 14 trades (need 30+)
+
+[Trial #105] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00017, batch=64, epochs=26, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1120.5% | WorstFold: -16.5% | Sharpe: 5.18 | MaxDD: -5.8% | Trades: 42 | W/L: 28/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 329.9% | Sharpe: 8.43 | Trades: 63 | W/L: 39/24
+  ** SHORT MODEL SAVED: models_short/trial_105.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 329.9% | Sharpe: 8.43 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #106] TP=1.50%, SL=3.00%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.30, lr=0.00015, batch=64, epochs=21, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 223.5% | WorstFold: -9.6% | Sharpe: 4.72 | MaxDD: -6.4% | Trades: 45 | W/L: 25/20
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 102.7% | Sharpe: 3.86 | Trades: 52 | W/L: 29/23
+  ** SHORT MODEL SAVED: models_short/trial_106.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 102.7% | Sharpe: 3.86 | TP=1.50% | SL=3.00%
+============================================================
+
+[Trial #107] TP=1.75%, SL=3.25%, Bars=32 | seq=32, hidden=256, layers=3, heads=8, drop=0.33, lr=0.00031, batch=64, epochs=25, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 160.9% | WorstFold: -41.1% | Sharpe: 14.81 | MaxDD: -4.4% | Trades: 28 | W/L: 17/11
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #108] TP=1.25%, SL=3.75%, Bars=12 | seq=128, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00027, batch=256, epochs=18, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 140.2% | WorstFold: 16.6% | Sharpe: 3.23 | MaxDD: -10.3% | Trades: 85 | W/L: 49/36
+  REJECTED: Max Drawdown of -10.3% exceeded -7.0% limit
+
+[Trial #109] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=64, layers=3, heads=2, drop=0.26, lr=0.00036, batch=64, epochs=24, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 669.9% | WorstFold: 8.4% | Sharpe: 8.72 | MaxDD: -8.7% | Trades: 35 | W/L: 25/10
+  REJECTED: Max Drawdown of -8.7% exceeded -7.0% limit
+
+[Trial #110] TP=1.50%, SL=3.25%, Bars=16 | seq=32, hidden=256, layers=3, heads=8, drop=0.48, lr=0.00023, batch=128, epochs=26, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 127.1% | WorstFold: 20.9% | Sharpe: 3.40 | MaxDD: -9.1% | Trades: 48 | W/L: 32/16
+  REJECTED: Max Drawdown of -9.1% exceeded -7.0% limit
+
+[Trial #111] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.49, lr=0.00020, batch=64, epochs=27, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5419.9% | WorstFold: 11.9% | Sharpe: 13.31 | MaxDD: -2.6% | Trades: 48 | W/L: 37/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 414.2% | Sharpe: 7.40 | Trades: 95 | W/L: 64/31
+  ** SHORT MODEL SAVED: models_short/trial_111.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 414.2% | Sharpe: 7.40 | TP=1.25% | SL=3.75%
+============================================================
+
+[Trial #112] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.49, lr=0.00026, batch=64, epochs=27, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 544.5% | WorstFold: 90.1% | Sharpe: 9.47 | MaxDD: -4.6% | Trades: 55 | W/L: 38/17
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 175.4% | Sharpe: 4.11 | Trades: 87 | W/L: 57/30
+  ** SHORT MODEL SAVED: models_short/trial_112.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 175.4% | Sharpe: 4.11 | TP=1.25% | SL=3.75%
+============================================================
+
+[Trial #113] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.49, lr=0.00024, batch=64, epochs=22, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2600.5% | WorstFold: 62.1% | Sharpe: 11.39 | MaxDD: -4.4% | Trades: 60 | W/L: 38/22
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 209.8% | Sharpe: 4.26 | Trades: 112 | W/L: 72/40
+  ** SHORT MODEL SAVED: models_short/trial_113.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 209.8% | Sharpe: 4.26 | TP=1.25% | SL=3.75%
+============================================================
+
+[Trial #114] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00021, batch=64, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 20628.4% | WorstFold: 13.7% | Sharpe: 15.40 | MaxDD: -1.4% | Trades: 40 | W/L: 30/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 83.2% | Sharpe: 2.44 | Trades: 70 | W/L: 43/27
+  ** SHORT MODEL SAVED: models_short/trial_114.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 83.2% | Sharpe: 2.44 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #115] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.47, lr=0.00013, batch=64, epochs=25, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5412.7% | WorstFold: 10.9% | Sharpe: 15.50 | MaxDD: -2.0% | Trades: 38 | W/L: 28/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 75.3% | Sharpe: 2.11 | Trades: 119 | W/L: 65/54
+  ** SHORT MODEL SAVED: models_short/trial_115.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 75.3% | Sharpe: 2.11 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #116] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.45, lr=0.00051, batch=64, epochs=23, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 34.3% | WorstFold: 0.0% | Sharpe: 0.70 | MaxDD: -5.6% | Trades: 20 | W/L: 12/8
+  REJECTED: Only 20 trades (need 30+)
+
+[Trial #117] TP=3.75%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.34, lr=0.00018, batch=64, epochs=21, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #118] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.33, lr=0.00022, batch=64, epochs=26, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 371.5% | WorstFold: -19.5% | Sharpe: 4.65 | MaxDD: -5.2% | Trades: 29 | W/L: 19/10
+  REJECTED: Only 29 trades (need 30+)
+
+[Trial #119] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.47, lr=0.00015, batch=64, epochs=10, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 147.6% | WorstFold: -3.1% | Sharpe: 1.28 | MaxDD: -8.6% | Trades: 36 | W/L: 21/15
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #120] TP=1.50%, SL=3.75%, Bars=12 | seq=128, hidden=256, layers=3, heads=8, drop=0.29, lr=0.00017, batch=64, epochs=25, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 254.0% | WorstFold: 120.5% | Sharpe: 21.51 | MaxDD: -13.7% | Trades: 42 | W/L: 31/11
+  REJECTED: Max Drawdown of -13.7% exceeded -7.0% limit
+
+[Trial #121] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00013, batch=64, epochs=24, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 10855.6% | WorstFold: -18.4% | Sharpe: 8.12 | MaxDD: -1.8% | Trades: 50 | W/L: 31/19
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 285.6% | Sharpe: 8.71 | Trades: 52 | W/L: 31/21
+  ** SHORT MODEL SAVED: models_short/trial_121.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 285.6% | Sharpe: 8.71 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #122] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00014, batch=64, epochs=24, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 778.1% | WorstFold: 74.8% | Sharpe: 8.87 | MaxDD: -10.0% | Trades: 50 | W/L: 32/18
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #123] TP=1.50%, SL=3.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00012, batch=64, epochs=23, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 6255.0% | WorstFold: 16.5% | Sharpe: 18.13 | MaxDD: -3.5% | Trades: 38 | W/L: 30/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 222.2% | Sharpe: 6.04 | Trades: 66 | W/L: 40/26
+  ** SHORT MODEL SAVED: models_short/trial_123.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 222.2% | Sharpe: 6.04 | TP=1.50% | SL=3.00%
+============================================================
+
+[Trial #124] TP=1.25%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.24, lr=0.00018, batch=64, epochs=22, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 360.9% | WorstFold: 12.2% | Sharpe: 6.20 | MaxDD: -6.4% | Trades: 59 | W/L: 38/21
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 490.5% | Sharpe: 6.68 | Trades: 103 | W/L: 67/36
+  ** SHORT MODEL SAVED: models_short/trial_124.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 490.5% | Sharpe: 6.68 | TP=1.25% | SL=3.25%
+============================================================
+
+[Trial #125] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=128, layers=3, heads=2, drop=0.44, lr=0.00021, batch=64, epochs=25, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1821.1% | WorstFold: -17.8% | Sharpe: 7.24 | MaxDD: -3.1% | Trades: 29 | W/L: 20/9
+  REJECTED: Only 29 trades (need 30+)
+
+[Trial #126] TP=1.25%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.31, lr=0.00025, batch=64, epochs=27, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5245.8% | WorstFold: 23.3% | Sharpe: 10.35 | MaxDD: -2.4% | Trades: 58 | W/L: 39/19
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 927.0% | Sharpe: 10.22 | Trades: 122 | W/L: 82/40
+  ** SHORT MODEL SAVED: models_short/trial_126.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 927.0% | Sharpe: 10.22 | TP=1.25% | SL=3.25%
+============================================================
+
+[Trial #127] TP=1.50%, SL=3.50%, Bars=24 | seq=48, hidden=256, layers=3, heads=2, drop=0.49, lr=0.00093, batch=64, epochs=20, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 8.2% | WorstFold: 0.0% | Sharpe: 0.46 | MaxDD: -1.9% | Trades: 6 | W/L: 4/2
+  REJECTED: Only 6 trades (need 30+)
+
+[Trial #128] TP=1.25%, SL=3.75%, Bars=8 | seq=32, hidden=256, layers=3, heads=2, drop=0.47, lr=0.00016, batch=256, epochs=24, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 212.9% | WorstFold: 0.7% | Sharpe: 3.43 | MaxDD: -7.6% | Trades: 106 | W/L: 59/47
+  REJECTED: Max Drawdown of -7.6% exceeded -7.0% limit
+
+[Trial #129] TP=2.00%, SL=3.50%, Bars=32 | seq=64, hidden=256, layers=3, heads=8, drop=0.43, lr=0.00027, batch=64, epochs=26, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 1687.1% | WorstFold: 47.0% | Sharpe: 13.53 | MaxDD: -3.3% | Trades: 20 | W/L: 16/4
+  REJECTED: Only 20 trades (need 30+)
+
+[Trial #130] TP=1.75%, SL=3.25%, Bars=12 | seq=32, hidden=64, layers=3, heads=2, drop=0.48, lr=0.00013, batch=64, epochs=30, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 776.1% | WorstFold: 0.0% | Sharpe: 3.88 | MaxDD: -2.6% | Trades: 23 | W/L: 15/8
+  REJECTED: Only 23 trades (need 30+)
+
+[Trial #131] TP=1.50%, SL=3.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00011, batch=64, epochs=23, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1740.6% | WorstFold: 34.6% | Sharpe: 8.61 | MaxDD: -6.3% | Trades: 45 | W/L: 31/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 652.2% | Sharpe: 8.39 | Trades: 94 | W/L: 61/33
+  ** SHORT MODEL SAVED: models_short/trial_131.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 652.2% | Sharpe: 8.39 | TP=1.50% | SL=3.00%
+============================================================
+
+[Trial #132] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.45, lr=0.00012, batch=64, epochs=23, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3544.2% | WorstFold: 40.3% | Sharpe: 25.34 | MaxDD: -0.4% | Trades: 22 | W/L: 20/2
+  REJECTED: Only 22 trades (need 30+)
+
+[Trial #133] TP=3.50%, SL=2.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00014, batch=64, epochs=24, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #134] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.50, lr=0.00011, batch=64, epochs=21, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2249.5% | WorstFold: 41.3% | Sharpe: 22.69 | MaxDD: -3.5% | Trades: 43 | W/L: 28/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 163.5% | Sharpe: 4.31 | Trades: 74 | W/L: 45/29
+  ** SHORT MODEL SAVED: models_short/trial_134.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 163.5% | Sharpe: 4.31 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #135] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00015, batch=64, epochs=23, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 15389.2% | WorstFold: 6.3% | Sharpe: 19.34 | MaxDD: -1.4% | Trades: 37 | W/L: 28/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 45.6% | Sharpe: 1.55 | Trades: 86 | W/L: 46/40
+  ** SHORT MODEL SAVED: models_short/trial_135.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 45.6% | Sharpe: 1.55 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #136] TP=1.75%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.49, lr=0.00019, batch=128, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 8688.6% | WorstFold: 55.1% | Sharpe: 1345.55 | MaxDD: -1.1% | Trades: 28 | W/L: 23/5
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #137] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.48, lr=0.00015, batch=64, epochs=21, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1092.5% | WorstFold: 48.8% | Sharpe: 9.90 | MaxDD: -3.1% | Trades: 36 | W/L: 22/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 120.6% | Sharpe: 4.58 | Trades: 57 | W/L: 29/28
+  ** SHORT MODEL SAVED: models_short/trial_137.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 120.6% | Sharpe: 4.58 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #138] TP=1.25%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.47, lr=0.00017, batch=64, epochs=28, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 998.0% | WorstFold: 2.4% | Sharpe: 4.98 | MaxDD: -6.5% | Trades: 64 | W/L: 38/26
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 307.7% | Sharpe: 6.37 | Trades: 99 | W/L: 63/36
+  ** SHORT MODEL SAVED: models_short/trial_138.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 307.7% | Sharpe: 6.37 | TP=1.25% | SL=3.50%
+============================================================
+
+[Trial #139] TP=1.25%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00021, batch=64, epochs=32, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2704.5% | WorstFold: 54.3% | Sharpe: 10.82 | MaxDD: -3.4% | Trades: 51 | W/L: 38/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 316.5% | Sharpe: 7.34 | Trades: 76 | W/L: 52/24
+  ** SHORT MODEL SAVED: models_short/trial_139.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 316.5% | Sharpe: 7.34 | TP=1.25% | SL=3.25%
+============================================================
+
+[Trial #140] TP=1.50%, SL=3.75%, Bars=16 | seq=32, hidden=256, layers=3, heads=8, drop=0.49, lr=0.00028, batch=256, epochs=22, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3202.3% | WorstFold: 60.5% | Sharpe: 9.36 | MaxDD: -3.9% | Trades: 49 | W/L: 33/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 109.4% | Sharpe: 3.13 | Trades: 77 | W/L: 41/36
+  ** SHORT MODEL SAVED: models_short/trial_140.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 109.4% | Sharpe: 3.13 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #141] TP=1.50%, SL=3.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.46, lr=0.00013, batch=64, epochs=23, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1742.6% | WorstFold: 21.1% | Sharpe: 9.71 | MaxDD: -1.5% | Trades: 33 | W/L: 24/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 273.3% | Sharpe: 6.87 | Trades: 60 | W/L: 39/21
+  ** SHORT MODEL SAVED: models_short/trial_141.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 273.3% | Sharpe: 6.87 | TP=1.50% | SL=3.00%
+============================================================
+
+[Trial #142] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.47, lr=0.00016, batch=64, epochs=24, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 6264.0% | WorstFold: -2.7% | Sharpe: 11.92 | MaxDD: -3.2% | Trades: 43 | W/L: 30/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 32.7% | Sharpe: 1.35 | Trades: 68 | W/L: 37/31
+  ** SHORT MODEL SAVED: models_short/trial_142.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 32.7% | Sharpe: 1.35 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #143] TP=1.75%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.12, lr=0.00012, batch=64, epochs=23, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2526.4% | WorstFold: 29.5% | Sharpe: 15.97 | MaxDD: -2.7% | Trades: 45 | W/L: 28/17
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -19.6% | Sharpe: -0.62 | Trades: 108 | W/L: 54/54
+
+[Trial #144] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.44, lr=0.00034, batch=64, epochs=24, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 11342.3% | WorstFold: -28.5% | Sharpe: 9.61 | MaxDD: -2.3% | Trades: 39 | W/L: 31/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 276.5% | Sharpe: 12.00 | Trades: 28 | W/L: 21/7
+  ** SHORT MODEL SAVED: models_short/trial_144.pth **
+
+[Trial #145] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.44, lr=0.00023, batch=64, epochs=25, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2460.8% | WorstFold: 15.8% | Sharpe: 8.96 | MaxDD: -2.3% | Trades: 28 | W/L: 19/9
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #146] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.34, lr=0.00032, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 7796.7% | WorstFold: 80.1% | Sharpe: 15.97 | MaxDD: -5.2% | Trades: 44 | W/L: 35/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 111.8% | Sharpe: 3.40 | Trades: 63 | W/L: 42/21
+  ** SHORT MODEL SAVED: models_short/trial_146.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 111.8% | Sharpe: 3.40 | TP=1.25% | SL=3.75%
+============================================================
+
+[Trial #147] TP=1.50%, SL=3.75%, Bars=12 | seq=96, hidden=128, layers=3, heads=2, drop=0.34, lr=0.00030, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 810.1% | WorstFold: 61.5% | Sharpe: 11.95 | MaxDD: -2.7% | Trades: 29 | W/L: 23/6
+  REJECTED: Only 29 trades (need 30+)
+
+[Trial #148] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00034, batch=64, epochs=26, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 20024.3% | WorstFold: -5.8% | Sharpe: 16.25 | MaxDD: -1.4% | Trades: 43 | W/L: 34/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 18.4% | Sharpe: 0.83 | Trades: 47 | W/L: 27/20
+  ** SHORT MODEL SAVED: models_short/trial_148.pth **
+
+[Trial #149] TP=1.75%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00032, batch=64, epochs=27, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 12101.1% | WorstFold: 42.1% | Sharpe: 12.46 | MaxDD: -1.7% | Trades: 38 | W/L: 27/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 93.1% | Sharpe: 4.83 | Trades: 26 | W/L: 14/12
+  ** SHORT MODEL SAVED: models_short/trial_149.pth **
+
+[Trial #150] TP=1.75%, SL=4.00%, Bars=12 | seq=48, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00034, batch=64, epochs=27, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 7472.2% | WorstFold: 52.0% | Sharpe: 12.55 | MaxDD: -1.7% | Trades: 34 | W/L: 27/7
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 15.8% | Sharpe: 0.71 | Trades: 63 | W/L: 34/29
+  ** SHORT MODEL SAVED: models_short/trial_150.pth **
+
+[Trial #151] TP=1.75%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00037, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 27808.5% | WorstFold: 22.0% | Sharpe: 41.72 | MaxDD: -2.1% | Trades: 39 | W/L: 31/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 65.8% | Sharpe: 2.96 | Trades: 35 | W/L: 19/16
+  ** SHORT MODEL SAVED: models_short/trial_151.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 65.8% | Sharpe: 2.96 | TP=1.75% | SL=4.00%
+============================================================
+
+[Trial #152] TP=2.00%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00032, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 261.1% | WorstFold: 0.0% | Sharpe: 2.93 | MaxDD: -5.4% | Trades: 21 | W/L: 13/8
+  REJECTED: Only 21 trades (need 30+)
+
+[Trial #153] TP=1.75%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00037, batch=64, epochs=27, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 7626.2% | WorstFold: -9.0% | Sharpe: 14.35 | MaxDD: -1.4% | Trades: 30 | W/L: 24/6
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 22.2% | Sharpe: 1.44 | Trades: 25 | W/L: 12/13
+  ** SHORT MODEL SAVED: models_short/trial_153.pth **
+
+[Trial #154] TP=1.75%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00041, batch=64, epochs=25, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1164.8% | WorstFold: 40.3% | Sharpe: 21.97 | MaxDD: -1.0% | Trades: 22 | W/L: 18/4
+  REJECTED: Only 22 trades (need 30+)
+
+[Trial #155] TP=1.50%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.35, lr=0.00035, batch=64, epochs=27, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4097.9% | WorstFold: -7.8% | Sharpe: 10.73 | MaxDD: -1.4% | Trades: 44 | W/L: 29/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 63.3% | Sharpe: 2.20 | Trades: 46 | W/L: 28/18
+  ** SHORT MODEL SAVED: models_short/trial_155.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 63.3% | Sharpe: 2.20 | TP=1.50% | SL=4.00%
+============================================================
+
+[Trial #156] TP=1.50%, SL=3.75%, Bars=12 | seq=128, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00043, batch=64, epochs=24, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 1496.2% | WorstFold: -24.6% | Sharpe: 6.34 | MaxDD: -8.9% | Trades: 53 | W/L: 34/19
+  REJECTED: Max Drawdown of -8.9% exceeded -7.0% limit
+
+[Trial #157] TP=2.25%, SL=4.00%, Bars=24 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00038, batch=64, epochs=28, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 108.2% | WorstFold: 0.0% | Sharpe: 2.99 | MaxDD: -4.2% | Trades: 12 | W/L: 8/4
+  REJECTED: Only 12 trades (need 30+)
+
+[Trial #158] TP=2.00%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.33, lr=0.00031, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1040.8% | WorstFold: 26.0% | Sharpe: 11.64 | MaxDD: -2.3% | Trades: 27 | W/L: 17/10
+  REJECTED: Only 27 trades (need 30+)
+
+[Trial #159] TP=2.75%, SL=3.75%, Bars=12 | seq=64, hidden=64, layers=3, heads=2, drop=0.39, lr=0.00034, batch=256, epochs=25, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+
+[Trial #160] TP=1.25%, SL=3.75%, Bars=8 | seq=32, hidden=256, layers=2, heads=2, drop=0.35, lr=0.00028, batch=128, epochs=27, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 637.5% | WorstFold: -41.7% | Sharpe: 4.48 | MaxDD: -10.4% | Trades: 88 | W/L: 48/40
+  REJECTED: Max Drawdown of -10.4% exceeded -7.0% limit
+
+[Trial #161] TP=1.50%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.35, lr=0.00027, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5190.3% | WorstFold: -19.7% | Sharpe: 11.09 | MaxDD: -2.1% | Trades: 40 | W/L: 28/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 78.6% | Sharpe: 2.62 | Trades: 54 | W/L: 34/20
+  ** SHORT MODEL SAVED: models_short/trial_161.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 78.6% | Sharpe: 2.62 | TP=1.50% | SL=4.00%
+============================================================
+
+[Trial #162] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00032, batch=64, epochs=24, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4406.3% | WorstFold: 8.6% | Sharpe: 11.47 | MaxDD: -1.1% | Trades: 31 | W/L: 23/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 63.3% | Sharpe: 2.74 | Trades: 33 | W/L: 19/14
+  ** SHORT MODEL SAVED: models_short/trial_162.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 63.3% | Sharpe: 2.74 | TP=1.75% | SL=3.75%
+============================================================
+
+[Trial #163] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00036, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 10328.4% | WorstFold: -15.9% | Sharpe: 24.34 | MaxDD: -2.0% | Trades: 37 | W/L: 26/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 108.3% | Sharpe: 2.84 | Trades: 78 | W/L: 45/33
+  ** SHORT MODEL SAVED: models_short/trial_163.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 108.3% | Sharpe: 2.84 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #164] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00045, batch=64, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 15559.3% | WorstFold: 13.1% | Sharpe: 10.23 | MaxDD: -2.4% | Trades: 45 | W/L: 32/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 445.6% | Sharpe: 6.27 | Trades: 94 | W/L: 57/37
+  ** SHORT MODEL SAVED: models_short/trial_164.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 445.6% | Sharpe: 6.27 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #165] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00045, batch=64, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 49928.5% | WorstFold: 19.8% | Sharpe: 17.46 | MaxDD: -1.6% | Trades: 36 | W/L: 28/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 69.0% | Sharpe: 2.58 | Trades: 32 | W/L: 19/13
+  ** SHORT MODEL SAVED: models_short/trial_165.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 69.0% | Sharpe: 2.58 | TP=1.75% | SL=3.50%
+============================================================
+
+[Trial #166] TP=1.75%, SL=3.50%, Bars=12 | seq=96, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00047, batch=64, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: -27.4% | WorstFold: -62.9% | Sharpe: -2.06 | MaxDD: -6.9% | Trades: 22 | W/L: 10/12
+  REJECTED: Only 22 trades (need 30+)
+
+[Trial #167] TP=4.00%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00043, batch=64, epochs=26, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #168] TP=1.75%, SL=3.50%, Bars=32 | seq=32, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00040, batch=64, epochs=28, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: -42.3% | WorstFold: -65.4% | Sharpe: -2.32 | MaxDD: -7.3% | Trades: 20 | W/L: 9/11
+  REJECTED: Only 20 trades (need 30+)
+
+[Trial #169] TP=2.00%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00050, batch=64, epochs=25, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 10257.8% | WorstFold: -7.4% | Sharpe: 9.68 | MaxDD: -1.8% | Trades: 27 | W/L: 20/7
+  REJECTED: Only 27 trades (need 30+)
+
+[Trial #170] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00053, batch=64, epochs=25, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 9032.9% | WorstFold: 5.3% | Sharpe: 10.36 | MaxDD: -3.2% | Trades: 51 | W/L: 35/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 260.0% | Sharpe: 6.21 | Trades: 43 | W/L: 30/13
+  ** SHORT MODEL SAVED: models_short/trial_170.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 260.0% | Sharpe: 6.21 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #171] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00038, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 58469.6% | WorstFold: -8.0% | Sharpe: 28.03 | MaxDD: -1.3% | Trades: 41 | W/L: 34/7
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 117.6% | Sharpe: 4.05 | Trades: 43 | W/L: 26/17
+  ** SHORT MODEL SAVED: models_short/trial_171.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 117.6% | Sharpe: 4.05 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #172] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00044, batch=64, epochs=27, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1398.9% | WorstFold: 22.0% | Sharpe: 36.48 | MaxDD: -2.3% | Trades: 26 | W/L: 21/5
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #173] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00036, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 20381.3% | WorstFold: 8.4% | Sharpe: 20.03 | MaxDD: -0.9% | Trades: 32 | W/L: 27/5
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 36.5% | Sharpe: 1.48 | Trades: 41 | W/L: 22/19
+  ** SHORT MODEL SAVED: models_short/trial_173.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 36.5% | Sharpe: 1.48 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #174] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00037, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 9202.0% | WorstFold: 3.0% | Sharpe: 3689498347574695.50 | MaxDD: -2.7% | Trades: 32 | W/L: 25/7
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 259.0% | Sharpe: 7.11 | Trades: 48 | W/L: 34/14
+  ** SHORT MODEL SAVED: models_short/trial_174.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 259.0% | Sharpe: 7.11 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #175] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00038, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 23088.8% | WorstFold: -49.1% | Sharpe: 11.89 | MaxDD: -2.9% | Trades: 36 | W/L: 26/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 47.6% | Sharpe: 2.92 | Trades: 23 | W/L: 11/12
+  ** SHORT MODEL SAVED: models_short/trial_175.pth **
+
+[Trial #176] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00036, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2363.4% | WorstFold: -32.9% | Sharpe: 16.63 | MaxDD: -2.6% | Trades: 27 | W/L: 20/7
+  REJECTED: Only 27 trades (need 30+)
+
+[Trial #177] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00039, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 14948.7% | WorstFold: -9.6% | Sharpe: 11.56 | MaxDD: -1.7% | Trades: 35 | W/L: 25/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 15.0% | Sharpe: 1.16 | Trades: 16 | W/L: 7/9
+  ** SHORT MODEL SAVED: models_short/trial_177.pth **
+
+[Trial #178] TP=1.75%, SL=3.75%, Bars=16 | seq=32, hidden=128, layers=3, heads=2, drop=0.37, lr=0.00061, batch=64, epochs=26, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 140.4% | WorstFold: 23.5% | Sharpe: 3.94 | MaxDD: -2.1% | Trades: 21 | W/L: 13/8
+  REJECTED: Only 21 trades (need 30+)
+
+[Trial #179] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00039, batch=256, epochs=25, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3275.1% | WorstFold: -28.4% | Sharpe: 3.18 | MaxDD: -4.4% | Trades: 58 | W/L: 34/24
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 8.2% | Sharpe: 0.46 | Trades: 52 | W/L: 29/23
+  ** SHORT MODEL SAVED: models_short/trial_179.pth **
+
+[Trial #180] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00041, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3261.9% | WorstFold: -3.0% | Sharpe: 12.65 | MaxDD: -1.4% | Trades: 44 | W/L: 31/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 48.2% | Sharpe: 1.65 | Trades: 74 | W/L: 39/35
+  ** SHORT MODEL SAVED: models_short/trial_180.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 48.2% | Sharpe: 1.65 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #181] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00038, batch=64, epochs=27, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2998.5% | WorstFold: -9.0% | Sharpe: 25.43 | MaxDD: -2.0% | Trades: 28 | W/L: 20/8
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #182] TP=2.00%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00036, batch=64, epochs=27, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4133.8% | WorstFold: -15.2% | Sharpe: 4.59 | MaxDD: -2.8% | Trades: 30 | W/L: 19/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -12.5% | Sharpe: -0.94 | Trades: 10 | W/L: 5/5
+
+[Trial #183] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00044, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4778.6% | WorstFold: 70.4% | Sharpe: 16.81 | MaxDD: -1.2% | Trades: 34 | W/L: 27/7
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 23.7% | Sharpe: 1.30 | Trades: 28 | W/L: 13/15
+  ** SHORT MODEL SAVED: models_short/trial_183.pth **
+
+[Trial #184] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00047, batch=64, epochs=25, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2605.8% | WorstFold: -9.8% | Sharpe: 5.19 | MaxDD: -6.5% | Trades: 52 | W/L: 33/19
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 9.8% | Sharpe: 0.48 | Trades: 79 | W/L: 41/38
+  ** SHORT MODEL SAVED: models_short/trial_184.pth **
+
+[Trial #185] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00038, batch=64, epochs=27, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3527.3% | WorstFold: -38.7% | Sharpe: 7.63 | MaxDD: -2.0% | Trades: 36 | W/L: 21/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 30.6% | Sharpe: 1.24 | Trades: 55 | W/L: 33/22
+  ** SHORT MODEL SAVED: models_short/trial_185.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 30.6% | Sharpe: 1.24 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #186] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00035, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2225.0% | WorstFold: 20.1% | Sharpe: 13.02 | MaxDD: -2.3% | Trades: 27 | W/L: 20/7
+  REJECTED: Only 27 trades (need 30+)
+
+[Trial #187] TP=1.50%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00041, batch=64, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1760.7% | WorstFold: 8.4% | Sharpe: 10.74 | MaxDD: -3.4% | Trades: 34 | W/L: 24/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 127.5% | Sharpe: 3.94 | Trades: 55 | W/L: 37/18
+  ** SHORT MODEL SAVED: models_short/trial_187.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 127.5% | Sharpe: 3.94 | TP=1.50% | SL=4.00%
+============================================================
+
+[Trial #188] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00029, batch=64, epochs=26, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 21926.1% | WorstFold: 16.5% | Sharpe: 16.32 | MaxDD: -1.8% | Trades: 33 | W/L: 25/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 140.3% | Sharpe: 7.06 | Trades: 22 | W/L: 14/8
+  ** SHORT MODEL SAVED: models_short/trial_188.pth **
+
+[Trial #189] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.35, lr=0.00029, batch=64, epochs=25, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3246.1% | WorstFold: -2.9% | Sharpe: 30.30 | MaxDD: -3.5% | Trades: 43 | W/L: 28/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 79.5% | Sharpe: 2.80 | Trades: 48 | W/L: 28/20
+  ** SHORT MODEL SAVED: models_short/trial_189.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 79.5% | Sharpe: 2.80 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #190] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=64, layers=3, heads=2, drop=0.39, lr=0.00039, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 391.5% | WorstFold: 7.4% | Sharpe: 6.93 | MaxDD: -4.1% | Trades: 36 | W/L: 22/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 51.9% | Sharpe: 1.92 | Trades: 47 | W/L: 27/20
+  ** SHORT MODEL SAVED: models_short/trial_190.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 51.9% | Sharpe: 1.92 | TP=1.75% | SL=3.50%
+============================================================
+
+[Trial #191] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00033, batch=64, epochs=27, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4730.1% | WorstFold: -0.1% | Sharpe: 11.48 | MaxDD: -0.8% | Trades: 24 | W/L: 19/5
+  REJECTED: Only 24 trades (need 30+)
+
+[Trial #192] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00037, batch=64, epochs=27, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4620.0% | WorstFold: 13.5% | Sharpe: 20.24 | MaxDD: -0.9% | Trades: 28 | W/L: 21/7
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #193] TP=2.00%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.34, lr=0.00030, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2624.4% | WorstFold: -6.9% | Sharpe: 7.79 | MaxDD: -1.3% | Trades: 22 | W/L: 17/5
+  REJECTED: Only 22 trades (need 30+)
+
+[Trial #194] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00034, batch=64, epochs=28, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1553.9% | WorstFold: -34.1% | Sharpe: 5.82 | MaxDD: -1.9% | Trades: 34 | W/L: 23/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 15.4% | Sharpe: 0.83 | Trades: 38 | W/L: 21/17
+  ** SHORT MODEL SAVED: models_short/trial_194.pth **
+
+[Trial #195] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00028, batch=64, epochs=25, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1519.6% | WorstFold: -10.0% | Sharpe: 9.50 | MaxDD: -1.1% | Trades: 28 | W/L: 20/8
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #196] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00036, batch=64, epochs=26, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2976.6% | WorstFold: 36.4% | Sharpe: 13.22 | MaxDD: -1.8% | Trades: 22 | W/L: 18/4
+  REJECTED: Only 22 trades (need 30+)
+
+[Trial #197] TP=2.00%, SL=3.75%, Bars=12 | seq=48, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00033, batch=128, epochs=24, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 33332.5% | WorstFold: 5.3% | Sharpe: 14.19 | MaxDD: -1.0% | Trades: 28 | W/L: 23/5
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #198] TP=1.50%, SL=3.50%, Bars=12 | seq=128, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00045, batch=64, epochs=27, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 1858.7% | WorstFold: 22.0% | Sharpe: 34.76 | MaxDD: -6.2% | Trades: 50 | W/L: 34/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 109.5% | Sharpe: 7.08 | Trades: 18 | W/L: 13/5
+  ** SHORT MODEL SAVED: models_short/trial_198.pth **
+
+[Trial #199] TP=1.50%, SL=3.75%, Bars=24 | seq=32, hidden=256, layers=3, heads=2, drop=0.34, lr=0.00025, batch=256, epochs=26, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 35.8% | WorstFold: -16.9% | Sharpe: 0.73 | MaxDD: -4.8% | Trades: 38 | W/L: 21/17
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 87.6% | Sharpe: 2.80 | Trades: 58 | W/L: 33/25
+  ** SHORT MODEL SAVED: models_short/trial_199.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 87.6% | Sharpe: 2.80 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #200] TP=1.75%, SL=4.00%, Bars=8 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00049, batch=64, epochs=25, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #201] TP=1.50%, SL=3.75%, Bars=12 | seq=96, hidden=256, layers=3, heads=4, drop=0.36, lr=0.00039, batch=64, epochs=25, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34175 sequences of length 96, 41 features.
+  Val -> AvgROI: 2243.4% | WorstFold: -32.6% | Sharpe: 5.51 | MaxDD: -3.7% | Trades: 39 | W/L: 26/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 56.6% | Sharpe: 1.82 | Trades: 82 | W/L: 47/35
+  ** SHORT MODEL SAVED: models_short/trial_201.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 56.6% | Sharpe: 1.82 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #202] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=4, drop=0.35, lr=0.00031, batch=64, epochs=26, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 16313.5% | WorstFold: 9.5% | Sharpe: 11.27 | MaxDD: -2.3% | Trades: 39 | W/L: 30/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 249.1% | Sharpe: 7.44 | Trades: 44 | W/L: 30/14
+  ** SHORT MODEL SAVED: models_short/trial_202.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 249.1% | Sharpe: 7.44 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #203] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=4, drop=0.35, lr=0.00031, batch=64, epochs=26, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2489.2% | WorstFold: -1.4% | Sharpe: 12.77 | MaxDD: -0.8% | Trades: 26 | W/L: 18/8
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #204] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00029, batch=64, epochs=27, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 819.6% | WorstFold: -4.5% | Sharpe: 8.65 | MaxDD: -7.7% | Trades: 59 | W/L: 39/20
+  REJECTED: Max Drawdown of -7.7% exceeded -7.0% limit
+
+[Trial #205] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.35, lr=0.00026, batch=64, epochs=28, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2525.6% | WorstFold: 24.5% | Sharpe: 20.35 | MaxDD: -2.3% | Trades: 38 | W/L: 27/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 70.5% | Sharpe: 3.17 | Trades: 38 | W/L: 25/13
+  ** SHORT MODEL SAVED: models_short/trial_205.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 70.5% | Sharpe: 3.17 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #206] TP=1.75%, SL=4.00%, Bars=32 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00033, batch=64, epochs=24, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 304.0% | WorstFold: -12.9% | Sharpe: 3.09 | MaxDD: -4.4% | Trades: 26 | W/L: 15/11
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #207] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00038, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 24055.7% | WorstFold: -4.5% | Sharpe: 9.79 | MaxDD: -2.9% | Trades: 48 | W/L: 33/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 331.7% | Sharpe: 6.60 | Trades: 56 | W/L: 39/17
+  ** SHORT MODEL SAVED: models_short/trial_207.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 331.7% | Sharpe: 6.60 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #208] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00042, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 22141.2% | WorstFold: 50.6% | Sharpe: 15.86 | MaxDD: -0.7% | Trades: 42 | W/L: 29/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 0.9% | Sharpe: 0.13 | Trades: 19 | W/L: 8/11
+  ** SHORT MODEL SAVED: models_short/trial_208.pth **
+
+[Trial #209] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00043, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 14624.9% | WorstFold: 45.5% | Sharpe: 15.77 | MaxDD: -1.0% | Trades: 37 | W/L: 28/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 253.6% | Sharpe: 6.60 | Trades: 52 | W/L: 33/19
+  ** SHORT MODEL SAVED: models_short/trial_209.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 253.6% | Sharpe: 6.60 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #210] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00041, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 22083.6% | WorstFold: -14.2% | Sharpe: 13.16 | MaxDD: -1.7% | Trades: 49 | W/L: 35/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 141.0% | Sharpe: 3.28 | Trades: 105 | W/L: 58/47
+  ** SHORT MODEL SAVED: models_short/trial_210.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 141.0% | Sharpe: 3.28 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #211] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00041, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 7853.5% | WorstFold: -33.7% | Sharpe: 13.21 | MaxDD: -2.1% | Trades: 44 | W/L: 31/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 337.0% | Sharpe: 7.16 | Trades: 52 | W/L: 35/17
+  ** SHORT MODEL SAVED: models_short/trial_211.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 337.0% | Sharpe: 7.16 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #212] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00037, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 2927.2% | WorstFold: 100.3% | Sharpe: 13.31 | MaxDD: -2.1% | Trades: 46 | W/L: 33/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 151.5% | Sharpe: 4.98 | Trades: 49 | W/L: 31/18
+  ** SHORT MODEL SAVED: models_short/trial_212.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 151.5% | Sharpe: 4.98 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #213] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.42, lr=0.00042, batch=64, epochs=26, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 1493.8% | WorstFold: 13.5% | Sharpe: 25.34 | MaxDD: -7.7% | Trades: 53 | W/L: 34/19
+  REJECTED: Max Drawdown of -7.7% exceeded -7.0% limit
+
+[Trial #214] TP=1.25%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00038, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 672.7% | WorstFold: 22.2% | Sharpe: 11.07 | MaxDD: -6.7% | Trades: 55 | W/L: 35/20
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 77.8% | Sharpe: 2.20 | Trades: 100 | W/L: 64/36
+  ** SHORT MODEL SAVED: models_short/trial_214.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 77.8% | Sharpe: 2.20 | TP=1.25% | SL=3.75%
+============================================================
+
+[Trial #215] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00040, batch=64, epochs=27, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 1665.8% | WorstFold: -3.5% | Sharpe: 3.24 | MaxDD: -7.1% | Trades: 51 | W/L: 31/20
+  REJECTED: Max Drawdown of -7.1% exceeded -7.0% limit
+
+[Trial #216] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00035, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 1046.0% | WorstFold: 57.9% | Sharpe: 9.54 | MaxDD: -3.9% | Trades: 49 | W/L: 30/19
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 68.6% | Sharpe: 2.39 | Trades: 51 | W/L: 30/21
+  ** SHORT MODEL SAVED: models_short/trial_216.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 68.6% | Sharpe: 2.39 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #217] TP=1.25%, SL=3.75%, Bars=12 | seq=64, hidden=128, layers=3, heads=2, drop=0.38, lr=0.00047, batch=64, epochs=25, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 4498.3% | WorstFold: 33.9% | Sharpe: 14.89 | MaxDD: -1.7% | Trades: 49 | W/L: 37/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 645.3% | Sharpe: 11.61 | Trades: 67 | W/L: 52/15
+  ** SHORT MODEL SAVED: models_short/trial_217.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 645.3% | Sharpe: 11.61 | TP=1.25% | SL=3.75%
+============================================================
+
+[Trial #218] TP=1.50%, SL=3.50%, Bars=16 | seq=64, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00043, batch=64, epochs=25, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 3.7% | WorstFold: -5.6% | Sharpe: 0.20 | MaxDD: -8.8% | Trades: 21 | W/L: 11/10
+  REJECTED: Only 21 trades (need 30+)
+
+[Trial #219] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00036, batch=64, epochs=27, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 2021.1% | WorstFold: 79.7% | Sharpe: 12.44 | MaxDD: -4.9% | Trades: 47 | W/L: 32/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 16.7% | Sharpe: 0.76 | Trades: 52 | W/L: 30/22
+  ** SHORT MODEL SAVED: models_short/trial_219.pth **
+
+[Trial #220] TP=1.25%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00039, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2934.7% | WorstFold: 114.1% | Sharpe: 13.38 | MaxDD: -4.8% | Trades: 50 | W/L: 37/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 141.6% | Sharpe: 3.86 | Trades: 58 | W/L: 39/19
+  ** SHORT MODEL SAVED: models_short/trial_220.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 141.6% | Sharpe: 3.86 | TP=1.25% | SL=3.50%
+============================================================
+
+[Trial #221] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00044, batch=64, epochs=25, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 834.3% | WorstFold: -1.1% | Sharpe: 5.04 | MaxDD: -7.3% | Trades: 51 | W/L: 31/20
+  REJECTED: Max Drawdown of -7.3% exceeded -7.0% limit
+
+[Trial #222] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00051, batch=64, epochs=24, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 889.5% | WorstFold: 39.3% | Sharpe: 12.46 | MaxDD: -3.3% | Trades: 46 | W/L: 29/17
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 274.7% | Sharpe: 9.32 | Trades: 35 | W/L: 27/8
+  ** SHORT MODEL SAVED: models_short/trial_222.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 274.7% | Sharpe: 9.32 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #223] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.43, lr=0.00046, batch=64, epochs=25, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 8.7% | WorstFold: 0.2% | Sharpe: 2.13 | MaxDD: -2.6% | Trades: 17 | W/L: 9/8
+  REJECTED: Only 17 trades (need 30+)
+
+[Trial #224] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00042, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4899.3% | WorstFold: -8.0% | Sharpe: 12.81 | MaxDD: -3.0% | Trades: 41 | W/L: 27/14
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 149.5% | Sharpe: 6.60 | Trades: 27 | W/L: 19/8
+  ** SHORT MODEL SAVED: models_short/trial_224.pth **
+
+[Trial #225] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.42, lr=0.00034, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 19315.5% | WorstFold: 57.1% | Sharpe: 20.80 | MaxDD: -0.9% | Trades: 34 | W/L: 29/5
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 136.9% | Sharpe: 3.25 | Trades: 79 | W/L: 47/32
+  ** SHORT MODEL SAVED: models_short/trial_225.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 136.9% | Sharpe: 3.25 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #226] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00034, batch=64, epochs=27, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 353.4% | WorstFold: -3.9% | Sharpe: 5.42 | MaxDD: -3.3% | Trades: 38 | W/L: 22/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -7.8% | Sharpe: -0.13 | Trades: 157 | W/L: 75/82
+
+[Trial #227] TP=1.50%, SL=2.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00037, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4318.2% | WorstFold: -7.2% | Sharpe: 13.27 | MaxDD: -1.7% | Trades: 28 | W/L: 22/6
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #228] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=4, drop=0.42, lr=0.00034, batch=64, epochs=26, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2462.9% | WorstFold: -27.7% | Sharpe: 10.64 | MaxDD: -3.5% | Trades: 37 | W/L: 24/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 150.2% | Sharpe: 4.17 | Trades: 57 | W/L: 35/22
+  ** SHORT MODEL SAVED: models_short/trial_228.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 150.2% | Sharpe: 4.17 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #229] TP=3.00%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00031, batch=64, epochs=27, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #230] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=64, layers=3, heads=2, drop=0.38, lr=0.00040, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 6963.4% | WorstFold: 0.0% | Sharpe: 9.56 | MaxDD: -2.0% | Trades: 43 | W/L: 30/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 206.6% | Sharpe: 3.69 | Trades: 121 | W/L: 70/51
+  ** SHORT MODEL SAVED: models_short/trial_230.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 206.6% | Sharpe: 3.69 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #231] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00043, batch=64, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 882.4% | WorstFold: 24.6% | Sharpe: 4.37 | MaxDD: -4.1% | Trades: 33 | W/L: 25/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 63.4% | Sharpe: 3.23 | Trades: 22 | W/L: 14/8
+  ** SHORT MODEL SAVED: models_short/trial_231.pth **
+
+[Trial #232] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=1, heads=2, drop=0.39, lr=0.00037, batch=64, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2081.3% | WorstFold: 63.1% | Sharpe: 24.43 | MaxDD: -6.6% | Trades: 41 | W/L: 32/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 86.9% | Sharpe: 4.37 | Trades: 28 | W/L: 18/10
+  ** SHORT MODEL SAVED: models_short/trial_232.pth **
+
+[Trial #233] TP=2.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00036, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #234] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00040, batch=64, epochs=24, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 113.3% | WorstFold: -6.6% | Sharpe: 2.54 | MaxDD: -8.6% | Trades: 52 | W/L: 31/21
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #235] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00046, batch=64, epochs=25, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 215.4% | WorstFold: -32.1% | Sharpe: 1.27 | MaxDD: -3.9% | Trades: 37 | W/L: 20/17
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 15.9% | Sharpe: 0.80 | Trades: 30 | W/L: 18/12
+  ** SHORT MODEL SAVED: models_short/trial_235.pth **
+
+[Trial #236] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00033, batch=64, epochs=27, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1416.1% | WorstFold: -24.9% | Sharpe: 6.45 | MaxDD: -3.0% | Trades: 31 | W/L: 22/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 153.4% | Sharpe: 4.31 | Trades: 64 | W/L: 42/22
+  ** SHORT MODEL SAVED: models_short/trial_236.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 153.4% | Sharpe: 4.31 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #237] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=2, heads=2, drop=0.42, lr=0.00039, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1723.2% | WorstFold: 22.5% | Sharpe: 19.00 | MaxDD: -1.7% | Trades: 32 | W/L: 26/6
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 291.5% | Sharpe: 6.08 | Trades: 65 | W/L: 40/25
+  ** SHORT MODEL SAVED: models_short/trial_237.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 291.5% | Sharpe: 6.08 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #238] TP=1.25%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00043, batch=64, epochs=25, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 332.2% | WorstFold: -25.5% | Sharpe: 4.47 | MaxDD: -2.6% | Trades: 36 | W/L: 24/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -61.6% | Sharpe: -3.52 | Trades: 102 | W/L: 46/56
+
+[Trial #239] TP=1.75%, SL=4.00%, Bars=12 | seq=48, hidden=256, layers=3, heads=2, drop=0.43, lr=0.00035, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 8760.3% | WorstFold: 45.4% | Sharpe: 19.50 | MaxDD: -3.3% | Trades: 47 | W/L: 32/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 100.4% | Sharpe: 3.50 | Trades: 35 | W/L: 21/14
+  ** SHORT MODEL SAVED: models_short/trial_239.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 100.4% | Sharpe: 3.50 | TP=1.75% | SL=4.00%
+============================================================
+
+[Trial #240] TP=1.50%, SL=3.75%, Bars=24 | seq=128, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00054, batch=64, epochs=28, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #241] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.35, lr=0.00028, batch=256, epochs=21, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 16629.6% | WorstFold: -15.0% | Sharpe: 8.12 | MaxDD: -2.1% | Trades: 53 | W/L: 37/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 33.9% | Sharpe: 1.24 | Trades: 70 | W/L: 36/34
+  ** SHORT MODEL SAVED: models_short/trial_241.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 33.9% | Sharpe: 1.24 | TP=1.75% | SL=3.50%
+============================================================
+
+[Trial #242] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.36, lr=0.00026, batch=64, epochs=23, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2919.0% | WorstFold: -16.7% | Sharpe: 3.44 | MaxDD: -8.6% | Trades: 37 | W/L: 25/12
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #243] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.32, lr=0.00028, batch=256, epochs=22, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 23799.4% | WorstFold: 49.6% | Sharpe: 11.58 | MaxDD: -1.7% | Trades: 41 | W/L: 29/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -19.9% | Sharpe: -0.66 | Trades: 69 | W/L: 35/34
+
+[Trial #244] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.32, lr=0.00031, batch=128, epochs=22, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 711.1% | WorstFold: 14.2% | Sharpe: 5.01 | MaxDD: -5.4% | Trades: 53 | W/L: 32/21
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 325.5% | Sharpe: 6.39 | Trades: 83 | W/L: 53/30
+  ** SHORT MODEL SAVED: models_short/trial_244.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 325.5% | Sharpe: 6.39 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #245] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.33, lr=0.00024, batch=64, epochs=27, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1055.5% | WorstFold: 7.1% | Sharpe: 9.75 | MaxDD: -4.9% | Trades: 35 | W/L: 26/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 81.0% | Sharpe: 2.27 | Trades: 75 | W/L: 46/29
+  ** SHORT MODEL SAVED: models_short/trial_245.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 81.0% | Sharpe: 2.27 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #246] TP=1.75%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.32, lr=0.00029, batch=64, epochs=26, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 7795.8% | WorstFold: -32.6% | Sharpe: 9.13 | MaxDD: -1.9% | Trades: 35 | W/L: 24/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 67.5% | Sharpe: 3.17 | Trades: 32 | W/L: 18/14
+  ** SHORT MODEL SAVED: models_short/trial_246.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 67.5% | Sharpe: 3.17 | TP=1.75% | SL=3.75%
+============================================================
+
+[Trial #247] TP=1.50%, SL=3.50%, Bars=8 | seq=32, hidden=256, layers=3, heads=4, drop=0.39, lr=0.00037, batch=64, epochs=23, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5432.0% | WorstFold: 13.1% | Sharpe: 15.25 | MaxDD: -2.4% | Trades: 34 | W/L: 27/7
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 74.8% | Sharpe: 3.18 | Trades: 37 | W/L: 22/15
+  ** SHORT MODEL SAVED: models_short/trial_247.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 74.8% | Sharpe: 3.18 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #248] TP=1.75%, SL=2.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.33, lr=0.00032, batch=64, epochs=22, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3922.5% | WorstFold: 13.5% | Sharpe: 29.60 | MaxDD: -2.7% | Trades: 34 | W/L: 27/7
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -12.6% | Sharpe: -0.66 | Trades: 28 | W/L: 15/13
+
+[Trial #249] TP=1.50%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.34, lr=0.00038, batch=64, epochs=24, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 210.6% | WorstFold: 0.0% | Sharpe: 3.32 | MaxDD: -2.4% | Trades: 17 | W/L: 12/5
+  REJECTED: Only 17 trades (need 30+)
+
+[Trial #250] TP=1.50%, SL=3.50%, Bars=32 | seq=32, hidden=256, layers=3, heads=2, drop=0.33, lr=0.00187, batch=64, epochs=25, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: -28.2% | WorstFold: -49.5% | Sharpe: -2.93 | MaxDD: -6.2% | Trades: 15 | W/L: 7/8
+  REJECTED: Only 15 trades (need 30+)
+
+[Trial #251] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00034, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 908.4% | WorstFold: -26.0% | Sharpe: 11.93 | MaxDD: -7.0% | Trades: 36 | W/L: 26/10
+  REJECTED: Max Drawdown of -7.0% exceeded -7.0% limit
+
+[Trial #252] TP=1.25%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.38, lr=0.00041, batch=64, epochs=14, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4277.8% | WorstFold: 35.2% | Sharpe: 15.09 | MaxDD: -2.8% | Trades: 58 | W/L: 42/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 157.1% | Sharpe: 4.03 | Trades: 70 | W/L: 46/24
+  ** SHORT MODEL SAVED: models_short/trial_252.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 157.1% | Sharpe: 4.03 | TP=1.25% | SL=3.50%
+============================================================
+
+[Trial #253] TP=1.75%, SL=4.00%, Bars=12 | seq=32, hidden=128, layers=3, heads=2, drop=0.41, lr=0.00022, batch=256, epochs=27, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #254] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00027, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 38294.2% | WorstFold: -37.0% | Sharpe: 15.82 | MaxDD: -2.1% | Trades: 42 | W/L: 31/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 35.7% | Sharpe: 1.47 | Trades: 70 | W/L: 40/30
+  ** SHORT MODEL SAVED: models_short/trial_254.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 35.7% | Sharpe: 1.47 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #255] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00026, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 15319.6% | WorstFold: 76.3% | Sharpe: 15.67 | MaxDD: -2.4% | Trades: 41 | W/L: 33/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 451.2% | Sharpe: 7.10 | Trades: 81 | W/L: 57/24
+  ** SHORT MODEL SAVED: models_short/trial_255.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 451.2% | Sharpe: 7.10 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #256] TP=1.75%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00027, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 7571.0% | WorstFold: 31.8% | Sharpe: 18.70 | MaxDD: -0.8% | Trades: 34 | W/L: 26/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 80.1% | Sharpe: 5.44 | Trades: 16 | W/L: 9/7
+  ** SHORT MODEL SAVED: models_short/trial_256.pth **
+
+[Trial #257] TP=1.50%, SL=3.25%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00029, batch=64, epochs=26, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 2539.9% | WorstFold: -37.0% | Sharpe: 7.79 | MaxDD: -6.2% | Trades: 61 | W/L: 40/21
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 253.3% | Sharpe: 5.09 | Trades: 90 | W/L: 56/34
+  ** SHORT MODEL SAVED: models_short/trial_257.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 253.3% | Sharpe: 5.09 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #258] TP=1.25%, SL=3.25%, Bars=16 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00025, batch=64, epochs=25, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 510.6% | WorstFold: 17.3% | Sharpe: 5.23 | MaxDD: -6.7% | Trades: 57 | W/L: 40/17
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 192.7% | Sharpe: 3.92 | Trades: 113 | W/L: 69/44
+  ** SHORT MODEL SAVED: models_short/trial_258.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 192.7% | Sharpe: 3.92 | TP=1.25% | SL=3.25%
+============================================================
+
+[Trial #259] TP=1.75%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=4, drop=0.39, lr=0.00031, batch=64, epochs=23, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2824.3% | WorstFold: -15.9% | Sharpe: 15.19 | MaxDD: -1.2% | Trades: 26 | W/L: 20/6
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #260] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00028, batch=64, epochs=26, class_w=4.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1274.9% | WorstFold: 29.8% | Sharpe: 11.30 | MaxDD: -4.8% | Trades: 33 | W/L: 25/8
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 472.8% | Sharpe: 17.10 | Trades: 32 | W/L: 27/5
+  ** SHORT MODEL SAVED: models_short/trial_260.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 472.8% | Sharpe: 17.10 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #261] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00033, batch=64, epochs=25, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3249.5% | WorstFold: 18.6% | Sharpe: 15.55 | MaxDD: -4.0% | Trades: 42 | W/L: 33/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 199.1% | Sharpe: 4.48 | Trades: 94 | W/L: 53/41
+  ** SHORT MODEL SAVED: models_short/trial_261.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 199.1% | Sharpe: 4.48 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #262] TP=1.75%, SL=4.00%, Bars=12 | seq=32, hidden=64, layers=3, heads=8, drop=0.30, lr=0.00024, batch=64, epochs=26, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 807.8% | WorstFold: -6.1% | Sharpe: 9.99 | MaxDD: -1.2% | Trades: 20 | W/L: 15/5
+  REJECTED: Only 20 trades (need 30+)
+
+[Trial #263] TP=1.50%, SL=1.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00022, batch=64, epochs=24, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1560.3% | WorstFold: -2.8% | Sharpe: 13.82 | MaxDD: -1.8% | Trades: 39 | W/L: 26/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 184.6% | Sharpe: 6.78 | Trades: 36 | W/L: 25/11
+  ** SHORT MODEL SAVED: models_short/trial_263.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 184.6% | Sharpe: 6.78 | TP=1.50% | SL=1.25%
+============================================================
+
+[Trial #264] TP=1.50%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.35, lr=0.00018, batch=64, epochs=27, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3049.9% | WorstFold: 8.4% | Sharpe: 9.51 | MaxDD: -2.6% | Trades: 43 | W/L: 28/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 116.2% | Sharpe: 3.79 | Trades: 62 | W/L: 39/23
+  ** SHORT MODEL SAVED: models_short/trial_264.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 116.2% | Sharpe: 3.79 | TP=1.50% | SL=3.75%
+============================================================
+
+[Trial #265] TP=1.75%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00135, batch=256, epochs=26, class_w=2.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+
+[Trial #266] TP=1.25%, SL=3.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.36, lr=0.00036, batch=128, epochs=25, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 394.9% | WorstFold: 68.6% | Sharpe: 7.22 | MaxDD: -10.7% | Trades: 71 | W/L: 42/29
+  REJECTED: Max Drawdown of -10.7% exceeded -7.0% limit
+
+[Trial #267] TP=1.50%, SL=3.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00027, batch=64, epochs=22, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 36480.2% | WorstFold: -3.8% | Sharpe: 10.73 | MaxDD: -3.5% | Trades: 46 | W/L: 34/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 181.5% | Sharpe: 4.93 | Trades: 82 | W/L: 47/35
+  ** SHORT MODEL SAVED: models_short/trial_267.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 181.5% | Sharpe: 4.93 | TP=1.50% | SL=3.00%
+============================================================
+
+[Trial #268] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00025, batch=64, epochs=22, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2551.0% | WorstFold: 23.8% | Sharpe: 13.39 | MaxDD: -1.9% | Trades: 32 | W/L: 25/7
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 187.2% | Sharpe: 4.93 | Trades: 67 | W/L: 39/28
+  ** SHORT MODEL SAVED: models_short/trial_268.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 187.2% | Sharpe: 4.93 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #269] TP=1.25%, SL=3.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00262, batch=64, epochs=22, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #270] TP=1.50%, SL=3.00%, Bars=12 | seq=128, hidden=256, layers=3, heads=8, drop=0.39, lr=0.00026, batch=64, epochs=23, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34143 sequences of length 128, 41 features.
+  Val -> AvgROI: 3459.4% | WorstFold: 27.0% | Sharpe: 7.08 | MaxDD: -3.5% | Trades: 51 | W/L: 31/20
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 329.4% | Sharpe: 6.03 | Trades: 83 | W/L: 54/29
+  ** SHORT MODEL SAVED: models_short/trial_270.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 329.4% | Sharpe: 6.03 | TP=1.50% | SL=3.00%
+============================================================
+
+[Trial #271] TP=1.50%, SL=3.25%, Bars=24 | seq=48, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00029, batch=64, epochs=21, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34223 sequences of length 48, 41 features.
+  Val -> AvgROI: 41.2% | WorstFold: 29.5% | Sharpe: 1.89 | MaxDD: -10.0% | Trades: 37 | W/L: 24/13
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #272] TP=1.50%, SL=2.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00027, batch=64, epochs=22, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 20067.4% | WorstFold: 26.4% | Sharpe: 12.43 | MaxDD: -2.7% | Trades: 39 | W/L: 29/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 185.7% | Sharpe: 4.84 | Trades: 54 | W/L: 32/22
+  ** SHORT MODEL SAVED: models_short/trial_272.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 185.7% | Sharpe: 4.84 | TP=1.50% | SL=2.75%
+============================================================
+
+[Trial #273] TP=1.50%, SL=2.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.37, lr=0.00023, batch=64, epochs=22, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2708.0% | WorstFold: 15.9% | Sharpe: 17.61 | MaxDD: -4.6% | Trades: 37 | W/L: 28/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 166.8% | Sharpe: 5.70 | Trades: 39 | W/L: 26/13
+  ** SHORT MODEL SAVED: models_short/trial_273.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 166.8% | Sharpe: 5.70 | TP=1.50% | SL=2.75%
+============================================================
+
+[Trial #274] TP=1.50%, SL=2.75%, Bars=8 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00027, batch=64, epochs=22, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 554.0% | WorstFold: 15.5% | Sharpe: 10.09 | MaxDD: -6.4% | Trades: 45 | W/L: 28/17
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 64.9% | Sharpe: 3.52 | Trades: 45 | W/L: 25/20
+  ** SHORT MODEL SAVED: models_short/trial_274.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 64.9% | Sharpe: 3.52 | TP=1.50% | SL=2.75%
+============================================================
+
+[Trial #275] TP=1.50%, SL=2.75%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.31, lr=0.00025, batch=64, epochs=22, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 651.3% | WorstFold: -38.8% | Sharpe: 4.87 | MaxDD: -3.0% | Trades: 36 | W/L: 23/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 121.0% | Sharpe: 4.41 | Trades: 52 | W/L: 31/21
+  ** SHORT MODEL SAVED: models_short/trial_275.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 121.0% | Sharpe: 4.41 | TP=1.50% | SL=2.75%
+============================================================
+
+[Trial #276] TP=1.25%, SL=3.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00020, batch=64, epochs=24, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 3632.3% | WorstFold: 33.7% | Sharpe: 14.32 | MaxDD: -3.0% | Trades: 43 | W/L: 33/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 475.6% | Sharpe: 11.90 | Trades: 52 | W/L: 39/13
+  ** SHORT MODEL SAVED: models_short/trial_276.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 475.6% | Sharpe: 11.90 | TP=1.25% | SL=3.00%
+============================================================
+
+[Trial #277] TP=1.50%, SL=3.00%, Bars=32 | seq=64, hidden=256, layers=3, heads=2, drop=0.21, lr=0.00027, batch=64, epochs=23, class_w=4.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 300.8% | WorstFold: 11.1% | Sharpe: 4.58 | MaxDD: -2.0% | Trades: 18 | W/L: 12/6
+  REJECTED: Only 18 trades (need 30+)
+
+[Trial #278] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00030, batch=64, epochs=11, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 5129.5% | WorstFold: -16.6% | Sharpe: 24.29 | MaxDD: -2.6% | Trades: 41 | W/L: 29/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 87.5% | Sharpe: 3.21 | Trades: 40 | W/L: 27/13
+  ** SHORT MODEL SAVED: models_short/trial_278.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 87.5% | Sharpe: 3.21 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #279] TP=1.25%, SL=3.25%, Bars=12 | seq=32, hidden=128, layers=2, heads=2, drop=0.37, lr=0.00021, batch=256, epochs=23, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 997.3% | WorstFold: 15.1% | Sharpe: 10.13 | MaxDD: -5.9% | Trades: 80 | W/L: 47/33
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: -18.1% | Sharpe: -0.43 | Trades: 135 | W/L: 75/60
+
+[Trial #280] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00024, batch=64, epochs=21, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 2641.3% | WorstFold: -18.3% | Sharpe: 9.96 | MaxDD: -6.0% | Trades: 38 | W/L: 27/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 70.9% | Sharpe: 2.49 | Trades: 56 | W/L: 35/21
+  ** SHORT MODEL SAVED: models_short/trial_280.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 70.9% | Sharpe: 2.49 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #281] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00028, batch=64, epochs=20, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 4766.9% | WorstFold: -23.5% | Sharpe: 9.65 | MaxDD: -3.2% | Trades: 38 | W/L: 27/11
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 157.6% | Sharpe: 7.28 | Trades: 28 | W/L: 18/10
+  ** SHORT MODEL SAVED: models_short/trial_281.pth **
+
+[Trial #282] TP=1.75%, SL=2.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.48, lr=0.00033, batch=64, epochs=25, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+
+[Trial #283] TP=1.50%, SL=3.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.15, lr=0.00036, batch=64, epochs=24, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 11427.2% | WorstFold: -2.2% | Sharpe: 7.97 | MaxDD: -2.6% | Trades: 51 | W/L: 35/16
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 141.9% | Sharpe: 3.96 | Trades: 72 | W/L: 43/29
+  ** SHORT MODEL SAVED: models_short/trial_283.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 141.9% | Sharpe: 3.96 | TP=1.50% | SL=3.00%
+============================================================
+
+[Trial #284] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=64, layers=3, heads=2, drop=0.37, lr=0.00026, batch=64, epochs=22, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1166.4% | WorstFold: -4.1% | Sharpe: 6.07 | MaxDD: -2.6% | Trades: 34 | W/L: 21/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 4.5% | Sharpe: 0.35 | Trades: 29 | W/L: 15/14
+  ** SHORT MODEL SAVED: models_short/trial_284.pth **
+
+[Trial #285] TP=1.75%, SL=3.50%, Bars=16 | seq=64, hidden=256, layers=3, heads=8, drop=0.37, lr=0.00040, batch=64, epochs=27, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 1306.1% | WorstFold: 10.9% | Sharpe: 8.97 | MaxDD: -9.3% | Trades: 44 | W/L: 29/15
+  REJECTED: Max Drawdown of -9.3% exceeded -7.0% limit
+
+[Trial #286] TP=1.25%, SL=3.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.34, lr=0.00043, batch=64, epochs=23, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 319.7% | WorstFold: -14.1% | Sharpe: 4.20 | MaxDD: -8.0% | Trades: 49 | W/L: 32/17
+  REJECTED: Max Drawdown of -8.0% exceeded -7.0% limit
+
+[Trial #287] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00029, batch=64, epochs=25, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 17861.7% | WorstFold: -33.6% | Sharpe: 13.06 | MaxDD: -2.0% | Trades: 41 | W/L: 32/9
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 185.9% | Sharpe: 4.45 | Trades: 69 | W/L: 46/23
+  ** SHORT MODEL SAVED: models_short/trial_287.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 185.9% | Sharpe: 4.45 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #288] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00029, batch=128, epochs=25, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 10568.9% | WorstFold: 29.0% | Sharpe: 13.20 | MaxDD: -2.3% | Trades: 43 | W/L: 33/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 117.8% | Sharpe: 3.97 | Trades: 54 | W/L: 32/22
+  ** SHORT MODEL SAVED: models_short/trial_288.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 117.8% | Sharpe: 3.97 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #289] TP=1.50%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00026, batch=64, epochs=24, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1666.9% | WorstFold: 47.0% | Sharpe: 9.06 | MaxDD: -5.7% | Trades: 40 | W/L: 27/13
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 92.1% | Sharpe: 3.06 | Trades: 60 | W/L: 35/25
+  ** SHORT MODEL SAVED: models_short/trial_289.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 92.1% | Sharpe: 3.06 | TP=1.50% | SL=3.50%
+============================================================
+
+[Trial #290] TP=1.75%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.29, lr=0.00023, batch=64, epochs=25, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 1561.6% | WorstFold: 5.8% | Sharpe: 12.29 | MaxDD: -1.6% | Trades: 31 | W/L: 21/10
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 74.0% | Sharpe: 2.62 | Trades: 54 | W/L: 28/26
+  ** SHORT MODEL SAVED: models_short/trial_290.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 74.0% | Sharpe: 2.62 | TP=1.75% | SL=3.50%
+============================================================
+
+[Trial #291] TP=1.25%, SL=4.00%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.40, lr=0.00030, batch=64, epochs=25, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 8984.7% | WorstFold: 34.1% | Sharpe: 13.47 | MaxDD: -3.6% | Trades: 52 | W/L: 37/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 112.5% | Sharpe: 3.48 | Trades: 79 | W/L: 50/29
+  ** SHORT MODEL SAVED: models_short/trial_291.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 112.5% | Sharpe: 3.48 | TP=1.25% | SL=4.00%
+============================================================
+
+[Trial #292] TP=2.00%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.38, lr=0.00071, batch=256, epochs=24, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 144.1% | WorstFold: -20.1% | Sharpe: 2.49 | MaxDD: -9.4% | Trades: 57 | W/L: 29/28
+  REJECTED: Max Drawdown of -9.4% exceeded -7.0% limit
+
+[Trial #293] TP=1.50%, SL=3.25%, Bars=12 | seq=32, hidden=256, layers=3, heads=8, drop=0.48, lr=0.00027, batch=64, epochs=23, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.
+  Val -> AvgROI: 6125.8% | WorstFold: 15.1% | Sharpe: 11.07 | MaxDD: -4.9% | Trades: 41 | W/L: 29/12
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 155.9% | Sharpe: 5.60 | Trades: 48 | W/L: 26/22
+  ** SHORT MODEL SAVED: models_short/trial_293.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 155.9% | Sharpe: 5.60 | TP=1.50% | SL=3.25%
+============================================================
+
+[Trial #294] TP=1.75%, SL=3.75%, Bars=12 | seq=64, hidden=256, layers=3, heads=2, drop=0.42, lr=0.00050, batch=64, epochs=26, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34207 sequences of length 64, 41 features.
+  Val -> AvgROI: 2552.7% | WorstFold: -29.0% | Sharpe: 4.84 | MaxDD: -5.8% | Trades: 40 | W/L: 25/15
+  --> Edge potentially found on Validation (>5%)! Verifying on Unseen Test Data...
+  Test -> ROI: 51.1% | Sharpe: 1.78 | Trades: 58 | W/L: 33/25
+  ** SHORT MODEL SAVED: models_short/trial_294.pth **
+
+============================================================
+*** HOLY GRAIL SHORT FOUND! ***
+   Test ROI: 51.1% | Sharpe: 1.78 | TP=1.75% | SL=3.75%
+============================================================
+
+[Trial #295] TP=1.25%, SL=3.50%, Bars=12 | seq=32, hidden=256, layers=3, heads=2, drop=0.39, lr=0.00018, batch=64, epochs=22, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_short_processed.csv...
+Dataset: 34239 sequences of length 32, 41 features.

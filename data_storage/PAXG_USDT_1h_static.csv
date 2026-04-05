@@ -1,0 +1,1 @@
+timestamp,open,high,low,close,volume,DXY,VIX,EMA_10,EMA_50,EMA_200,Dist_EMA10,Dist_EMA50,Dist_EMA200,EMA_10_50_Ratio,MACD,MACD_signal,MACD_hist,BB_width,BB_pct,Volume_Delta,Return,Prev_Return,Rolling_Vol_20,Hour_sin,Hour_cos,DOW_sin,DOW_cos,Is_London,Is_NY,4h_EMA_200,4h_Dist_EMA200,1d_EMA_200,1d_Dist_EMA200

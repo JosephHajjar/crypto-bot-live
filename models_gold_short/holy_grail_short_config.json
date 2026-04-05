@@ -1,0 +1,11 @@
+{
+  "seq_len": 48,
+  "hidden_dim": 128,
+  "num_layers": 3,
+  "num_heads": 8,
+  "dropout": 0.359,
+  "take_profit": 0.0125,
+  "stop_loss": 0.006,
+  "max_hold_bars": 16,
+  "input_dim": 41
+}

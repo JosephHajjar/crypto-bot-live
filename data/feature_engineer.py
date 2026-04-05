@@ -2,347 +2,185 @@ import pandas as pd
 import ta
 import numpy as np
 import os
+import json
+from numba import njit
+import sys
 
-def _resample_ohlcv(df, rule):
-    """Resample 15m OHLCV data to a higher timeframe (e.g., '1h', '4h')."""
-    resampled = df.resample(rule).agg({
-        'open': 'first',
-        'high': 'max',
-        'low': 'min',
-        'close': 'last',
-        'volume': 'sum'
-    }).dropna()
-    return resampled
-
-def _compute_indicators(df, prefix=''):
-    """Compute technical indicators on a dataframe. Returns new columns as a dict."""
-    cols = {}
-    close = df['close']
-    high = df['high']
-    low = df['low']
-    volume = df['volume']
-    
-    # Trend
-    cols[f'{prefix}SMA_10'] = ta.trend.sma_indicator(close, window=10)
-    cols[f'{prefix}SMA_50'] = ta.trend.sma_indicator(close, window=50)
-    cols[f'{prefix}EMA_12'] = ta.trend.ema_indicator(close, window=12)
-    cols[f'{prefix}EMA_26'] = ta.trend.ema_indicator(close, window=26)
-    
-    # RSI
-    cols[f'{prefix}RSI_14'] = ta.momentum.rsi(close, window=14)
-    
-    # MACD
-    cols[f'{prefix}MACD'] = ta.trend.macd(close, window_slow=26, window_fast=12)
-    cols[f'{prefix}MACD_hist'] = ta.trend.macd_diff(close, window_slow=26, window_fast=12, window_sign=9)
-    cols[f'{prefix}MACD_signal'] = ta.trend.macd_signal(close, window_slow=26, window_fast=12, window_sign=9)
-    
-    # Bollinger Bands
-    bb = ta.volatility.BollingerBands(close=close, window=20, window_dev=2)
-    cols[f'{prefix}BB_width'] = (bb.bollinger_hband() - bb.bollinger_lband()) / bb.bollinger_mavg() * 100
-    cols[f'{prefix}BB_pct'] = (close - bb.bollinger_lband()) / (bb.bollinger_hband() - bb.bollinger_lband() + 1e-10)
-    
-    # ATR
-    cols[f'{prefix}ATR_14'] = ta.volatility.average_true_range(high=high, low=low, close=close, window=14)
-    
-    # Volume ratio  
-    vol_sma = ta.trend.sma_indicator(volume, window=20)
-    cols[f'{prefix}Vol_Ratio'] = volume / (vol_sma + 1e-8)
-    
-    return cols
-
-def _triple_barrier_label(df, take_profit=0.015, stop_loss=0.0075, max_hold_bars=16):
+def precompute_static_features(csv_path):
     """
-    Triple Barrier Method labeling.
-    For each bar, look forward up to max_hold_bars:
-      - If price hits take_profit first -> label 1 (profitable trade)
-      - If price hits stop_loss first -> label 0 (losing trade)
-      - If neither hit within max_hold_bars -> label 0 (no clear signal)
+    Computes all static features (EMAs, session times, higher timeframe lookups, DXY/VIX)
+    and saves them to a base processed file to be loaded quickly during Optuna trials.
     """
-    close = df['close'].values
-    labels = np.zeros(len(close), dtype=int)
-    
-    for i in range(len(close) - max_hold_bars):
-        entry = close[i]
-        tp_price = entry * (1 + take_profit)
-        sl_price = entry * (1 - stop_loss)
-        
-        for j in range(1, max_hold_bars + 1):
-            future_high = df['high'].values[i + j]
-            future_low = df['low'].values[i + j]
-            
-            # Check stop loss first (conservative — assumes worst case within candle)
-            if future_low <= sl_price:
-                labels[i] = 0
-                break
-            # Check take profit
-            if future_high >= tp_price:
-                labels[i] = 1
-                break
-        # If loop completes without break, label stays 0
-    
-    return labels
-
-def _triple_barrier_label_short(df, take_profit=0.015, stop_loss=0.0075, max_hold_bars=16):
-    """
-    Triple Barrier Method labeling for SCHORTS.
-    For each bar, look forward up to max_hold_bars:
-      - If price hits take_profit first (down) -> label 1 (profitable short)
-      - If price hits stop_loss first (up) -> label 0 (losing short)
-      - If neither hit within max_hold_bars -> label 0
-    """
-    close = df['close'].values
-    labels = np.zeros(len(close), dtype=int)
-    
-    for i in range(len(close) - max_hold_bars):
-        entry = close[i]
-        tp_price = entry * (1 - take_profit)
-        sl_price = entry * (1 + stop_loss)
-        
-        for j in range(1, max_hold_bars + 1):
-            future_high = df['high'].values[i + j]
-            future_low = df['low'].values[i + j]
-            
-            # Check stop loss first
-            if future_high >= sl_price:
-                labels[i] = 0
-                break
-            # Check take profit
-            if future_low <= tp_price:
-                labels[i] = 1
-                break
-    
-    return labels
-
-def engineer_features(csv_path, take_profit=0.015, stop_loss=0.0075, max_hold_bars=16, mode='long'):
-    """
-    Multi-timeframe feature engineering with Triple Barrier labeling.
-    
-    Reads 15m OHLCV data, computes indicators at 15m/1h/4h timeframes,
-    adds microstructure features, and labels using Triple Barrier method.
-    """
-    print(f"Loading data from {csv_path}...")
+    print(f"Loading raw data from {csv_path}...")
     df = pd.read_csv(csv_path)
     df['timestamp'] = pd.to_datetime(df['timestamp'])
     df = df.set_index('timestamp')
-    
-    # ================================================================
-    # 1. BASE 15-MINUTE INDICATORS
-    # ================================================================
-    print("Computing 15m indicators...")
-    base_indicators = _compute_indicators(df, prefix='')
-    for col_name, col_data in base_indicators.items():
-        df[col_name] = col_data
-    
-    # ================================================================
-    # 2. MULTI-TIMEFRAME INDICATORS (1h, 4h)
-    # ================================================================
-    print("Computing 1h indicators...")
-    df_1h = _resample_ohlcv(df[['open', 'high', 'low', 'close', 'volume']], '1h')
-    indicators_1h = _compute_indicators(df_1h, prefix='1h_')
-    df_1h_features = pd.DataFrame(indicators_1h, index=df_1h.index)
-    # Forward-fill 1h features onto 15m index (no look-ahead: each 15m bar gets the LAST completed 1h value)
-    df = df.join(df_1h_features, how='left')
-    df[list(indicators_1h.keys())] = df[list(indicators_1h.keys())].ffill()
-    
-    print("Computing 4h indicators...")
-    df_4h = _resample_ohlcv(df[['open', 'high', 'low', 'close', 'volume']], '4h')
-    indicators_4h = _compute_indicators(df_4h, prefix='4h_')
-    df_4h_features = pd.DataFrame(indicators_4h, index=df_4h.index)
-    df = df.join(df_4h_features, how='left')
-    df[list(indicators_4h.keys())] = df[list(indicators_4h.keys())].ffill()
-    
-    # ================================================================
-    # 3. MICROSTRUCTURE FEATURES
-    # ================================================================
-    print("Computing microstructure features...")
-    
-    # Percentage Returns
-    df['Returns'] = df['close'].pct_change()
-    
-    # Realized Volatility (rolling std of returns)
-    df['RealVol_12'] = df['Returns'].rolling(12).std()  # 3-hour realized vol
-    df['RealVol_48'] = df['Returns'].rolling(48).std()  # 12-hour realized vol
-    df['Vol_Regime'] = df['RealVol_12'] / (df['RealVol_48'] + 1e-10)  # vol expansion/contraction
-    
-    # Multi-horizon momentum
-    df['Mom_4'] = df['close'].pct_change(4)    # 1-hour momentum
-    df['Mom_16'] = df['close'].pct_change(16)  # 4-hour momentum
-    df['Mom_48'] = df['close'].pct_change(48)  # 12-hour momentum
-    df['Mom_96'] = df['close'].pct_change(96)  # 24-hour momentum
-    
-    # Volume Imbalance (approximation using candle body position within range)
-    body = df['close'] - df['open']
-    wick_range = df['high'] - df['low']
-    df['Vol_Imbalance'] = body / (wick_range + 1e-10)  # +1 = full bullish, -1 = full bearish
-    
-    # Candle body ratio (how much of the candle is body vs wick)
-    df['Body_Ratio'] = abs(body) / (wick_range + 1e-10)
-    
-    # Time-of-day encoding (cyclical — crypto has daily session patterns)
-    hour = df.index.hour + df.index.minute / 60.0
+
+    close = df['close']
+    high = df['high']
+    low = df['low']
+    open_ = df['open']
+    volume = df['volume']
+
+    # 1. EMAs and distances
+    df['EMA_10'] = ta.trend.ema_indicator(close, window=10)
+    df['EMA_50'] = ta.trend.ema_indicator(close, window=50)
+    df['EMA_200'] = ta.trend.ema_indicator(close, window=200)
+
+    df['Dist_EMA10'] = (close - df['EMA_10']) / df['EMA_10']
+    df['Dist_EMA50'] = (close - df['EMA_50']) / df['EMA_50']
+    df['Dist_EMA200'] = (close - df['EMA_200']) / df['EMA_200']
+    df['EMA_10_50_Ratio'] = df['EMA_10'] / df['EMA_50']
+
+    # 2. MACD
+    df['MACD'] = ta.trend.macd(close)
+    df['MACD_signal'] = ta.trend.macd_signal(close)
+    df['MACD_hist'] = ta.trend.macd_diff(close)
+
+    # 3. Bollinger Bands
+    bb = ta.volatility.BollingerBands(close)
+    df['BB_width'] = (bb.bollinger_hband() - bb.bollinger_lband()) / bb.bollinger_mavg()
+    df['BB_pct'] = (close - bb.bollinger_lband()) / (bb.bollinger_hband() - bb.bollinger_lband() + 1e-10)
+
+    # 4. Volume Delta
+    df['Volume_Delta'] = volume.diff()
+
+    # 5. Previous Return & Volatility
+    df['Return'] = close.pct_change()
+    df['Prev_Return'] = df['Return'].shift(1)
+    df['Rolling_Vol_20'] = df['Return'].rolling(20).std()
+
+    # 6. Session Data
+    # Assuming timezone is UTC
+    hour = df.index.hour
     df['Hour_sin'] = np.sin(2 * np.pi * hour / 24)
     df['Hour_cos'] = np.cos(2 * np.pi * hour / 24)
-    
-    # Day-of-week encoding (cyclical)
+
     dow = df.index.dayofweek
     df['DOW_sin'] = np.sin(2 * np.pi * dow / 7)
     df['DOW_cos'] = np.cos(2 * np.pi * dow / 7)
-    
-    # Price distance from key levels
-    df['Dist_SMA50'] = (df['close'] - df['SMA_50']) / (df['SMA_50'] + 1e-10)
-    
-    # ================================================================
-    # 4. TRIPLE BARRIER LABELING
-    # ================================================================
-    print(f"Labeling with Triple Barrier (TP={take_profit*100:.1f}%, SL={stop_loss*100:.2f}%, MaxBars={max_hold_bars}, mode={mode})...")
-    if mode == 'short':
-        df['Target'] = _triple_barrier_label_short(df, take_profit, stop_loss, max_hold_bars)
-    else:
-        df['Target'] = _triple_barrier_label(df, take_profit, stop_loss, max_hold_bars)
-    
-    # ================================================================
-    # 5. CLEANUP AND NORMALIZE
-    # ================================================================
-    df = df.dropna()
-    
-    # Remove the last max_hold_bars rows (they can't have proper labels)
-    df = df.iloc[:-max_hold_bars]
-    
-    # Define all feature columns
-    feature_cols = get_feature_cols()
-    
-    # Verify all features exist
-    missing = [c for c in feature_cols if c not in df.columns]
-    if missing:
-        print(f"WARNING: Missing features: {missing}")
-        feature_cols = [c for c in feature_cols if c in df.columns]
-    
-    # Z-score normalize using ONLY training data (first 70%)
-    print("Normalizing features (train-only statistics)...")
-    train_end_idx = int(len(df) * 0.7)
-    train_slice = df[feature_cols].iloc[:train_end_idx]
-    
-    feature_means = train_slice.mean()
-    feature_stds = train_slice.std().replace(0, 1)
-    
-    df[feature_cols] = (df[feature_cols] - feature_means) / feature_stds
-    
-    # Save
-    if mode == 'short':
-        save_path = csv_path.replace('.csv', '_short_processed.csv')
-        scaler_save = csv_path.replace('.csv', '_short_scaler.json')
-    else:
-        save_path = csv_path.replace('.csv', '_processed.csv')
-        scaler_save = csv_path.replace('.csv', '_scaler.json')
-        
-    df.to_csv(save_path)
-    
-    # Save scalars to disk
-    import json
-    stats = {
-        'mean': feature_means.to_dict(),
-        'std': feature_stds.to_dict()
-    }
-    with open(scaler_save, 'w') as f:
-        json.dump(stats, f)
-        
-    # Print class distribution
-    target_dist = df['Target'].value_counts()
-    pct_positive = target_dist.get(1, 0) / len(df) * 100
-    print(f"Saved {len(df)} samples to {save_path}")
-    print(f"Target distribution: {target_dist.to_dict()} ({pct_positive:.1f}% positive)")
-    
-    return save_path, stats
 
-def compute_live_features(df, scaler_path="data_storage/BTC_USDT_15m_scaler.json"):
+    # London: 8-16 UTC, NY: 13-21 UTC
+    df['Is_London'] = ((hour >= 8) & (hour < 16)).astype(int)
+    df['Is_NY'] = ((hour >= 13) & (hour < 21)).astype(int)
+
+    # 7. Higher Timeframe Resampling (4H, Daily)
+    def resample_htf(rule, prefix):
+        htf = df[['open', 'high', 'low', 'close', 'volume']].resample(rule).agg({
+            'open': 'first', 'high': 'max', 'low': 'min', 'close': 'last', 'volume': 'sum'
+        }).dropna()
+        htf_features = pd.DataFrame(index=htf.index)
+        # Macro context: distance from 200 EMA
+        htf_features[f'{prefix}_EMA_200'] = ta.trend.ema_indicator(htf['close'], window=200)
+        htf_features[f'{prefix}_Dist_EMA200'] = (htf['close'] - htf_features[f'{prefix}_EMA_200']) / htf_features[f'{prefix}_EMA_200']
+        return htf_features
+
+    df_4h_feat = resample_htf('4h', '4h')
+    df_1d_feat = resample_htf('1d', '1d')
+
+    # Join lower frequency onto our 1H dataframe (forward filled to avoid look ahead logic)
+    df = df.join(df_4h_feat, how='left').join(df_1d_feat, how='left')
+    df['4h_Dist_EMA200'] = df['4h_Dist_EMA200'].ffill()
+    df['1d_Dist_EMA200'] = df['1d_Dist_EMA200'].ffill()
+
+    # Drop early rows with NaNs (EMA 200 inherently removes the first 200 intervals)
+    df = df.dropna(subset=['EMA_200', '4h_Dist_EMA200', '1d_Dist_EMA200'])
+
+    # Default 'DXY' and 'VIX' gracefully if fetch_data.py didn't inject them
+    if 'DXY' not in df.columns:
+        df['DXY'] = 100.0
+    if 'VIX' not in df.columns:
+        df['VIX'] = 20.0
+
+    # Clean extreme inf values occasionally produced by math divisions
+    df = df.replace([np.inf, -np.inf], np.nan)
+    df = df.dropna()
+
+    out_path = csv_path.replace('.csv', '_static.csv')
+    df.to_csv(out_path)
+    print(f"Saved {len(df)} static processed features to {out_path}")
+    return out_path
+
+@njit
+def _compute_3class_labels(close, high, low, atr, threshold, horizon):
     """
-    Computes indicators on live streaming DataFrame.
-    Crucially drops future-leakage (No Triple-Barrier labeling) and retains the most recent candles for actual inference.
+    Classes:
+    0 = Neither / Flat (Skip trade)
+    1 = Long (+1: Rises > threshold * ATR)
+    2 = Short (-1: Falls > threshold * ATR) 
+    """
+    n = len(close)
+    labels = np.zeros(n, dtype=np.int64)
+    
+    for i in range(n - horizon):
+        entry_price = close[i]
+        barrier = atr[i] * threshold
+        up_barrier = entry_price + barrier
+        dn_barrier = entry_price - barrier
+        
+        for j in range(1, horizon + 1):
+            f_high = high[i + j]
+            f_low = low[i + j]
+            
+            # First touch logic
+            # If high hits up_barrier AND low hits dn_barrier in the exact same hourly candle
+            if f_high >= up_barrier and f_low <= dn_barrier:
+                # Ambiguous noise: ignore trade
+                labels[i] = 0
+                break
+                
+            elif f_high >= up_barrier:
+                labels[i] = 1 # Long
+                break
+                
+            elif f_low <= dn_barrier:
+                labels[i] = 2 # Short
+                break
+                
+    return labels
+
+def dynamic_features_and_labels(df, atr_period, rsi_period, label_horizon, label_threshold):
+    """
+    Computes dynamic features natively inside the Optuna Trial loop extremely fast!
     """
     df = df.copy()
-    if 'timestamp' in df.columns:
-        df['timestamp'] = pd.to_datetime(df['timestamp'])
-        df = df.set_index('timestamp')
-        
-    # 1. BASE 15-MINUTE INDICATORS
-    base_indicators = _compute_indicators(df, prefix='')
-    for col_name, col_data in base_indicators.items():
-        df[col_name] = col_data
-        
-    # 2. MULTI-TIMEFRAME INDICATORS (1h, 4h)
-    df_1h = _resample_ohlcv(df[['open', 'high', 'low', 'close', 'volume']], '1h')
-    indicators_1h = _compute_indicators(df_1h, prefix='1h_')
-    df_1h_features = pd.DataFrame(indicators_1h, index=df_1h.index)
-    df = df.join(df_1h_features, how='left')
-    df[list(indicators_1h.keys())] = df[list(indicators_1h.keys())].ffill()
     
-    df_4h = _resample_ohlcv(df[['open', 'high', 'low', 'close', 'volume']], '4h')
-    indicators_4h = _compute_indicators(df_4h, prefix='4h_')
-    df_4h_features = pd.DataFrame(indicators_4h, index=df_4h.index)
-    df = df.join(df_4h_features, how='left')
-    df[list(indicators_4h.keys())] = df[list(indicators_4h.keys())].ffill()
+    # 1. Dynamic TSI/RSI
+    df['RSI'] = ta.momentum.rsi(df['close'], window=rsi_period)
     
-    # 3. MICROSTRUCTURE FEATURES
-    df['Returns'] = df['close'].pct_change()
-    df['RealVol_12'] = df['Returns'].rolling(12).std()
-    df['RealVol_48'] = df['Returns'].rolling(48).std()
-    df['Vol_Regime'] = df['RealVol_12'] / (df['RealVol_48'] + 1e-10)
-    
-    df['Mom_4'] = df['close'].pct_change(4)
-    df['Mom_16'] = df['close'].pct_change(16)
-    df['Mom_48'] = df['close'].pct_change(48)
-    df['Mom_96'] = df['close'].pct_change(96)
-    
-    body = df['close'] - df['open']
-    wick_range = df['high'] - df['low']
-    df['Vol_Imbalance'] = body / (wick_range + 1e-10)
-    df['Body_Ratio'] = abs(body) / (wick_range + 1e-10)
-    
-    hour = df.index.hour + df.index.minute / 60.0
-    df['Hour_sin'] = np.sin(2 * np.pi * hour / 24)
-    df['Hour_cos'] = np.cos(2 * np.pi * hour / 24)
-    
-    dow = df.index.dayofweek
-    df['DOW_sin'] = np.sin(2 * np.pi * dow / 7)
-    df['DOW_cos'] = np.cos(2 * np.pi * dow / 7)
-    
-    df['Dist_SMA50'] = (df['close'] - df['SMA_50']) / (df['SMA_50'] + 1e-10)
-    
+    # 2. Dynamic ATR
+    df['ATR'] = ta.volatility.average_true_range(df['high'], df['low'], df['close'], window=atr_period)
+    df['ATR_Norm'] = df['ATR'] / df['close']  # Normalized by price scaling
+
+    # 3. Target Barrier Computation
+    df['Target'] = _compute_3class_labels(
+        df['close'].values, 
+        df['high'].values, 
+        df['low'].values, 
+        df['ATR'].values,
+        label_threshold,
+        label_horizon
+    )
+
     df = df.dropna()
-    
-    # NORMALIZATION
-    feature_cols = get_feature_cols()
-    
-    import json
-    with open(scaler_path, 'r') as f:
-        scaler = json.load(f)
-        
-    for col in feature_cols:
-        if col in df.columns and col in scaler['mean']:
-            df[col] = (df[col] - scaler['mean'][col]) / scaler['std'][col]
-            
+    # Remove last incomplete futures
+    df = df.iloc[:-label_horizon]
     return df
 
 def get_feature_cols():
-    """Returns the canonical list of feature columns used everywhere."""
-    base = ['Returns', 'SMA_10', 'SMA_50', 'EMA_12', 'EMA_26',
-            'RSI_14', 'MACD', 'MACD_hist', 'MACD_signal',
-            'BB_width', 'BB_pct', 'ATR_14', 'Vol_Ratio']
-    
-    htf_1h = [f'1h_{x}' for x in ['RSI_14', 'MACD', 'MACD_hist', 'BB_width', 'BB_pct', 'ATR_14', 'Vol_Ratio']]
-    htf_4h = [f'4h_{x}' for x in ['RSI_14', 'MACD', 'MACD_hist', 'BB_width', 'BB_pct', 'ATR_14', 'Vol_Ratio']]
-    
-    micro = ['RealVol_12', 'RealVol_48', 'Vol_Regime',
-             'Mom_4', 'Mom_16', 'Mom_48', 'Mom_96',
-             'Vol_Imbalance', 'Body_Ratio',
-             'Hour_sin', 'Hour_cos', 'DOW_sin', 'DOW_cos',
-             'Dist_SMA50']
-    
-    return base + htf_1h + htf_4h + micro
+    """Canonical feature lookup for the Gold 1H Strategy Model."""
+    return [
+        'EMA_10', 'EMA_50', 'EMA_200', 'Dist_EMA10', 'Dist_EMA50', 'Dist_EMA200', 'EMA_10_50_Ratio',
+        'MACD', 'MACD_signal', 'MACD_hist', 'BB_width', 'BB_pct', 'Volume_Delta',
+        'Return', 'Prev_Return', 'Rolling_Vol_20', 
+        'Hour_sin', 'Hour_cos', 'DOW_sin', 'DOW_cos', 'Is_London', 'Is_NY',
+        '4h_Dist_EMA200', '1d_Dist_EMA200', 'DXY', 'VIX',
+        'RSI', 'ATR_Norm'
+    ]
 
 if __name__ == "__main__":
-    dummy_path = "data_storage/BTC_USDT_15m.csv"
+    dummy_path = "data_storage/PAXG_USDT_1h.csv"
     if os.path.exists(dummy_path):
-        engineer_features(dummy_path)
+        precompute_static_features(dummy_path)
     else:
-        print(f"Run fetch_data.py first. Could not find {dummy_path}")
+        print(f"File {dummy_path} missing.")

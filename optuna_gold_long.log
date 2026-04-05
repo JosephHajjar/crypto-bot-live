@@ -1,0 +1,1320 @@
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Could not read existing file: name 'np' is not defined. Fetching 365 days.
+Successfully saved 35056 candles to data_storage\PAXG_USDT_15m.csv
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #0] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=256, epochs=23, class_w=3.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: 0.5% | WorstFold: -13.1% | Sharpe: -3.37 | MaxDD: -1.8% | Trades: 20 | W/L: 10/10
+  REJECTED: Only 20 trades (need 30+)
+
+[Trial #1] seq=48, hidden=128, layers=2, heads=8, drop=0.17, lr=0.00012, batch=128, epochs=17, class_w=2.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -0.3% | WorstFold: -19.9% | Sharpe: -0.05 | MaxDD: -5.4% | Trades: 36 | W/L: 19/17
+
+[Trial #2] seq=32, hidden=64, layers=1, heads=4, drop=0.49, lr=0.00140, batch=64, epochs=33, class_w=2.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -39.3% | WorstFold: -95.6% | Sharpe: -6.50 | MaxDD: -11.1% | Trades: 48 | W/L: 15/33
+  REJECTED: Max Drawdown of -11.1% exceeded -7.0% limit
+
+[Trial #3] seq=96, hidden=64, layers=2, heads=4, drop=0.49, lr=0.00138, batch=256, epochs=28, class_w=4.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -22.6% | WorstFold: -86.5% | Sharpe: -3.49 | MaxDD: -9.4% | Trades: 56 | W/L: 24/32
+  REJECTED: Max Drawdown of -9.4% exceeded -7.0% limit
+
+[Trial #4] seq=128, hidden=64, layers=1, heads=4, drop=0.45, lr=0.00050, batch=256, epochs=24, class_w=5.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -19.7% | WorstFold: -74.0% | Sharpe: 0.44 | MaxDD: -7.7% | Trades: 44 | W/L: 18/26
+  REJECTED: Max Drawdown of -7.7% exceeded -7.0% limit
+
+[Trial #5] seq=48, hidden=128, layers=2, heads=2, drop=0.40, lr=0.00022, batch=128, epochs=34, class_w=5.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -7.3% | WorstFold: -16.0% | Sharpe: -0.98 | MaxDD: -4.7% | Trades: 26 | W/L: 13/13
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #6] seq=128, hidden=256, layers=1, heads=8, drop=0.43, lr=0.00187, batch=128, epochs=15, class_w=2.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -29.2% | WorstFold: -87.7% | Sharpe: -9.09 | MaxDD: -7.4% | Trades: 14 | W/L: 2/12
+  REJECTED: Only 14 trades (need 30+)
+
+[Trial #7] seq=48, hidden=128, layers=1, heads=2, drop=0.11, lr=0.00080, batch=64, epochs=33, class_w=3.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+
+[Trial #8] seq=64, hidden=128, layers=3, heads=8, drop=0.16, lr=0.00011, batch=128, epochs=10, class_w=3.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: -4.5% | WorstFold: -13.5% | Sharpe: -0.29 | MaxDD: -2.4% | Trades: 15 | W/L: 6/9
+  REJECTED: Only 15 trades (need 30+)
+
+[Trial #9] seq=32, hidden=128, layers=3, heads=8, drop=0.24, lr=0.00011, batch=128, epochs=18, class_w=5.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -20.6% | WorstFold: -70.1% | Sharpe: -1.80 | MaxDD: -9.1% | Trades: 62 | W/L: 29/33
+  REJECTED: Max Drawdown of -9.1% exceeded -7.0% limit
+
+[Trial #10] seq=96, hidden=128, layers=3, heads=8, drop=0.29, lr=0.00036, batch=128, epochs=17, class_w=2.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+
+[Trial #11] seq=48, hidden=256, layers=2, heads=8, drop=0.32, lr=0.00021, batch=256, epochs=23, class_w=3.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -18.8% | WorstFold: -50.0% | Sharpe: -2.29 | MaxDD: -4.8% | Trades: 19 | W/L: 6/13
+  REJECTED: Only 19 trades (need 30+)
+
+[Trial #12] seq=48, hidden=256, layers=2, heads=8, drop=0.36, lr=0.00023, batch=256, epochs=20, class_w=4.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -25.9% | WorstFold: -86.4% | Sharpe: -2.44 | MaxDD: -9.3% | Trades: 39 | W/L: 15/24
+  REJECTED: Max Drawdown of -9.3% exceeded -7.0% limit
+
+[Trial #13] seq=48, hidden=256, layers=2, heads=8, drop=0.20, lr=0.00015, batch=256, epochs=13, class_w=2.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -21.7% | WorstFold: -32.0% | Sharpe: -4.38 | MaxDD: -3.9% | Trades: 21 | W/L: 8/13
+  REJECTED: Only 21 trades (need 30+)
+
+[Trial #14] seq=64, hidden=256, layers=2, heads=8, drop=0.29, lr=0.00033, batch=64, epochs=27, class_w=4.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: -26.6% | WorstFold: -85.5% | Sharpe: -3.17 | MaxDD: -8.0% | Trades: 31 | W/L: 11/20
+  REJECTED: Max Drawdown of -8.0% exceeded -7.0% limit
+
+[Trial #15] seq=48, hidden=128, layers=3, heads=2, drop=0.10, lr=0.00017, batch=128, epochs=21, class_w=3.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+
+[Trial #16] seq=48, hidden=256, layers=2, heads=8, drop=0.23, lr=0.00075, batch=256, epochs=28, class_w=2.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -21.6% | WorstFold: -59.1% | Sharpe: -2.81 | MaxDD: -5.2% | Trades: 24 | W/L: 11/13
+  REJECTED: Only 24 trades (need 30+)
+
+[Trial #17] seq=48, hidden=128, layers=3, heads=8, drop=0.37, lr=0.00031, batch=256, epochs=25, class_w=3.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -36.2% | WorstFold: -91.1% | Sharpe: -5.72 | MaxDD: -9.3% | Trades: 33 | W/L: 8/25
+  REJECTED: Max Drawdown of -9.3% exceeded -7.0% limit
+
+[Trial #18] seq=96, hidden=256, layers=2, heads=4, drop=0.32, lr=0.00016, batch=128, epochs=13, class_w=4.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -15.1% | WorstFold: -79.4% | Sharpe: -1.29 | MaxDD: -7.6% | Trades: 32 | W/L: 12/20
+  REJECTED: Max Drawdown of -7.6% exceeded -7.0% limit
+
+[Trial #19] seq=32, hidden=64, layers=1, heads=2, drop=0.16, lr=0.00011, batch=64, epochs=19, class_w=2.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #20] seq=128, hidden=256, layers=2, heads=8, drop=0.24, lr=0.00052, batch=256, epochs=16, class_w=3.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #21] seq=32, hidden=64, layers=1, heads=4, drop=0.49, lr=0.00297, batch=64, epochs=31, class_w=2.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #22] seq=32, hidden=64, layers=1, heads=4, drop=0.45, lr=0.00118, batch=64, epochs=30, class_w=2.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #23] seq=32, hidden=64, layers=1, heads=4, drop=0.40, lr=0.00295, batch=64, epochs=22, class_w=2.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #24] seq=64, hidden=64, layers=1, heads=4, drop=0.46, lr=0.00086, batch=64, epochs=35, class_w=2.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+
+[Trial #25] seq=32, hidden=64, layers=2, heads=4, drop=0.42, lr=0.00175, batch=64, epochs=10, class_w=3.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #26] seq=48, hidden=128, layers=3, heads=8, drop=0.36, lr=0.00027, batch=128, epochs=26, class_w=5.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -37.6% | WorstFold: -58.1% | Sharpe: -4.95 | MaxDD: -4.8% | Trades: 42 | W/L: 17/25
+
+[Trial #27] seq=48, hidden=128, layers=3, heads=8, drop=0.36, lr=0.00028, batch=128, epochs=22, class_w=6.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: 28.1% | WorstFold: -24.1% | Sharpe: 0.08 | MaxDD: -4.7% | Trades: 37 | W/L: 18/19
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -51.5% | Sharpe: -6.38 | Trades: 49 | W/L: 17/32
+
+[Trial #28] seq=48, hidden=128, layers=3, heads=8, drop=0.36, lr=0.00038, batch=128, epochs=26, class_w=6.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: 14.4% | WorstFold: -30.2% | Sharpe: 1.22 | MaxDD: -3.6% | Trades: 46 | W/L: 23/23
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -56.3% | Sharpe: -7.15 | Trades: 59 | W/L: 19/40
+
+[Trial #29] seq=48, hidden=128, layers=3, heads=8, drop=0.33, lr=0.00049, batch=128, epochs=22, class_w=5.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -24.2% | WorstFold: -64.9% | Sharpe: -2.61 | MaxDD: -6.2% | Trades: 32 | W/L: 12/20
+
+[Trial #30] seq=48, hidden=128, layers=3, heads=8, drop=0.35, lr=0.00039, batch=128, epochs=20, class_w=5.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -22.4% | WorstFold: -83.4% | Sharpe: -2.86 | MaxDD: -6.4% | Trades: 30 | W/L: 10/20
+
+[Trial #31] seq=48, hidden=128, layers=3, heads=8, drop=0.27, lr=0.00040, batch=128, epochs=18, class_w=5.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: 12.4% | WorstFold: -30.2% | Sharpe: 2.40 | MaxDD: -3.2% | Trades: 33 | W/L: 15/18
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -17.5% | Sharpe: -1.67 | Trades: 39 | W/L: 15/24
+
+[Trial #32] seq=48, hidden=128, layers=3, heads=8, drop=0.27, lr=0.00065, batch=128, epochs=14, class_w=5.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -37.7% | WorstFold: -86.5% | Sharpe: -4.56 | MaxDD: -8.7% | Trades: 44 | W/L: 14/30
+  REJECTED: Max Drawdown of -8.7% exceeded -7.0% limit
+
+[Trial #33] seq=48, hidden=128, layers=3, heads=8, drop=0.21, lr=0.00042, batch=128, epochs=18, class_w=5.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -44.1% | WorstFold: -87.4% | Sharpe: -6.32 | MaxDD: -8.7% | Trades: 53 | W/L: 16/37
+  REJECTED: Max Drawdown of -8.7% exceeded -7.0% limit
+
+[Trial #34] seq=48, hidden=128, layers=3, heads=8, drop=0.39, lr=0.00029, batch=128, epochs=25, class_w=5.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -19.7% | WorstFold: -53.9% | Sharpe: -1.94 | MaxDD: -4.3% | Trades: 24 | W/L: 9/15
+  REJECTED: Only 24 trades (need 30+)
+
+[Trial #35] seq=48, hidden=128, layers=3, heads=8, drop=0.17, lr=0.00018, batch=128, epochs=23, class_w=4.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -38.8% | WorstFold: -83.1% | Sharpe: -6.78 | MaxDD: -6.5% | Trades: 36 | W/L: 12/24
+
+[Trial #36] seq=128, hidden=128, layers=3, heads=8, drop=0.27, lr=0.00063, batch=128, epochs=16, class_w=5.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -24.7% | WorstFold: -87.0% | Sharpe: -4.17 | MaxDD: -7.5% | Trades: 25 | W/L: 8/17
+  REJECTED: Only 25 trades (need 30+)
+
+[Trial #37] seq=96, hidden=128, layers=3, heads=2, drop=0.14, lr=0.00013, batch=128, epochs=21, class_w=6.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -51.7% | WorstFold: -74.7% | Sharpe: -6.27 | MaxDD: -6.6% | Trades: 69 | W/L: 24/45
+
+[Trial #38] seq=48, hidden=128, layers=2, heads=8, drop=0.19, lr=0.00026, batch=128, epochs=29, class_w=5.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -17.7% | WorstFold: -56.3% | Sharpe: -5.31 | MaxDD: -3.1% | Trades: 17 | W/L: 6/11
+  REJECTED: Only 17 trades (need 30+)
+
+[Trial #39] seq=48, hidden=128, layers=3, heads=8, drop=0.31, lr=0.00018, batch=128, epochs=24, class_w=5.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -26.0% | WorstFold: -81.3% | Sharpe: -3.23 | MaxDD: -8.6% | Trades: 37 | W/L: 12/25
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #40] seq=64, hidden=128, layers=2, heads=2, drop=0.34, lr=0.00037, batch=128, epochs=18, class_w=4.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: 46.8% | WorstFold: -14.3% | Sharpe: 0.13 | MaxDD: -1.6% | Trades: 25 | W/L: 13/12
+  REJECTED: Only 25 trades (need 30+)
+
+[Trial #41] seq=48, hidden=128, layers=3, heads=8, drop=0.38, lr=0.00043, batch=128, epochs=20, class_w=5.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: 26.2% | WorstFold: -30.2% | Sharpe: -1.25 | MaxDD: -2.9% | Trades: 39 | W/L: 16/23
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -22.9% | Sharpe: -2.28 | Trades: 38 | W/L: 16/22
+
+[Trial #42] seq=48, hidden=128, layers=3, heads=8, drop=0.41, lr=0.00043, batch=128, epochs=19, class_w=5.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: 26.9% | WorstFold: -23.7% | Sharpe: -0.99 | MaxDD: -3.2% | Trades: 26 | W/L: 13/13
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #43] seq=48, hidden=128, layers=3, heads=8, drop=0.35, lr=0.00058, batch=128, epochs=16, class_w=5.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -32.6% | WorstFold: -74.2% | Sharpe: -3.45 | MaxDD: -8.6% | Trades: 44 | W/L: 18/26
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #44] seq=48, hidden=128, layers=3, heads=8, drop=0.39, lr=0.00047, batch=128, epochs=20, class_w=5.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -25.7% | WorstFold: -55.1% | Sharpe: -2.49 | MaxDD: -4.9% | Trades: 42 | W/L: 17/25
+
+[Trial #45] seq=128, hidden=128, layers=3, heads=8, drop=0.38, lr=0.00033, batch=128, epochs=24, class_w=4.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: 3.2% | WorstFold: 2.4% | Sharpe: 0.58 | MaxDD: -3.9% | Trades: 25 | W/L: 12/13
+  REJECTED: Only 25 trades (need 30+)
+
+[Trial #46] seq=48, hidden=128, layers=3, heads=8, drop=0.45, lr=0.00100, batch=128, epochs=12, class_w=4.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -27.5% | WorstFold: -79.4% | Sharpe: -3.79 | MaxDD: -6.6% | Trades: 23 | W/L: 7/16
+  REJECTED: Only 23 trades (need 30+)
+
+[Trial #47] seq=96, hidden=128, layers=2, heads=8, drop=0.31, lr=0.00024, batch=128, epochs=17, class_w=5.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -21.6% | WorstFold: -53.8% | Sharpe: -0.90 | MaxDD: -4.8% | Trades: 44 | W/L: 18/26
+
+[Trial #48] seq=48, hidden=128, layers=3, heads=8, drop=0.13, lr=0.00020, batch=128, epochs=21, class_w=5.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -12.7% | WorstFold: -19.8% | Sharpe: -2.63 | MaxDD: -3.2% | Trades: 33 | W/L: 14/19
+
+[Trial #49] seq=48, hidden=128, layers=2, heads=8, drop=0.27, lr=0.00058, batch=128, epochs=19, class_w=4.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -37.8% | WorstFold: -78.8% | Sharpe: -7.78 | MaxDD: -7.2% | Trades: 25 | W/L: 7/18
+  REJECTED: Only 25 trades (need 30+)
+
+============================================================
+SEARCH COMPLETE
+============================================================
+Completed trials: 41
+Best score: 28.36
+Best params: {'seq_len': 48, 'hidden_dim': 128, 'num_layers': 3, 'num_heads': 8, 'dropout': 0.3593527264542069, 'lr': 0.00027837779269978733, 'batch_size': 128, 'epochs': 22, 'class_weight': 5.9900639716401685}
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #0] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=256, epochs=23, class_w=3.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: 18.9% | WorstFold: -11.9% | Sharpe: 6.21 | MaxDD: -2.7% | Trades: 23 | W/L: 12/11
+  REJECTED: Only 23 trades (need 30+)
+
+[Trial #1] seq=48, hidden=128, layers=2, heads=8, drop=0.17, lr=0.00012, batch=128, epochs=17, class_w=2.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -12.5% | WorstFold: -50.2% | Sharpe: -1.78 | MaxDD: -3.0% | Trades: 11 | W/L: 4/7
+  REJECTED: Only 11 trades (need 30+)
+
+[Trial #2] seq=32, hidden=64, layers=1, heads=4, drop=0.49, lr=0.00140, batch=64, epochs=33, class_w=2.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -1.2% | WorstFold: -19.9% | Sharpe: 0.38 | MaxDD: -4.2% | Trades: 53 | W/L: 26/27
+
+[Trial #3] seq=96, hidden=64, layers=2, heads=4, drop=0.49, lr=0.00138, batch=256, epochs=28, class_w=4.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -20.9% | WorstFold: -89.5% | Sharpe: -1.11 | MaxDD: -11.1% | Trades: 43 | W/L: 17/26
+  REJECTED: Max Drawdown of -11.1% exceeded -7.0% limit
+
+[Trial #4] seq=128, hidden=64, layers=1, heads=4, drop=0.45, lr=0.00050, batch=256, epochs=24, class_w=5.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: 4.1% | WorstFold: -22.8% | Sharpe: 0.86 | MaxDD: -2.5% | Trades: 18 | W/L: 8/10
+  REJECTED: Only 18 trades (need 30+)
+
+[Trial #5] seq=48, hidden=128, layers=2, heads=2, drop=0.40, lr=0.00022, batch=128, epochs=34, class_w=5.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -26.8% | WorstFold: -71.9% | Sharpe: -2.89 | MaxDD: -5.2% | Trades: 29 | W/L: 11/18
+  REJECTED: Only 29 trades (need 30+)
+
+[Trial #6] seq=128, hidden=256, layers=1, heads=8, drop=0.43, lr=0.00187, batch=128, epochs=15, class_w=2.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -14.1% | WorstFold: -42.3% | Sharpe: -1.12 | MaxDD: -3.2% | Trades: 13 | W/L: 5/8
+  REJECTED: Only 13 trades (need 30+)
+
+[Trial #7] seq=48, hidden=128, layers=1, heads=2, drop=0.11, lr=0.00080, batch=64, epochs=33, class_w=3.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+
+[Trial #8] seq=32, hidden=64, layers=3, heads=4, drop=0.30, lr=0.00219, batch=64, epochs=11, class_w=3.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #9] seq=64, hidden=64, layers=3, heads=4, drop=0.31, lr=0.00071, batch=64, epochs=29, class_w=5.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: 5.6% | WorstFold: -30.7% | Sharpe: -2.39 | MaxDD: -3.6% | Trades: 49 | W/L: 24/25
+
+[Trial #10] seq=64, hidden=64, layers=3, heads=4, drop=0.29, lr=0.00054, batch=64, epochs=29, class_w=6.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: -28.7% | WorstFold: -70.1% | Sharpe: -2.92 | MaxDD: -7.9% | Trades: 44 | W/L: 17/27
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #11] seq=32, hidden=64, layers=3, heads=4, drop=0.32, lr=0.00100, batch=64, epochs=29, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #12] seq=64, hidden=64, layers=3, heads=4, drop=0.23, lr=0.00270, batch=64, epochs=35, class_w=4.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #0] seq=48, hidden=128, layers=2, heads=2, drop=0.41, lr=0.00012, batch=64, epochs=15, class_w=3.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #1] seq=48, hidden=64, layers=1, heads=2, drop=0.40, lr=0.00257, batch=128, epochs=14, class_w=2.9
+[Trial #2] seq=64, hidden=64, layers=3, heads=4, drop=0.17, lr=0.00253, batch=64, epochs=15, class_w=3.9
+
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #3] seq=96, hidden=256, layers=2, heads=2, drop=0.18, lr=0.00147, batch=128, epochs=18, class_w=5.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #4] seq=32, hidden=256, layers=2, heads=2, drop=0.38, lr=0.00027, batch=128, epochs=34, class_w=4.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -23.9% | WorstFold: -84.4% | Sharpe: -3.47 | MaxDD: -8.5% | Trades: 21 | W/L: 6/15
+  REJECTED: Only 21 trades (need 30+)
+
+[Trial #5] seq=32, hidden=128, layers=2, heads=2, drop=0.50, lr=0.00093, batch=256, epochs=28, class_w=5.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: 4.2% | WorstFold: -12.8% | Sharpe: -0.38 | MaxDD: -4.1% | Trades: 41 | W/L: 20/21
+
+[Trial #6] seq=128, hidden=64, layers=1, heads=2, drop=0.44, lr=0.00059, batch=64, epochs=15, class_w=2.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #7] seq=128, hidden=64, layers=2, heads=8, drop=0.25, lr=0.00051, batch=256, epochs=16, class_w=3.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+
+[Trial #8] seq=32, hidden=128, layers=2, heads=8, drop=0.44, lr=0.00052, batch=256, epochs=20, class_w=4.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #9] seq=64, hidden=64, layers=2, heads=2, drop=0.47, lr=0.00034, batch=64, epochs=25, class_w=5.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: -8.2% | WorstFold: -41.5% | Sharpe: 0.08 | MaxDD: -4.5% | Trades: 38 | W/L: 18/20
+
+[Trial #10] seq=32, hidden=128, layers=3, heads=4, drop=0.50, lr=0.00093, batch=256, epochs=29, class_w=5.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -4.7% | WorstFold: -61.7% | Sharpe: -1.20 | MaxDD: -6.1% | Trades: 52 | W/L: 22/30
+
+[Trial #11] seq=32, hidden=128, layers=3, heads=4, drop=0.50, lr=0.00087, batch=256, epochs=27, class_w=5.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -0.2% | WorstFold: -21.4% | Sharpe: -1.97 | MaxDD: -4.6% | Trades: 46 | W/L: 19/27
+
+[Trial #12] seq=96, hidden=128, layers=1, heads=4, drop=0.32, lr=0.00023, batch=256, epochs=26, class_w=5.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: 2.0% | WorstFold: -38.7% | Sharpe: -1.62 | MaxDD: -4.8% | Trades: 39 | W/L: 18/21
+
+[Trial #13] seq=32, hidden=128, layers=3, heads=4, drop=0.50, lr=0.00112, batch=256, epochs=26, class_w=5.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -18.4% | WorstFold: -71.7% | Sharpe: -1.02 | MaxDD: -5.3% | Trades: 45 | W/L: 20/25
+
+[Trial #14] seq=32, hidden=128, layers=3, heads=4, drop=0.50, lr=0.00138, batch=256, epochs=25, class_w=6.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -42.4% | WorstFold: -92.1% | Sharpe: -7.23 | MaxDD: -11.5% | Trades: 53 | W/L: 16/37
+  REJECTED: Max Drawdown of -11.5% exceeded -7.0% limit
+
+[Trial #15] seq=32, hidden=128, layers=3, heads=4, drop=0.32, lr=0.00082, batch=256, epochs=33, class_w=6.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -30.2% | WorstFold: -96.9% | Sharpe: -4.20 | MaxDD: -13.5% | Trades: 53 | W/L: 18/35
+  REJECTED: Max Drawdown of -13.5% exceeded -7.0% limit
+
+[Trial #16] seq=64, hidden=128, layers=3, heads=8, drop=0.33, lr=0.00078, batch=256, epochs=33, class_w=4.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: -7.6% | WorstFold: -29.1% | Sharpe: -0.24 | MaxDD: -4.0% | Trades: 35 | W/L: 15/20
+
+[Trial #17] seq=64, hidden=128, layers=2, heads=8, drop=0.24, lr=0.00035, batch=256, epochs=30, class_w=4.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: -20.5% | WorstFold: -76.5% | Sharpe: -1.29 | MaxDD: -7.3% | Trades: 46 | W/L: 17/29
+  REJECTED: Max Drawdown of -7.3% exceeded -7.0% limit
+
+[Trial #18] seq=32, hidden=256, layers=3, heads=8, drop=0.26, lr=0.00187, batch=256, epochs=10, class_w=2.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #19] seq=32, hidden=128, layers=1, heads=2, drop=0.35, lr=0.00073, batch=256, epochs=31, class_w=4.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+
+[Trial #20] seq=128, hidden=128, layers=2, heads=4, drop=0.44, lr=0.00042, batch=256, epochs=29, class_w=5.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: 5.2% | WorstFold: -31.4% | Sharpe: 0.54 | MaxDD: -4.6% | Trades: 36 | W/L: 16/20
+
+[Trial #21] seq=64, hidden=128, layers=2, heads=8, drop=0.22, lr=0.00034, batch=128, epochs=31, class_w=4.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+
+[Trial #22] seq=64, hidden=256, layers=2, heads=8, drop=0.36, lr=0.00011, batch=256, epochs=35, class_w=5.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: -6.9% | WorstFold: -50.3% | Sharpe: 0.80 | MaxDD: -6.0% | Trades: 38 | W/L: 17/21
+
+[Trial #23] seq=64, hidden=128, layers=3, heads=8, drop=0.45, lr=0.00107, batch=256, epochs=35, class_w=5.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: 15.2% | WorstFold: -59.3% | Sharpe: 15.98 | MaxDD: -4.7% | Trades: 30 | W/L: 14/16
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -77.5% | Sharpe: -9.61 | Trades: 111 | W/L: 34/77
+
+[Trial #24] seq=128, hidden=128, layers=2, heads=8, drop=0.11, lr=0.00016, batch=256, epochs=23, class_w=5.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -25.8% | WorstFold: -86.2% | Sharpe: -2.89 | MaxDD: -8.0% | Trades: 20 | W/L: 5/15
+  REJECTED: Only 20 trades (need 30+)
+
+[Trial #25] seq=128, hidden=128, layers=2, heads=8, drop=0.44, lr=0.00016, batch=256, epochs=22, class_w=5.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -14.1% | WorstFold: -63.2% | Sharpe: -1.25 | MaxDD: -4.6% | Trades: 39 | W/L: 18/21
+
+[Trial #26] seq=128, hidden=128, layers=2, heads=2, drop=0.43, lr=0.00063, batch=256, epochs=33, class_w=4.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -37.3% | WorstFold: -67.3% | Sharpe: -3.12 | MaxDD: -9.3% | Trades: 66 | W/L: 27/39
+  REJECTED: Max Drawdown of -9.3% exceeded -7.0% limit
+
+[Trial #27] seq=128, hidden=128, layers=1, heads=2, drop=0.40, lr=0.00061, batch=256, epochs=28, class_w=4.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -32.5% | WorstFold: -82.1% | Sharpe: -1.71 | MaxDD: -9.7% | Trades: 64 | W/L: 26/38
+  REJECTED: Max Drawdown of -9.7% exceeded -7.0% limit
+
+[Trial #28] seq=128, hidden=128, layers=1, heads=2, drop=0.28, lr=0.00056, batch=256, epochs=28, class_w=4.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -31.7% | WorstFold: -96.6% | Sharpe: -7.47 | MaxDD: -13.1% | Trades: 33 | W/L: 8/25
+  REJECTED: Max Drawdown of -13.1% exceeded -7.0% limit
+
+[Trial #29] seq=96, hidden=128, layers=2, heads=4, drop=0.31, lr=0.00049, batch=256, epochs=32, class_w=4.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -24.2% | WorstFold: -65.4% | Sharpe: -3.03 | MaxDD: -4.8% | Trades: 24 | W/L: 7/17
+  REJECTED: Only 24 trades (need 30+)
+
+[Trial #30] seq=96, hidden=128, layers=2, heads=4, drop=0.30, lr=0.00045, batch=128, epochs=32, class_w=4.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+
+[Trial #31] seq=48, hidden=256, layers=3, heads=4, drop=0.47, lr=0.00043, batch=64, epochs=29, class_w=3.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -15.4% | WorstFold: -79.1% | Sharpe: -2.57 | MaxDD: -7.6% | Trades: 26 | W/L: 9/17
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #32] seq=48, hidden=256, layers=3, heads=4, drop=0.46, lr=0.00187, batch=64, epochs=30, class_w=3.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+
+[Trial #33] seq=48, hidden=128, layers=3, heads=4, drop=0.48, lr=0.00078, batch=256, epochs=27, class_w=5.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -6.0% | WorstFold: -56.4% | Sharpe: 0.29 | MaxDD: -4.7% | Trades: 30 | W/L: 14/16
+
+[Trial #34] seq=48, hidden=128, layers=3, heads=4, drop=0.47, lr=0.00076, batch=256, epochs=27, class_w=5.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -34.1% | WorstFold: -69.2% | Sharpe: -5.25 | MaxDD: -4.9% | Trades: 28 | W/L: 11/17
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #35] seq=32, hidden=128, layers=3, heads=4, drop=0.40, lr=0.00141, batch=64, epochs=23, class_w=5.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -26.4% | WorstFold: -52.9% | Sharpe: -3.19 | MaxDD: -4.3% | Trades: 42 | W/L: 14/28
+
+[Trial #36] seq=32, hidden=64, layers=3, heads=4, drop=0.41, lr=0.00147, batch=64, epochs=23, class_w=5.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #0] seq=48, hidden=256, layers=3, heads=2, drop=0.35, lr=0.00088, batch=128, epochs=21, class_w=3.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #1] seq=96, hidden=128, layers=3, heads=4, drop=0.38, lr=0.00079, batch=64, epochs=30, class_w=4.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #2] seq=48, hidden=128, layers=1, heads=4, drop=0.23, lr=0.00202, batch=128, epochs=28, class_w=3.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #3] seq=48, hidden=64, layers=1, heads=8, drop=0.45, lr=0.00014, batch=256, epochs=28, class_w=2.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #4] seq=48, hidden=64, layers=2, heads=2, drop=0.44, lr=0.00040, batch=128, epochs=16, class_w=2.2
+
+[Trial #6] seq=48, hidden=128, layers=2, heads=4, drop=0.29, lr=0.00048, batch=64, epochs=25, class_w=5.3Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #5] seq=48, hidden=128, layers=2, heads=2, drop=0.32, lr=0.00031, batch=256, epochs=18, class_w=3.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #7] seq=96, hidden=256, layers=2, heads=8, drop=0.33, lr=0.00080, batch=64, epochs=22, class_w=5.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -6.5% | WorstFold: -12.4% | Sharpe: -1.18 | MaxDD: -3.2% | Trades: 15 | W/L: 7/8
+  REJECTED: Only 15 trades (need 30+)
+
+[Trial #8] seq=128, hidden=128, layers=2, heads=2, drop=0.26, lr=0.00016, batch=256, epochs=34, class_w=3.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+  Val -> AvgROI: -19.4% | WorstFold: -63.1% | Sharpe: -1.45 | MaxDD: -5.6% | Trades: 32 | W/L: 14/18
+
+[Trial #9] seq=64, hidden=128, layers=3, heads=4, drop=0.31, lr=0.00091, batch=64, epochs=16, class_w=4.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34193 sequences of length 64, 41 features.
+  Val -> AvgROI: 29.2% | WorstFold: 0.0% | Sharpe: 4.22 | MaxDD: -0.0% | Trades: 4 | W/L: 3/1
+  REJECTED: Only 4 trades (need 30+)
+
+[Trial #10] seq=48, hidden=64, layers=1, heads=8, drop=0.13, lr=0.00232, batch=128, epochs=11, class_w=3.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -33.2% | WorstFold: -80.4% | Sharpe: -6.56 | MaxDD: -6.8% | Trades: 21 | W/L: 5/16
+  REJECTED: Only 21 trades (need 30+)
+
+[Trial #11] seq=128, hidden=64, layers=3, heads=2, drop=0.44, lr=0.00062, batch=64, epochs=12, class_w=4.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #0] seq=128, hidden=256, layers=3, heads=2, drop=0.49, lr=0.00250, batch=256, epochs=15, class_w=6.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #1] seq=96, hidden=128, layers=1, heads=4, drop=0.48, lr=0.00020, batch=256, epochs=30, class_w=5.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #2] seq=96, hidden=128, layers=3, heads=2, drop=0.27, lr=0.00015, batch=128, epochs=20, class_w=3.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #3] seq=64, hidden=128, layers=2, heads=2, drop=0.49, lr=0.00015, batch=256, epochs=19, class_w=2.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #4] seq=96, hidden=64, layers=2, heads=4, drop=0.31, lr=0.00172, batch=64, epochs=11, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #5] seq=48, hidden=64, layers=1, heads=8, drop=0.25, lr=0.00026, batch=64, epochs=11, class_w=6.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #6] seq=128, hidden=256, layers=1, heads=2, drop=0.28, lr=0.00029, batch=64, epochs=15, class_w=4.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #7] seq=128, hidden=256, layers=3, heads=2, drop=0.30, lr=0.00010, batch=64, epochs=22, class_w=2.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #8] seq=64, hidden=64, layers=3, heads=2, drop=0.13, lr=0.00013, batch=64, epochs=28, class_w=5.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #9] seq=32, hidden=128, layers=3, heads=4, drop=0.20, lr=0.00025, batch=128, epochs=33, class_w=2.1
+
+[Trial #10] seq=96, hidden=128, layers=1, heads=8, drop=0.30, lr=0.00200, batch=128, epochs=34, class_w=5.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #13] seq=64, hidden=128, layers=1, heads=2, drop=0.15, lr=0.00048, batch=128, epochs=27, class_w=4.2
+
+[Trial #11] seq=64, hidden=256, layers=2, heads=4, drop=0.19, lr=0.00028, batch=64, epochs=28, class_w=5.4
+[Trial #15] seq=96, hidden=64, layers=2, heads=2, drop=0.38, lr=0.00038, batch=64, epochs=23, class_w=2.2
+[Trial #12] seq=64, hidden=256, layers=3, heads=8, drop=0.25, lr=0.00198, batch=128, epochs=16, class_w=4.2
+
+
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #14] seq=64, hidden=64, layers=2, heads=2, drop=0.47, lr=0.00234, batch=128, epochs=31, class_w=4.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+Dataset: 34225 sequences of length 32, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #0] seq=32, hidden=128, layers=1, heads=4, drop=0.18, lr=0.00046, batch=1024, epochs=11, class_w=5.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #1] seq=128, hidden=64, layers=3, heads=8, drop=0.36, lr=0.00082, batch=256, epochs=35, class_w=5.5
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #2] seq=96, hidden=128, layers=2, heads=4, drop=0.17, lr=0.00057, batch=256, epochs=23, class_w=4.7
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #3] seq=32, hidden=64, layers=2, heads=8, drop=0.43, lr=0.00218, batch=2048, epochs=35, class_w=4.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #4] seq=48, hidden=128, layers=2, heads=2, drop=0.36, lr=0.00097, batch=2048, epochs=31, class_w=2.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #5] seq=96, hidden=256, layers=2, heads=2, drop=0.20, lr=0.00195, batch=256, epochs=21, class_w=3.0
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #6] seq=128, hidden=64, layers=2, heads=4, drop=0.21, lr=0.00027, batch=1024, epochs=19, class_w=2.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #8] seq=32, hidden=64, layers=1, heads=2, drop=0.43, lr=0.00017, batch=256, epochs=27, class_w=5.9
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #7] seq=96, hidden=64, layers=1, heads=2, drop=0.37, lr=0.00017, batch=512, epochs=20, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #9] seq=32, hidden=64, layers=2, heads=8, drop=0.12, lr=0.00021, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #10] seq=128, hidden=64, layers=3, heads=2, drop=0.50, lr=0.00204, batch=256, epochs=29, class_w=3.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #11] seq=64, hidden=256, layers=2, heads=8, drop=0.30, lr=0.00072, batch=1024, epochs=17, class_w=3.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #12] seq=128, hidden=64, layers=3, heads=4, drop=0.28, lr=0.00108, batch=256, epochs=22, class_w=4.6
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #14] seq=64, hidden=256, layers=3, heads=8, drop=0.48, lr=0.00213, batch=256, epochs=11, class_w=3.2
+[Trial #13] seq=48, hidden=64, layers=3, heads=4, drop=0.43, lr=0.00139, batch=2048, epochs=20, class_w=5.6
+
+[Trial #16] seq=128, hidden=128, layers=2, heads=8, drop=0.35, lr=0.00142, batch=512, epochs=17, class_w=3.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+
+[Trial #18] seq=96, hidden=256, layers=2, heads=8, drop=0.27, lr=0.00019, batch=256, epochs=34, class_w=4.7
+[Trial #15] seq=96, hidden=256, layers=1, heads=2, drop=0.20, lr=0.00019, batch=1024, epochs=26, class_w=3.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #19] seq=96, hidden=256, layers=3, heads=4, drop=0.34, lr=0.00198, batch=1024, epochs=30, class_w=4.3
+[Trial #23] seq=128, hidden=256, layers=1, heads=8, drop=0.46, lr=0.00024, batch=2048, epochs=18, class_w=4.6
+
+
+[Trial #22] seq=128, hidden=256, layers=1, heads=2, drop=0.14, lr=0.00028, batch=256, epochs=13, class_w=2.9
+
+[Trial #21] seq=48, hidden=128, layers=3, heads=8, drop=0.11, lr=0.00170, batch=2048, epochs=19, class_w=4.4
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+
+[Trial #20] seq=96, hidden=64, layers=3, heads=2, drop=0.25, lr=0.00052, batch=512, epochs=35, class_w=2.7
+[Trial #17] seq=64, hidden=64, layers=2, heads=4, drop=0.42, lr=0.00061, batch=2048, epochs=10, class_w=3.4
+
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34225 sequences of length 32, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34225 sequences of length 32, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34225 sequences of length 32, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34209 sequences of length 48, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34161 sequences of length 96, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+Dataset: 34129 sequences of length 128, 41 features.
+Dataset: 34193 sequences of length 64, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #0] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=2048, epochs=21, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #1] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=2048, epochs=21, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #2] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=2048, epochs=21, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #3] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=2048, epochs=21, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #4] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=2048, epochs=21, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #5] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=2048, epochs=21, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #6] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=2048, epochs=21, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m PAXG/USDT data...
+Fetching 15m data for PAXG/USDT for the last 365 days...
+Loading existing data from data_storage\PAXG_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-03 16:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\PAXG_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.2%, SL=0.60%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+  Val -> AvgROI: 7.7% | WorstFold: -6.2% | Sharpe: 1.03 | MaxDD: -5.1% | Trades: 25 | W/L: 13/12
+  REJECTED: Only 25 trades (need 30+)
+
+[Trial #7] seq=32, hidden=64, layers=2, heads=4, drop=0.13, lr=0.00252, batch=256, epochs=27, class_w=3.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 8952 sequences of length 32, 41 features.
+Saved 34257 samples to data_storage\PAXG_USDT_15m_processed.csv
+Target distribution: {0: 33221, 1: 1036} (3.0% positive)
+
+Data splits -> Train: 23979 | Val: 5139 | Test: 5139
+Target distribution (train): {0: 23546, 1: 433}
+Target distribution (val): {0: 4822, 1: 317}
+Target distribution (test): {0: 4853, 1: 286}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.25% / SL=0.6% / MaxHold=16 bars
+============================================================
+
+
+[Trial #8] seq=48, hidden=256, layers=2, heads=8, drop=0.43, lr=0.00021, batch=2048, epochs=21, class_w=3.2
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34209 sequences of length 48, 41 features.
+  Val -> AvgROI: -29.8% | WorstFold: -85.4% | Sharpe: -3.44 | MaxDD: -9.1% | Trades: 32 | W/L: 11/21
+  REJECTED: Max Drawdown of -9.1% exceeded -7.0% limit
+
+[Trial #9] seq=32, hidden=64, layers=2, heads=4, drop=0.13, lr=0.00252, batch=256, epochs=27, class_w=3.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -3.0% | WorstFold: -25.7% | Sharpe: -1.93 | MaxDD: -3.4% | Trades: 28 | W/L: 14/14
+  REJECTED: Only 28 trades (need 30+)
+
+[Trial #10] seq=32, hidden=64, layers=2, heads=4, drop=0.13, lr=0.00252, batch=256, epochs=27, class_w=3.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: 44.1% | WorstFold: 4.9% | Sharpe: 1.81 | MaxDD: -2.7% | Trades: 38 | W/L: 23/15
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Val -> AvgROI: -13.9% | WorstFold: -67.2% | Sharpe: -0.96 | MaxDD: -6.6% | Trades: 26 | W/L: 11/15
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #11] seq=32, hidden=64, layers=2, heads=4, drop=0.13, lr=0.00252, batch=256, epochs=27, class_w=3.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -15.6% | WorstFold: -57.2% | Sharpe: -1.49 | MaxDD: -4.5% | Trades: 26 | W/L: 12/14
+  REJECTED: Only 26 trades (need 30+)
+
+[Trial #12] seq=32, hidden=64, layers=2, heads=4, drop=0.13, lr=0.00252, batch=256, epochs=27, class_w=3.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -25.8% | WorstFold: -54.3% | Sharpe: -2.51 | MaxDD: -4.8% | Trades: 40 | W/L: 16/24
+
+[Trial #13] seq=32, hidden=64, layers=2, heads=4, drop=0.13, lr=0.00252, batch=256, epochs=27, class_w=3.8
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34225 sequences of length 32, 41 features.
+  Val -> AvgROI: -24.7% | WorstFold: -67.9% | Sharpe: -5.08 | MaxDD: -4.4% | Trades: 14 | W/L: 5/9
+  REJECTED: Only 14 trades (need 30+)
+
+[Trial #14] seq=96, hidden=64, layers=2, heads=4, drop=0.48, lr=0.00210, batch=512, epochs=11, class_w=3.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -27.7% | WorstFold: -90.5% | Sharpe: -5.41 | MaxDD: -8.6% | Trades: 34 | W/L: 11/23
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #15] seq=96, hidden=128, layers=3, heads=2, drop=0.30, lr=0.00067, batch=512, epochs=11, class_w=5.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -46.4% | WorstFold: -93.4% | Sharpe: -8.50 | MaxDD: -9.8% | Trades: 36 | W/L: 6/30
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #16] seq=96, hidden=128, layers=3, heads=2, drop=0.31, lr=0.00063, batch=512, epochs=12, class_w=5.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -27.4% | WorstFold: -93.1% | Sharpe: -7.40 | MaxDD: -10.4% | Trades: 27 | W/L: 7/20
+  REJECTED: Only 27 trades (need 30+)
+
+[Trial #17] seq=96, hidden=128, layers=3, heads=2, drop=0.31, lr=0.00063, batch=512, epochs=12, class_w=5.3
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.
+  Val -> AvgROI: -26.2% | WorstFold: -66.2% | Sharpe: -2.53 | MaxDD: -6.6% | Trades: 42 | W/L: 18/24
+
+[Trial #18] seq=96, hidden=128, layers=3, heads=2, drop=0.28, lr=0.00076, batch=512, epochs=14, class_w=5.1
+Loading engineered dataset from data_storage\PAXG_USDT_15m_processed.csv...
+Dataset: 34161 sequences of length 96, 41 features.

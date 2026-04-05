@@ -1,0 +1,18 @@
+{
+  "trial": 239,
+  "seq_len": 48,
+  "hidden_dim": 256,
+  "num_layers": 3,
+  "num_heads": 2,
+  "dropout": 0.4310100704569536,
+  "input_dim": 41,
+  "take_profit": 0.0175,
+  "stop_loss": 0.04,
+  "max_hold_bars": 12,
+  "val_roi": 8760.28557107302,
+  "val_sharpe": 19.496141886825132,
+  "test_roi": 100.39875665933468,
+  "test_sharpe": 3.5034992697896263,
+  "test_trades": 35,
+  "test_wl": "21/14"
+}

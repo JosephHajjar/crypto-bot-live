@@ -1,11 +1,13 @@
 import os
 import ccxt
 import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta
 import time
 from tqdm import tqdm
+import yfinance as yf
 
-def fetch_klines(symbol='BTC/USDT', timeframe='5m', days_back=90, save_dir='data_storage'):
+def fetch_klines(symbol='BTC/USDT', timeframe='5m', days_back=90, save_dir='data_storage', fetch_macro=False):
     """
     Fetches historical OHLCV data from Binance and saves it to a CSV.
     Uses pagination since Binance limits to 1000 candles per request.
@@ -40,8 +42,8 @@ def fetch_klines(symbol='BTC/USDT', timeframe='5m', days_back=90, save_dir='data
             print(f"Could not read existing file: {e}. Fetching {days_back} days.")
             existing_df = None
 
+    now = datetime.utcnow()
     if existing_df is None:
-        now = datetime.utcnow()
         since_dt = now - timedelta(days=days_back)
         since_ts = int(since_dt.timestamp() * 1000)
 
@@ -101,6 +103,53 @@ def fetch_klines(symbol='BTC/USDT', timeframe='5m', days_back=90, save_dir='data
     
     # Ensure save directory exists
     os.makedirs(save_dir, exist_ok=True)
+    
+    if fetch_macro:
+        print("Fetching macro context (DXY, VIX) via yfinance...")
+        try:
+            start_dt = df['timestamp'].min() - pd.Timedelta(days=5) # Buffer for ffill
+            end_dt = df['timestamp'].max() + pd.Timedelta(days=1)
+            
+            # yfinance limits 1h data to max 730 days ago
+            min_allowed_start = pd.Timestamp(datetime.utcnow() - timedelta(days=729))
+            # Start dt must not be older than min_allowed_start
+            yf_start = max(start_dt, min_allowed_start)
+            
+            dxy_data = yf.download('DX-Y.NYB', start=yf_start, end=end_dt, interval='1h', progress=False)
+            vix_data = yf.download('^VIX', start=yf_start, end=end_dt, interval='1h', progress=False)
+            
+            # Extract close prices safely considering recent yfinance MultiIndex changes
+            if isinstance(dxy_data.columns, pd.MultiIndex):
+                dxy_close = dxy_data['Close']['DX-Y.NYB']
+            else:
+                dxy_close = dxy_data['Close']
+                
+            if isinstance(vix_data.columns, pd.MultiIndex):
+                vix_close = vix_data['Close']['^VIX']
+            else:
+                vix_close = vix_data['Close']
+                
+            dxy_df = dxy_close.to_frame(name='DXY').dropna()
+            vix_df = vix_close.to_frame(name='VIX').dropna()
+            
+            if dxy_df.empty:
+                df['DXY'] = 100.0
+            else:
+                dxy_df.index = dxy_df.index.tz_localize(None)
+                df = pd.merge_asof(df, dxy_df, left_on='timestamp', right_index=True, direction='backward')
+                df['DXY'] = df['DXY'].ffill().bfill()
+                
+            if vix_df.empty:
+                df['VIX'] = 20.0
+            else:
+                vix_df.index = vix_df.index.tz_localize(None)
+                df = pd.merge_asof(df, vix_df, left_on='timestamp', right_index=True, direction='backward')
+                df['VIX'] = df['VIX'].ffill().bfill()
+                
+        except Exception as e:
+            print(f"Warning: Failed to fetch macro data: {e}. Filling with defaults.")
+            df['DXY'] = 100.0
+            df['VIX'] = 20.0
     
     # Save to CSV
     # filename and filepath are already defined at the top
