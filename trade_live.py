@@ -251,75 +251,101 @@ class LiveHyperliquidTrader:
             logger.error(f"Sync exchange exception: {e}")
             return False
 
-    def manage_long(self, current_close, completed_high, completed_low):
-        """Manage the independent long position."""
+    def check_tp_sl(self):
+        """High-frequency check for TP/SL using live intra-candle prices."""
+        if not self.long_active and not self.short_active:
+            return
+            
+        try:
+            import requests
+            symbol_fmt = SYMBOL.replace('/', '')
+            res = requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol={symbol_fmt}", timeout=5)
+            live_price = float(res.json()['price'])
+        except Exception as e:
+            logger.error(f"Failed to fetch fast price: {e}")
+            return
+            
+        # --- LONG TP/SL ---
+        if self.long_active:
+            tp_price = self.long_entry * (1 + self.long_tp)
+            sl_price = self.long_entry * (1 - self.long_sl)
+            exit_price = None
+            reason = None
+            if live_price <= sl_price:
+                exit_price = live_price
+                reason = f"LONG Stop Loss (-{self.long_sl*100}%)"
+            elif live_price >= tp_price:
+                exit_price = live_price
+                reason = f"LONG Take Profit (+{self.long_tp*100}%)"
+                
+            if exit_price is not None:
+                logger.info(f"CLOSING LONG (FAST POLL): {reason} | Entry ${self.long_entry:.2f} -> Exit ${exit_price:.2f}")
+                trade = self._record_trade("LONG", self.long_entry, exit_price, self.long_bars, reason, self.long_size)
+                self.long_active = False
+                self.long_entry = 0.0
+                self.long_bars = 0
+                self.long_size = 0.0
+                self._sync_exchange_position(live_price)
+                self._notify(f"CLOSED LONG: {reason} | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                self._sync_balance()
+
+        # --- SHORT TP/SL ---
+        if self.short_active:
+            tp_price = self.short_entry * (1 - self.short_tp)
+            sl_price = self.short_entry * (1 + self.short_sl)
+            exit_price = None
+            reason = None
+            if live_price >= sl_price:
+                exit_price = live_price
+                reason = f"SHORT Stop Loss (+{self.short_sl*100}%)"
+            elif live_price <= tp_price:
+                exit_price = live_price
+                reason = f"SHORT Take Profit (-{self.short_tp*100}%)"
+                
+            if exit_price is not None:
+                logger.info(f"CLOSING SHORT (FAST POLL): {reason} | Entry ${self.short_entry:.2f} -> Exit ${exit_price:.2f}")
+                trade = self._record_trade("SHORT", self.short_entry, exit_price, self.short_bars, reason, self.short_size)
+                self.short_active = False
+                self.short_entry = 0.0
+                self.short_bars = 0
+                self.short_size = 0.0
+                self._sync_exchange_position(live_price)
+                self._notify(f"CLOSED SHORT: {reason} | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                self._sync_balance()
+
+    def manage_long_time_barrier(self, current_close):
+        """Manage the independent long position solely for Time Barriers at candle boundary."""
         if not self.long_active:
             return
             
         self.long_bars += 1
-        tp_price = self.long_entry * (1 + self.long_tp)
-        sl_price = self.long_entry * (1 - self.long_sl)
-        
-        exit_price = None
-        reason = None
-        
-        if completed_low <= sl_price:
-            exit_price = sl_price
-            reason = f"LONG Stop Loss (-{self.long_sl*100}%)"
-        elif completed_high >= tp_price:
-            exit_price = tp_price
-            reason = f"LONG Take Profit (+{self.long_tp*100}%)"
-        elif self.long_bars >= self.long_max_hold:
-            exit_price = current_close
-            reason = "LONG Time Barrier"
-        
-        if exit_price is not None:
-            logger.info(f"CLOSING LONG: {reason} | Entry ${self.long_entry:.2f} -> Exit ${exit_price:.2f}")
-            trade = self._record_trade("LONG", self.long_entry, exit_price, self.long_bars, reason, self.long_size)
-            self._notify(f"CLOSED LONG: {reason} | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
-            self._sync_balance()
-            
+        if self.long_bars >= self.long_max_hold:
+            logger.info(f"CLOSING LONG: Time Barrier | Entry ${self.long_entry:.2f} -> Exit ${current_close:.2f}")
+            trade = self._record_trade("LONG", self.long_entry, current_close, self.long_bars, "LONG Time Barrier", self.long_size)
             self.long_active = False
             self.long_entry = 0.0
             self.long_bars = 0
             self.long_size = 0.0
-            
             self._sync_exchange_position(current_close)
+            self._notify(f"CLOSED LONG: Time Barrier | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+            self._sync_balance()
 
-    def manage_short(self, current_close, completed_high, completed_low):
-        """Manage the independent short position."""
+    def manage_short_time_barrier(self, current_close):
+        """Manage the independent short position solely for Time Barriers at candle boundary."""
         if not self.short_active:
             return
             
         self.short_bars += 1
-        tp_price = self.short_entry * (1 - self.short_tp)
-        sl_price = self.short_entry * (1 + self.short_sl)
-        
-        exit_price = None
-        reason = None
-        
-        if completed_high >= sl_price:
-            exit_price = sl_price
-            reason = f"SHORT Stop Loss (+{self.short_sl*100}%)"
-        elif completed_low <= tp_price:
-            exit_price = tp_price
-            reason = f"SHORT Take Profit (-{self.short_tp*100}%)"
-        elif self.short_bars >= self.short_max_hold:
-            exit_price = current_close
-            reason = "SHORT Time Barrier"
-        
-        if exit_price is not None:
-            logger.info(f"CLOSING SHORT: {reason} | Entry ${self.short_entry:.2f} -> Exit ${exit_price:.2f}")
-            trade = self._record_trade("SHORT", self.short_entry, exit_price, self.short_bars, reason, self.short_size)
-            self._notify(f"CLOSED SHORT: {reason} | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
-            self._sync_balance()
-            
+        if self.short_bars >= self.short_max_hold:
+            logger.info(f"CLOSING SHORT: Time Barrier | Entry ${self.short_entry:.2f} -> Exit ${current_close:.2f}")
+            trade = self._record_trade("SHORT", self.short_entry, current_close, self.short_bars, "SHORT Time Barrier", self.short_size)
             self.short_active = False
             self.short_entry = 0.0
             self.short_bars = 0
             self.short_size = 0.0
-            
             self._sync_exchange_position(current_close)
+            self._notify(f"CLOSED SHORT: Time Barrier | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+            self._sync_balance()
 
     def save_state(self, current_close, bull_prob=0.0, bear_prob=0.0):
         """Persist both virtual positions + metrics to disk."""
@@ -365,24 +391,30 @@ class LiveHyperliquidTrader:
         try:
             df = self.fetch_recent_data()
             current_close = df['close'].iloc[-1]
-            # Use completed candle for TP/SL
+            # Use completed candle purely for logging
             completed_high = df['high'].iloc[-2] if len(df) >= 2 else df['high'].iloc[-1]
             completed_low  = df['low'].iloc[-2] if len(df) >= 2 else df['low'].iloc[-1]
             current_time = df['timestamp'].iloc[-1]
             
             self._sync_balance()
             
-            logger.info(f"Live Market Heartbeat: {current_time} | BTC ${current_close:.2f} | Balance: ${self.live_balance:.2f} | Long: {self.long_active} | Short: {self.short_active}")
+            logger.info(f"15m Candle Boundary: {current_time} | BTC ${current_close:.2f} | Balance: ${self.live_balance:.2f} | Long: {self.long_active} | Short: {self.short_active}")
             
-            # 1. Manage existing positions INDEPENDENTLY
-            self.manage_long(current_close, completed_high, completed_low)
-            self.manage_short(current_close, completed_high, completed_low)
+            # 1. Manage Time Barriers (Trade lifecycle closure on candle boundaries)
+            self.manage_long_time_barrier(current_close)
+            self.manage_short_time_barrier(current_close)
             
             # 2. Compute AI probabilities
             bull_prob = 0.0
             bear_prob = 0.0
             
             live_df = compute_live_features(df, SCALER_PATH)
+            
+            # CRITICAL FLAW 2 FIX: Drop the unclosed forming candle from inference!
+            # The LSTM must see explicitly fully-closed candles to match its trained distributions.
+            if len(live_df) > 1:
+                live_df = live_df.iloc[:-1]
+                
             max_seq = max(self.seq_len_long, self.seq_len_short)
             if len(live_df) >= max_seq:
                 feature_cols = get_feature_cols()
@@ -460,25 +492,30 @@ class LiveHyperliquidTrader:
             logger.warning(f"Failed to send notification: {e}")
 
     def run_forever(self):
-        logger.info("Initializing DUAL-INDEPENDENT LIVE EXECUTION Daemon...")
+        logger.info("Initializing DUAL-INDEPENDENT LIVE EXECUTION Daemon (with fast-polling loop)...")
+        step_ran_this_candle = False
+        
         while True:
+            # 1. High-frequency TP/SL polling (fixes Phantom PnL bug)
+            self.check_tp_sl()
+            
+            # 2. AI Inference Candle Boundary polling
             now = datetime.utcnow()
             minutes = now.minute
             seconds = now.second
             
             remainder = minutes % 15
             
-            if remainder == 0 and seconds < 60:
-                logger.info(f"Execution Barrier Reached (Minute: {minutes}, Second: {seconds}). Running step...")
-                self.step()
-                # Sleep past the current candle boundary to avoid double-execution
-                sleep_secs = max(30, 65 - seconds)
-                time.sleep(sleep_secs)
-            else:
-                # Calculate seconds until next 15m boundary + 5s buffer
-                secs_to_next = (15 - remainder) * 60 - seconds + 5
-                sleep_time = max(1, min(secs_to_next, 60))
-                time.sleep(sleep_time)
+            if remainder == 0 and seconds < 10:
+                if not step_ran_this_candle:
+                    logger.info(f"Execution Barrier Reached (Minute: {minutes}, Second: {seconds}). Generating Inference...")
+                    self.step()
+                    step_ran_this_candle = True
+            elif remainder != 0:
+                step_ran_this_candle = False
+                
+            # Sleep 5 seconds between polls
+            time.sleep(5)
 
 if __name__ == "__main__":
     import sys
