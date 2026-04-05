@@ -78,10 +78,6 @@
             <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live')">Autonomous Live Trader</div>
             <!-- <div class="nav-tab" id="tab-btn-replay" onclick="switchMainView('replay')">AI Simulator Replay</div> -->
         </div>
-        <div style="display:flex; gap:10px; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-            <button id="asset-btc" onclick="switchAsset('BTCUSDT')" style="background: rgba(0,255,200,0.15); color: #00ffc8; border: 1px solid #00ffc8; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;">BTC / USDT</button>
-            <button id="asset-paxg" onclick="switchAsset('PAXGUSDT')" style="background: transparent; color: #8b95a5; border: 1px solid transparent; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;">PAXG / USDT</button>
-        </div>
     </div>
 
     <!-- ===== MAIN VIEW 1: AUTONOMOUS AI LIVE TRADER ===== -->
@@ -89,20 +85,6 @@
         <script>
             // Master Live Asset State
             var _activeSymbol = 'BTCUSDT';
-            function switchAsset(sym) {
-                _activeSymbol = sym;
-                if(sym === 'BTCUSDT') {
-                    document.getElementById('asset-btc').style = "background: rgba(0,255,200,0.15); color: #00ffc8; border: 1px solid #00ffc8; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;";
-                    document.getElementById('asset-paxg').style = "background: transparent; color: #8b95a5; border: 1px solid transparent; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;";
-                    document.getElementById('live-market-title').innerText = "Live BTC Market";
-                } else {
-                    document.getElementById('asset-paxg').style = "background: rgba(255,215,0,0.15); color: #FFD700; border: 1px solid #FFD700; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;";
-                    document.getElementById('asset-btc').style = "background: transparent; color: #8b95a5; border: 1px solid transparent; padding: 6px 16px; border-radius: 8px; cursor:pointer; font-family: 'Outfit'; font-weight:700; transition: 0.2s;";
-                    document.getElementById('live-market-title').innerText = "Live PAXG Market";
-                }
-                document.getElementById('live-trade-log').innerHTML = '<div style="color:#4a5568;">Loading Asset Context...</div>';
-                fetchLiveState(); // Force sync master context
-            }
         </script>
         <!-- OVERVIEW METRICS GRID -->
         <div class="dashboard-grid" style="grid-template-columns: repeat(6, 1fr); margin-bottom:20px; margin-top:0;">
