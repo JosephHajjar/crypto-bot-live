@@ -111,9 +111,11 @@ def index():
 
 @app.route('/api/state')
 def get_state():
-    if os.path.exists('data_storage/live_state.json'):
+    symbol = request.args.get('symbol', 'BTCUSDT')
+    file_name = 'data_storage/live_state_gold.json' if symbol == 'PAXGUSDT' else 'data_storage/live_state.json'
+    if os.path.exists(file_name):
         try:
-            with open('data_storage/live_state.json', 'r') as f:
+            with open(file_name, 'r') as f:
                 return jsonify(json.load(f))
         except Exception:
             return jsonify({"error": "State file locked or corrupt"})
@@ -178,9 +180,11 @@ def get_historical():
 
 @app.route('/api/live_trades')
 def get_live_trades():
-    if os.path.exists("data_storage/live_trades.json"):
+    symbol = request.args.get('symbol', 'BTCUSDT')
+    file_name = 'data_storage/live_trades_gold.json' if symbol == 'PAXGUSDT' else 'data_storage/live_trades.json'
+    if os.path.exists(file_name):
         try:
-            with open("data_storage/live_trades.json", "r") as f:
+            with open(file_name, "r") as f:
                 return jsonify(json.load(f))
         except Exception as e:
             return jsonify({"error": str(e)})
@@ -206,7 +210,7 @@ def get_bot_signals():
     
     try:
         import torch
-        from data.feature_engineer import compute_live_features, get_feature_cols
+        from data.feature_engineer_btc import compute_live_features, get_feature_cols
         
         start_time = request.args.get('startTime', '')
         interval = request.args.get('interval', '15m')

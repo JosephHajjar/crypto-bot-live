@@ -18,7 +18,7 @@ from hyperliquid.utils import constants
 
 import sys
 sys.path.insert(0, '.')
-from data.feature_engineer import compute_live_features, get_feature_cols
+from data.feature_engineer_btc import compute_live_features, get_feature_cols
 from ml.model import AttentionLSTMModel
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
