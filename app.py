@@ -307,7 +307,7 @@ def get_bot_signals():
 
                     if position == 'flat':
                         if prob_bull >= 0.60 and can_trade:
-                            signals.append({'time': time_val, 'prob': round(prob_bull*100,1), 'signal': 'BUY', 'price': round(close_price, 2)})
+                            signals.append({'time': time_val, 'prob': round(prob_bull*100, 6), 'signal': 'BUY', 'price': round(close_price, 2)})
                             position = 'long'
                             entry_price = close_price
                             bars_held = 0
@@ -317,7 +317,7 @@ def get_bot_signals():
                         # For chart drawing simplicity, we'll let it switch to short if both fire,
                         # or we can just do independent flat checks. (Since this is just for the chart overlay)
                         if prob_bear >= 0.50 and can_trade and position == 'flat':
-                            signals.append({'time': time_val, 'prob': round(prob_bear*100,1), 'signal': 'SELL', 'price': round(close_price, 2)})
+                            signals.append({'time': time_val, 'prob': round(prob_bear*100, 6), 'signal': 'SELL', 'price': round(close_price, 2)})
                             position = 'short'
                             entry_price = close_price
                             bars_held = 0
