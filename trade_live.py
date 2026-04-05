@@ -37,6 +37,9 @@ CONFIG_SHORT_PATH = 'models_short/holy_grail_short_config.json'
 SCALER_PATH = 'data_storage/BTC_USDT_15m_scaler.json'
 NTFY_TOPIC = 'https://ntfy.sh/TradeBot5234'
 
+STATE_FILE = 'data_storage/live_state.json'
+TRADES_FILE = 'data_storage/live_trades.json'
+
 
 class LiveHyperliquidTrader:
     def __init__(self):
@@ -75,9 +78,9 @@ class LiveHyperliquidTrader:
         self.long_sl = cfg_long.get('stop_loss', 0.0250)
         self.long_max_hold = cfg_long.get('max_hold_bars', 12)
         
-        self.short_tp = cfg_short.get('take_profit', 0.0150)
-        self.short_sl = cfg_short.get('stop_loss', 0.0080)
-        self.short_max_hold = cfg_short.get('max_hold_bars', 8)
+        self.short_tp = cfg_short.get('take_profit', 0.0175)
+        self.short_sl = cfg_short.get('stop_loss', 0.0375)
+        self.short_max_hold = cfg_short.get('max_hold_bars', 12)
 
         self.model_short = AttentionLSTMModel(
             input_dim=cfg_short['input_dim'], hidden_dim=cfg_short['hidden_dim'],
@@ -86,35 +89,65 @@ class LiveHyperliquidTrader:
         self.model_short.load_state_dict(torch.load(MODEL_SHORT_PATH, map_location=self.device, weights_only=True))
         self.model_short.eval()
         
-        # Internal State tracking (syncs with exchange)
-        self.in_trade = False
-        self.trade_type = None # "LONG" or "SHORT"
-        self.entry_price = 0.0
-        self.entry_time = None
+        # ============================================================
+        # DUAL INDEPENDENT POSITION TRACKING
+        # Each bot tracks its own virtual position independently.
+        # The exchange net position = long_size - short_size.
+        # ============================================================
+        self.long_active = False
+        self.long_entry = 0.0
+        self.long_bars = 0
+        self.long_size = 0.0  # BTC amount
         
-        self.bars_held = 0
-        if os.path.exists("data_storage/live_state.json"):
+        self.short_active = False
+        self.short_entry = 0.0
+        self.short_bars = 0
+        self.short_size = 0.0  # BTC amount
+        
+        self.live_balance = 0.0
+        
+        # Restore state from disk (survives restarts)
+        self._load_persisted_state()
+        self._sync_balance()
+        
+        logger.info(f"Loaded Dual-Independent AI Trader on {self.device}. Long: {self.long_active}, Short: {self.short_active}")
+
+    def _load_persisted_state(self):
+        """Restore virtual position state from disk."""
+        if os.path.exists(STATE_FILE):
             try:
-                with open("data_storage/live_state.json", "r") as f:
-                    old_state = json.load(f)
-                    self.bars_held = old_state.get("bars_held", 0)
+                with open(STATE_FILE, "r") as f:
+                    s = json.load(f)
+                self.long_active = s.get("long_active", False)
+                self.long_entry = s.get("long_entry", 0.0)
+                self.long_bars = s.get("long_bars", 0)
+                self.long_size = s.get("long_size", 0.0)
+                self.short_active = s.get("short_active", False)
+                self.short_entry = s.get("short_entry", 0.0)
+                self.short_bars = s.get("short_bars", 0)
+                self.short_size = s.get("short_size", 0.0)
+                # Backward compat: old single-position format
+                if "in_trade" in s and s.get("in_trade") and not self.long_active and not self.short_active:
+                    if s.get("trade_type") == "LONG":
+                        self.long_active = True
+                        self.long_entry = s.get("entry_price", 0.0)
+                        self.long_bars = s.get("bars_held", 0)
+                        self.long_size = s.get("trade_amount_btc", 0.0)
+                    elif s.get("trade_type") == "SHORT":
+                        self.short_active = True
+                        self.short_entry = s.get("entry_price", 0.0)
+                        self.short_bars = s.get("bars_held", 0)
+                        self.short_size = s.get("trade_amount_btc", 0.0)
             except Exception:
                 pass
-                
-        self.trade_amount_btc = 0.0
-        
-        self._sync_state()
-        logger.info(f"Loaded Live Hyperliquid AI Trader on {self.device}. Active Trade: {self.in_trade}")
 
-    def _sync_state(self):
-        """Synchronizes local state with Hyperliquid DEX."""
+    def _sync_balance(self):
+        """Fetch current account balance from Hyperliquid."""
         try:
-            # 1. Fetch Perp Margin
             user_state = self.info.user_state(self.wallet_address)
             margin_summary = user_state.get("marginSummary", {})
             perp_balance = float(margin_summary.get("accountValue", 0.0))
             
-            # 2. Fetch Spot USDC (Unified Margin support)
             spot_state = self.info.spot_user_state(self.wallet_address)
             spot_usdc = 0.0
             if "balances" in spot_state:
@@ -123,28 +156,8 @@ class LiveHyperliquidTrader:
                         spot_usdc = float(bal.get("total", 0.0))
                         
             self.live_balance = spot_usdc + perp_balance
-            
-            positions = user_state.get("assetPositions", [])
-            in_trade_found = False
-            for pos in positions:
-                p = pos.get("position", {})
-                if p.get("coin") == COIN and float(p.get("szi", 0)) != 0.0:
-                    szi = float(p.get("szi"))
-                    self.in_trade = True
-                    self.trade_type = "LONG" if szi > 0 else "SHORT"
-                    self.entry_price = float(p.get("entryPx", 0.0))
-                    self.trade_amount_btc = abs(szi)
-                    in_trade_found = True
-                    break
-                    
-            if not in_trade_found:
-                self.in_trade = False
-                self.trade_type = None
-                self.bars_held = 0
-                self.entry_price = 0.0
-                
         except Exception as e:
-            logger.error(f"Failed to sync state from Hyperliquid: {e}")
+            logger.error(f"Failed to sync balance: {e}")
 
     def fetch_recent_data(self):
         import requests
@@ -153,7 +166,6 @@ class LiveHyperliquidTrader:
         res = requests.get(url, timeout=15)
         raw_candles = res.json()
         
-        # CCXT format
         candles = [
             [int(c[0]), float(c[1]), float(c[2]), float(c[3]), float(c[4]), float(c[5])]
             for c in raw_candles
@@ -163,158 +175,197 @@ class LiveHyperliquidTrader:
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
         return df
 
+    def _calc_trade_size(self, current_price):
+        """Calculate trade size: 5x leverage on half the balance (so both bots can trade)."""
+        usable_balance = self.live_balance * 0.5  # Each bot gets half the capital
+        target_notional = usable_balance * 5.0
+        return max(0.0001, round(target_notional / current_price, 5))
+
+    def _record_trade(self, trade_type, entry_price, exit_price, bars_held, reason):
+        """Append a completed trade to the trade log."""
+        trade_record = {
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "trade_type": trade_type,
+            "entry_price": entry_price,
+            "exit_price": exit_price,
+            "pnl_pct": 0.0,
+            "pnl_usd": 0.0,
+            "bars_held": bars_held,
+            "reason": reason
+        }
+        
+        if trade_type == "LONG":
+            trade_record["pnl_pct"] = round((exit_price - entry_price) / entry_price * 100, 3)
+        else:
+            trade_record["pnl_pct"] = round((entry_price - exit_price) / entry_price * 100, 3)
+        
+        trades = []
+        if os.path.exists(TRADES_FILE):
+            try:
+                with open(TRADES_FILE, "r") as f:
+                    trades = json.load(f)
+            except Exception:
+                pass
+        trades.append(trade_record)
+        with open(TRADES_FILE, "w") as f:
+            json.dump(trades, f, indent=2)
+        
+        return trade_record
+
+    def _send_exchange_order(self, is_buy, size, current_price):
+        """Send a market order to Hyperliquid. Returns True on success."""
+        try:
+            px = current_price * (1.05 if is_buy else 0.95)
+            res = self.exchange.market_open(COIN, is_buy=is_buy, sz=size, px=px, slippage=0.01)
+            if res and res.get('status') == 'ok':
+                logger.info(f"Exchange order OK: {'BUY' if is_buy else 'SELL'} {size} {COIN}")
+                return True
+            else:
+                logger.error(f"Exchange order FAILED: {res}")
+                return False
+        except Exception as e:
+            logger.error(f"Exchange order exception: {e}")
+            return False
+
+    def _close_exchange_position(self, size):
+        """Close a position on the exchange."""
+        try:
+            res = self.exchange.market_close(COIN, size)
+            logger.info(f"Exchange close: {res}")
+            return True
+        except Exception as e:
+            logger.error(f"Exchange close failed: {e}")
+            return False
+
+    def manage_long(self, current_close, completed_high, completed_low):
+        """Manage the independent long position."""
+        if not self.long_active:
+            return
+            
+        self.long_bars += 1
+        tp_price = self.long_entry * (1 + self.long_tp)
+        sl_price = self.long_entry * (1 - self.long_sl)
+        
+        exit_price = None
+        reason = None
+        
+        if completed_low <= sl_price:
+            exit_price = sl_price
+            reason = f"LONG Stop Loss (-{self.long_sl*100}%)"
+        elif completed_high >= tp_price:
+            exit_price = tp_price
+            reason = f"LONG Take Profit (+{self.long_tp*100}%)"
+        elif self.long_bars >= self.long_max_hold:
+            exit_price = current_close
+            reason = "LONG Time Barrier"
+        
+        if exit_price is not None:
+            logger.info(f"CLOSING LONG: {reason} | Entry ${self.long_entry:.2f} -> Exit ${exit_price:.2f}")
+            self._close_exchange_position(self.long_size)
+            trade = self._record_trade("LONG", self.long_entry, exit_price, self.long_bars, reason)
+            self._notify(f"CLOSED LONG: {reason} | PnL: {trade['pnl_pct']:+.2f}%")
+            self._sync_balance()
+            
+            self.long_active = False
+            self.long_entry = 0.0
+            self.long_bars = 0
+            self.long_size = 0.0
+
+    def manage_short(self, current_close, completed_high, completed_low):
+        """Manage the independent short position."""
+        if not self.short_active:
+            return
+            
+        self.short_bars += 1
+        tp_price = self.short_entry * (1 - self.short_tp)
+        sl_price = self.short_entry * (1 + self.short_sl)
+        
+        exit_price = None
+        reason = None
+        
+        if completed_high >= sl_price:
+            exit_price = sl_price
+            reason = f"SHORT Stop Loss (+{self.short_sl*100}%)"
+        elif completed_low <= tp_price:
+            exit_price = tp_price
+            reason = f"SHORT Take Profit (-{self.short_tp*100}%)"
+        elif self.short_bars >= self.short_max_hold:
+            exit_price = current_close
+            reason = "SHORT Time Barrier"
+        
+        if exit_price is not None:
+            logger.info(f"CLOSING SHORT: {reason} | Entry ${self.short_entry:.2f} -> Exit ${exit_price:.2f}")
+            self._close_exchange_position(self.short_size)
+            trade = self._record_trade("SHORT", self.short_entry, exit_price, self.short_bars, reason)
+            self._notify(f"CLOSED SHORT: {reason} | PnL: {trade['pnl_pct']:+.2f}%")
+            self._sync_balance()
+            
+            self.short_active = False
+            self.short_entry = 0.0
+            self.short_bars = 0
+            self.short_size = 0.0
+
     def save_state(self, current_close, bull_prob=0.0, bear_prob=0.0):
-        tp_target = 0.0
-        sl_target = 0.0
-        if self.in_trade:
-             if self.trade_type == "LONG":
-                 tp_target = self.entry_price * (1 + self.long_tp)
-                 sl_target = self.entry_price * (1 - self.long_sl)
-             elif self.trade_type == "SHORT":
-                 tp_target = self.entry_price * (1 - self.short_tp)
-                 sl_target = self.entry_price * (1 + self.short_sl)
+        """Persist both virtual positions + metrics to disk."""
+        long_pnl_pct = 0.0
+        short_pnl_pct = 0.0
+        if self.long_active and self.long_entry > 0:
+            long_pnl_pct = (current_close - self.long_entry) / self.long_entry * 100
+        if self.short_active and self.short_entry > 0:
+            short_pnl_pct = (self.short_entry - current_close) / self.short_entry * 100
 
         state = {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "paper_balance": self.live_balance,
-            "in_trade": self.in_trade,
-            "trade_type": self.trade_type,
-            "entry_price": self.entry_price,
             "current_price": current_close,
-            "bars_held": self.bars_held,
             "bull_prob": round(bull_prob * 100, 6),
             "bear_prob": round(bear_prob * 100, 6),
-            "open_pnl_usd": 0.0,
-            "open_pnl_pct": 0.0,
-            "take_profit_target": tp_target,
-            "stop_loss_target": sl_target,
-            "trade_amount_btc": self.trade_amount_btc,
-            "trade_amount_usd": self.trade_amount_btc * current_close if self.trade_amount_btc else 0.0
+            # Dual position state
+            "long_active": self.long_active,
+            "long_entry": self.long_entry,
+            "long_bars": self.long_bars,
+            "long_size": self.long_size,
+            "short_active": self.short_active,
+            "short_entry": self.short_entry,
+            "short_bars": self.short_bars,
+            "short_size": self.short_size,
+            # Dashboard backward-compat fields
+            "in_trade": self.long_active or self.short_active,
+            "trade_type": "LONG" if self.long_active and not self.short_active else ("SHORT" if self.short_active and not self.long_active else ("HEDGE" if self.long_active and self.short_active else None)),
+            "entry_price": self.long_entry if self.long_active else (self.short_entry if self.short_active else 0.0),
+            "bars_held": max(self.long_bars, self.short_bars),
+            "open_pnl_pct": round(long_pnl_pct + short_pnl_pct, 3),
+            "open_pnl_usd": round((self.long_size * self.long_entry * long_pnl_pct / 100) + (self.short_size * self.short_entry * short_pnl_pct / 100), 2),
+            "take_profit_target": self.long_entry * (1 + self.long_tp) if self.long_active else (self.short_entry * (1 - self.short_tp) if self.short_active else 0.0),
+            "stop_loss_target": self.long_entry * (1 - self.long_sl) if self.long_active else (self.short_entry * (1 + self.short_sl) if self.short_active else 0.0),
+            "trade_amount_btc": self.long_size + self.short_size,
+            "trade_amount_usd": (self.long_size + self.short_size) * current_close,
         }
         
-        if self.in_trade:
-             if self.trade_type == "LONG":
-                 gross_ret = (current_close - self.entry_price) / self.entry_price
-             else:
-                 gross_ret = (self.entry_price - current_close) / self.entry_price
-             
-             state['open_pnl_pct'] = round(gross_ret * 100, 3)
-             state['open_pnl_usd'] = round((self.trade_amount_btc * self.entry_price) * gross_ret, 2)
-            
-        with open("data_storage/live_state.json", "w") as f:
+        with open(STATE_FILE, "w") as f:
             json.dump(state, f, indent=2)
-
-    def manage_position(self, current_close, current_high, current_low):
-        if not self.in_trade:
-            return
-            
-        self.bars_held += 1
-        
-        tp_price = 0.0
-        sl_price = 0.0
-        max_bars = 0
-        
-        if self.trade_type == "LONG":
-            tp_price = self.entry_price * (1 + self.long_tp)
-            sl_price = self.entry_price * (1 - self.long_sl)
-            max_bars = self.long_max_hold
-        else: # SHORT
-            tp_price = self.entry_price * (1 - self.short_tp)
-            sl_price = self.entry_price * (1 + self.short_sl)
-            max_bars = self.short_max_hold
-
-        exit_price = None
-        reason = None
-        
-        if self.trade_type == "LONG":
-            if current_low <= sl_price:
-                exit_price = sl_price
-                reason = f"Stop Loss Hit (-{self.long_sl*100}%)"
-            elif current_high >= tp_price:
-                exit_price = tp_price
-                reason = f"Take Profit Hit (+{self.long_tp*100}%)"
-            elif self.bars_held >= max_bars:
-                exit_price = current_close
-                reason = "Time Barrier Exhausted"
-        elif self.trade_type == "SHORT":
-            if current_high >= sl_price:
-                exit_price = sl_price
-                reason = f"Stop Loss Hit (+{self.short_sl*100}% price rise)"
-            elif current_low <= tp_price:
-                exit_price = tp_price
-                reason = f"Take Profit Hit (-{self.short_tp*100}% price drop)"
-            elif self.bars_held >= max_bars:
-                exit_price = current_close
-                reason = "Time Barrier Exhausted"
-            
-        if exit_price is not None:
-            # LIVE CLOSE
-            logger.info(f"Triggering EXECUTING LIVE CLOSE for {COIN}... Reason: {reason}")
-            try:
-                # To close, we send market_close or market_open in opposite direction.
-                # The safest using sdk is to run market_close if it exists natively in hyperliquid sdk.
-                close_res = self.exchange.market_close(COIN, self.trade_amount_btc)
-                logger.info(f"Hyperliquid Close Response: {close_res}")
-                
-            except Exception as e:
-                logger.error(f"Failed to execute live close order: {e}")
-                self._notify(f"🚨 CRITICAL ERROR: Failed to close live position on HL: {e}")
-                return
-
-            self._sync_state() # Update balance and active positions
-            
-            # Record explicit historical trade receipt
-            trade_record = {
-                "timestamp": datetime.utcnow().isoformat() + "Z",
-                "trade_type": self.trade_type,
-                "entry_price": self.entry_price,
-                "exit_price": current_close,
-                "pnl_usd": 0.0, # Handled by exchange PNL natively
-                "bars_held": self.bars_held,
-                "reason": reason
-            }
-            
-            trades_file = "data_storage/live_trades.json"
-            trades = []
-            if os.path.exists(trades_file):
-                try:
-                    with open(trades_file, "r") as f:
-                        trades = json.load(f)
-                except Exception as e:
-                    logger.warning(f"Failed to read existing live_trades.json: {e}")
-            trades.append(trade_record)
-            with open(trades_file, "w") as f:
-                json.dump(trades, f, indent=2)
-            
-            logger.info(f"EXIT TRADE [{reason}] @ ${current_close:.2f} | Balance: ${self.live_balance:.2f}")
-            self._notify(f"✅ CLOSED LIVE {self.trade_type}: {reason} @ ${current_close:.2f} | Balance: ${self.live_balance:.2f}")
-            
-            self.in_trade = False
-            self.trade_type = None
-            self.entry_price = 0.0
-            self.bars_held = 0
-            self.trade_amount_btc = 0.0
 
     def step(self):
         try:
             df = self.fetch_recent_data()
             current_close = df['close'].iloc[-1]
-            # Use the COMPLETED (second-to-last) candle for TP/SL to avoid partial candle noise
+            # Use completed candle for TP/SL
             completed_high = df['high'].iloc[-2] if len(df) >= 2 else df['high'].iloc[-1]
             completed_low  = df['low'].iloc[-2] if len(df) >= 2 else df['low'].iloc[-1]
             current_time = df['timestamp'].iloc[-1]
             
-            self._sync_state() # Fetch latest real positions
+            self._sync_balance()
             
-            logger.info(f"Live Market Heartbeat: {current_time} | BTC Price: ${current_close:.2f} | Balance: ${self.live_balance:.2f}")
+            logger.info(f"Live Market Heartbeat: {current_time} | BTC ${current_close:.2f} | Balance: ${self.live_balance:.2f} | Long: {self.long_active} | Short: {self.short_active}")
             
-            # 1. Manage active live positions dynamically (use completed candle for TP/SL)
-            self.manage_position(current_close, completed_high, completed_low)
+            # 1. Manage existing positions INDEPENDENTLY
+            self.manage_long(current_close, completed_high, completed_low)
+            self.manage_short(current_close, completed_high, completed_low)
             
+            # 2. Compute AI probabilities
             bull_prob = 0.0
             bear_prob = 0.0
             
-            # 2. Compute probabilities
             live_df = compute_live_features(df, SCALER_PATH)
             max_seq = max(self.seq_len_long, self.seq_len_short)
             if len(live_df) >= max_seq:
@@ -336,54 +387,40 @@ class LiveHyperliquidTrader:
                     
                 logger.info(f"AI Models -> Bullish Edge: {bull_prob*100:.4f}% | Bearish Edge: {bear_prob*100:.4f}%")
 
-            # 3. Enter trade if flat
-            if not self.in_trade and len(live_df) >= max(self.seq_len_long, self.seq_len_short):
-                if bull_prob >= 0.60 and bear_prob >= 0.50:
-                    logger.info("⚡ Conflicting signals detected! High market uncertainty. Remaining flat.")
-                elif bull_prob >= 0.60:
-                    logger.info(f"🔥🔥 LONG EDGE DETECTED! ATTEMPTING LIVE ENTRY @ ~${current_close:.2f}")
-                    try:
-                        # Calculate trade size (using roughly 5x leverage on total available balance)
-                        target_notional = self.live_balance * 5.0 
-                        trade_sz = max(0.0001, round(target_notional / current_close, 5))
-                        
-                        logger.info(f"Submitting LIVE MARKET OPEN for {trade_sz} {COIN} (Notional: ${target_notional:.2f})...")
-                        res = self.exchange.market_open(COIN, is_buy=True, sz=trade_sz, px=current_close*1.05, slippage=0.01)
-                        if res and res.get('status') == 'ok':
-                            self.in_trade = True
-                            self.trade_type = "LONG"
-                            self.bars_held = 0
-                            self._notify(f"🔥 LIVE ENTRY LONG {trade_sz} {COIN} | Balance: ${self.live_balance:.2f} | Prob: {bull_prob*100:.1f}%")
-                            self._sync_state() # Lock true entry price via API
-                        else:
-                            logger.error(f"Failed to open LONG order. API returned: {res}")
-                    except Exception as e:
-                        logger.error(f"Exception during entry: {e}")
-                        
-                elif bear_prob >= 0.50:
-                    logger.info(f"🩸🩸 SHORT EDGE DETECTED! ATTEMPTING LIVE ENTRY @ ~${current_close:.2f}")
-                    try:
-                        target_notional = self.live_balance * 5.0
-                        trade_sz = max(0.0001, round(target_notional / current_close, 5))
-                        logger.info(f"Submitting LIVE MARKET SHORT for {trade_sz} {COIN} (Notional: ${target_notional:.2f})...")
-                        res = self.exchange.market_open(COIN, is_buy=False, sz=trade_sz, px=current_close*0.95, slippage=0.01)
-                        if res and res.get('status') == 'ok':
-                            self.in_trade = True
-                            self.trade_type = "SHORT"
-                            self.bars_held = 0
-                            self._notify(f"🩸 LIVE ENTRY SHORT {trade_sz} {COIN} | Balance: ${self.live_balance:.2f} | Prob: {bear_prob*100:.1f}%")
-                            self._sync_state() # Lock true entry price via API
-                        else:
-                            logger.error(f"Failed to open SHORT order. API returned: {res}")
-                    except Exception as e:
-                         logger.error(f"Exception during entry: {e}")
-                else:
-                    logger.info("No mathematical edge detected. Preserving capital. Staying flat.")
-                        
+            # 3. INDEPENDENT ENTRY LOGIC — no canceling, each bot acts alone
+            
+            # --- LONG BOT ---
+            if not self.long_active and bull_prob >= 0.60:
+                logger.info(f"LONG EDGE DETECTED! Prob: {bull_prob*100:.2f}% @ ${current_close:.2f}")
+                trade_sz = self._calc_trade_size(current_close)
+                if self._send_exchange_order(is_buy=True, size=trade_sz, current_price=current_close):
+                    self.long_active = True
+                    self.long_entry = current_close
+                    self.long_bars = 0
+                    self.long_size = trade_sz
+                    self._notify(f"LONG ENTRY {trade_sz} BTC @ ${current_close:.2f} | Prob: {bull_prob*100:.1f}%")
+                    self._sync_balance()
+            
+            # --- SHORT BOT ---
+            if not self.short_active and bear_prob >= 0.50:
+                logger.info(f"SHORT EDGE DETECTED! Prob: {bear_prob*100:.2f}% @ ${current_close:.2f}")
+                trade_sz = self._calc_trade_size(current_close)
+                if self._send_exchange_order(is_buy=False, size=trade_sz, current_price=current_close):
+                    self.short_active = True
+                    self.short_entry = current_close
+                    self.short_bars = 0
+                    self.short_size = trade_sz
+                    self._notify(f"SHORT ENTRY {trade_sz} BTC @ ${current_close:.2f} | Prob: {bear_prob*100:.1f}%")
+                    self._sync_balance()
+            
+            if not self.long_active and not self.short_active and bull_prob < 0.60 and bear_prob < 0.50:
+                logger.info("No edge detected. Staying flat.")
+                    
             self.save_state(current_close, bull_prob=bull_prob, bear_prob=bear_prob)
                     
         except Exception as e:
-            logger.error(f"Live API or Execution engine crashed on loop: {e}")
+            logger.error(f"Execution engine error: {e}")
+            import traceback; traceback.print_exc()
 
     def _notify(self, msg):
         """Send push notification via ntfy."""
@@ -395,7 +432,7 @@ class LiveHyperliquidTrader:
             logger.warning(f"Failed to send notification: {e}")
 
     def run_forever(self):
-        logger.info("Initializing LIVE EXECUTION Background Daemon...")
+        logger.info("Initializing DUAL-INDEPENDENT LIVE EXECUTION Daemon...")
         while True:
             now = datetime.utcnow()
             minutes = now.minute
@@ -410,9 +447,9 @@ class LiveHyperliquidTrader:
                 sleep_secs = max(30, 65 - seconds)
                 time.sleep(sleep_secs)
             else:
-                # Calculate seconds until next 15m boundary + 5s buffer for candle close
+                # Calculate seconds until next 15m boundary + 5s buffer
                 secs_to_next = (15 - remainder) * 60 - seconds + 5
-                sleep_time = max(1, min(secs_to_next, 60))  # Sleep at most 60s at a time
+                sleep_time = max(1, min(secs_to_next, 60))
                 time.sleep(sleep_time)
 
 if __name__ == "__main__":
@@ -421,8 +458,8 @@ if __name__ == "__main__":
     # Run once immediately on startup
     trader.step()
     
-    # If standard run, begin infinite loop on 15m physical candle clock
+    # If standard run, begin infinite loop
     if "--cron" not in sys.argv:
         trader.run_forever()
     else:
-        logger.info("Cron cycle complete. Exiting stateless runner.")
+        logger.info("Cron cycle complete. Exiting.")
