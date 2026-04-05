@@ -5,62 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI quantitative Execution</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Outfit:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap');
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: #050511;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.15) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.1) 0, transparent 50%);
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            background-image: radial-gradient(circle at 15% 50%, rgba(20, 20, 25, 0.8), transparent 50%), radial-gradient(circle at 85% 30%, rgba(25, 20, 30, 0.6), transparent 50%);
+            color: #F2F2F7;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 40px 20px;
+            letter-spacing: -0.3px;
         }
-        h1 { font-family: 'Outfit', sans-serif; font-size: 2.5rem; margin-bottom: 30px; letter-spacing: -1px; text-shadow: 0 0 20px rgba(0,255,255,0.4); }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 900px; width: 100%; }
-        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; backdrop-filter: blur(12px); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
-        .card h3 { font-size: 0.9rem; color: #8b95a5; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600; }
-        .card .value { font-size: 2.2rem; font-weight: 900; font-family: 'Outfit', sans-serif; }
+        h1 { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -1px; text-align: center; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; max-width: 1000px; width: 100%; margin-bottom: 20px; }
+        .card { 
+            background: rgba(28, 28, 30, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 20px; 
+            padding: 20px; 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px);
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        .card h3 { font-size: 0.8rem; color: #8E8E93; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; font-weight: 600; }
+        .card .value { font-size: 2rem; font-weight: 700; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; }
+        
         .status-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .status-flat { background: rgba(139,149,165,0.1); color: #8b95a5; border: 1px solid rgba(139,149,165,0.2); }
-        .status-long { background: rgba(0,255,200,0.1); color: #00ffc8; border: 1px solid rgba(0,255,200,0.2); box-shadow: 0 0 15px rgba(0,255,200,0.2); }
-        .status-short { background: rgba(255,51,102,0.1); color: #ff3366; border: 1px solid rgba(255,51,102,0.2); box-shadow: 0 0 15px rgba(255,51,102,0.2); }
-        .positive { color: #00ffc8; text-shadow: 0 0 10px rgba(0,255,200,0.3); }
-        .negative { color: #ff3366; text-shadow: 0 0 10px rgba(255,51,102,0.3); }
-        .neutral { color: #ffffff; }
-        .footer { margin-top: 40px; font-size: 0.85rem; color: #4a5568; display: flex; align-items: center; gap: 8px; }
-        .pulse { width: 8px; height: 8px; background: #00ffc8; border-radius: 50%; box-shadow: 0 0 8px #00ffc8; animation: pulse-anim 2s infinite; }
+        .positive { color: #32D74B; }
+        .negative { color: #FF453A; }
+        .neutral { color: #F2F2F7; }
+        
+        .pulse { width: 8px; height: 8px; background: #32D74B; border-radius: 50%; box-shadow: 0 0 8px rgba(50, 215, 75, 0.6); animation: pulse-anim 2s infinite; }
         @keyframes pulse-anim { 0%{transform:scale(0.95);opacity:0.5} 50%{transform:scale(1.2);opacity:1} 100%{transform:scale(0.95);opacity:0.5} }
-        .balance-card { grid-column: span 2; display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
-        .nav-tabs { display: flex; gap: 30px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.05); padding-bottom: 12px; width: 100%; max-width: 900px; }
-        .nav-tab { font-size: 1.2rem; font-family: 'Outfit', sans-serif; cursor: pointer; color: #8b95a5; transition: 0.3s; padding: 4px 8px; border-radius: 8px; }
-        .nav-tab:hover { color: #ffffff; background: rgba(255,255,255,0.03); }
-        .nav-tab.active { color: #00ffc8; text-shadow: 0 0 15px rgba(0,255,200,0.4); background: rgba(0,255,200,0.05); }
-        .replay-controls button { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px; cursor:pointer; font-family: 'Inter'; font-weight:600; transition: 0.2s;}
-        .replay-controls button:hover { background: rgba(0,255,200,0.1); border-color: #00ffc8; color:#00ffc8; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,255,200,0.15);}
-        .ind-toggles button, .tf-sel button, .draw-tools button { background: rgba(10,10,25,0.8); border: 1px solid rgba(255,255,255,0.1); color: #8b95a5; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; font-family: 'Inter'; font-weight: 600;}
-        .ind-toggles button.active, .tf-sel button.active, .draw-tools button.active { background: rgba(0,255,200,0.15); border-color: #00ffc8; color:#00ffc8; box-shadow: inset 0 0 10px rgba(0,255,200,0.1);}
-        .sim-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
-        .sim-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; }
-        .sim-card h4 { font-size: 0.8rem; color: #8b95a5; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .sim-val { font-size: 1.6rem; font-weight: 900; font-family: 'Outfit'; }
-        .trade-log { max-height: 180px; overflow-y: auto; font-size: 0.8rem; color: #8b95a5; }
-        .trade-log div { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
-        .trade-log .win { color: #00ffc8; } .trade-log .loss { color: #ff3366; }
-        .sim-actions button { padding: 10px 24px; border-radius: 8px; font-family: 'Inter'; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.2s; border: none; }
-        .sim-actions .buy-btn { background: rgba(0,255,200,0.2); color: #00ffc8; border: 1px solid #00ffc8; }
-        .sim-actions .buy-btn:hover { background: rgba(0,255,200,0.35); transform: translateY(-1px); }
-        .sim-actions .sell-btn { background: rgba(255,51,102,0.2); color: #ff3366; border: 1px solid #ff3366; }
-        .sim-actions .sell-btn:hover { background: rgba(255,51,102,0.35); transform: translateY(-1px); }
-        .sim-actions .close-btn { background: rgba(255,255,255,0.05); color: #8b95a5; border: 1px solid rgba(255,255,255,0.15); }
-        .sim-actions .close-btn:hover { color: #fff; border-color: #fff; }
+        
+        .nav-tabs { display: flex; gap: 20px; margin-bottom: 20px; padding-bottom: 12px; width: 100%; max-width: 1000px; flex-wrap: wrap; }
+        .nav-tab { font-size: 1.1rem; font-weight: 600; cursor: pointer; color: #8E8E93; transition: 0.2s; padding: 6px 12px; border-radius: 12px; }
+        .nav-tab:hover { color: #ffffff; background: rgba(255,255,255,0.05); }
+        .nav-tab.active { color: #000; background: #F2F2F7; }
+        
+        .main-content { display: grid; grid-template-columns: 1fr 3fr 1.2fr; gap: 16px; max-width: 1000px; width: 100%; }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 850px) {
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .dashboard-grid > div { grid-column: span 1 !important; }
+            .dashboard-grid > div:first-child, .dashboard-grid > div:last-child { grid-column: span 2 !important; }
+            .main-content { grid-template-columns: 1fr !important; }
+            .main-content > .card { height: auto !important; min-height: 200px; }
+            .nav-tabs { justify-content: center; }
+            h1 { font-size: 1.8rem; }
+        }
+
+        .trade-log { max-height: 180px; overflow-y: auto; font-size: 0.8rem; color: #8E8E93; }
+        .trade-log div { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .trade-log .win { color: #32D74B; } .trade-log .loss { color: #FF453A; }
     </style>
 </head>
 <body>
@@ -78,7 +85,7 @@
     </div>
 
     <!-- ===== MAIN VIEW 1: AUTONOMOUS AI LIVE TRADER ===== -->
-    <div id="view-live" style="display:block;width:100%;max-width:960px;">
+    <div id="view-live" style="display:block;width:100%;max-width:1000px;">
         <script>
             // Master Live Asset State
             var _activeSymbol = 'BTCUSDT';
@@ -135,7 +142,7 @@
         </div>
 
         <!-- MAIN CHART & LOG ZONE -->
-        <div style="display: grid; grid-template-columns: 1fr 3fr 1.2fr; gap: 16px;">
+        <div class="main-content">
             <!-- BTC MARKET PERFORMANCE SIDEPANEL -->
             <div class="card" style="height:480px; display:flex; flex-direction:column; padding:0; overflow:hidden;">
                 <h3 id="live-market-title" style="padding:16px 16px 12px 16px; margin:0; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:700; color:#fff;">Live BTC Market</h3>
@@ -289,7 +296,7 @@
             rightPriceScale: {borderColor: 'rgba(255,255,255,0.1)'},
             timeScale: {borderColor: 'rgba(255,255,255,0.1)', timeVisible: true}
         });
-        liveCandles = liveChart.addCandlestickSeries({upColor: '#00ffc8', downColor: '#ff3366', borderVisible: false, wickUpColor: '#00ffc8', wickDownColor: '#ff3366'});
+        liveCandles = liveChart.addCandlestickSeries({upColor: '#32D74B', downColor: '#FF453A', borderVisible: false, wickUpColor: '#32D74B', wickDownColor: '#FF453A'});
         window.addEventListener('resize', function() {
             if(document.getElementById('view-live').style.display !== 'none') liveChart.resize(dp.clientWidth, 480);
         });
@@ -430,9 +437,9 @@
             var bearEl = document.getElementById('live-bear-edge');
             if (bullEl && bearEl && state.bull_prob !== undefined && state.bear_prob !== undefined) {
                 if (state.bull_prob > 0 || state.bear_prob > 0) {
-                    bullEl.innerText = state.bull_prob.toFixed(3) + '%';
+                    bullEl.innerText = state.bull_prob.toFixed(4) + '%';
                     bullEl.className = 'value ' + (state.bull_prob >= 60 ? 'positive' : 'neutral');
-                    bearEl.innerText = state.bear_prob.toFixed(3) + '%';
+                    bearEl.innerText = state.bear_prob.toFixed(4) + '%';
                     bearEl.className = 'value ' + (state.bear_prob >= 50 ? 'negative' : 'neutral');
                 } else {
                     bullEl.innerText = '--%';
