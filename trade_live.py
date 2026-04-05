@@ -181,23 +181,25 @@ class LiveHyperliquidTrader:
         target_notional = usable_balance * 5.0
         return max(0.0001, round(target_notional / current_price, 5))
 
-    def _record_trade(self, trade_type, entry_price, exit_price, bars_held, reason):
+    def _record_trade(self, trade_type, entry_price, exit_price, bars_held, reason, size):
         """Append a completed trade to the trade log."""
         trade_record = {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "trade_type": trade_type,
             "entry_price": entry_price,
             "exit_price": exit_price,
-            "pnl_pct": 0.0,
+            "return_pct": 0.0,
             "pnl_usd": 0.0,
             "bars_held": bars_held,
             "reason": reason
         }
         
         if trade_type == "LONG":
-            trade_record["pnl_pct"] = round((exit_price - entry_price) / entry_price * 100, 3)
+            trade_record["return_pct"] = round((exit_price - entry_price) / entry_price * 100, 3)
+            trade_record["pnl_usd"] = round(size * (exit_price - entry_price), 2)
         else:
-            trade_record["pnl_pct"] = round((entry_price - exit_price) / entry_price * 100, 3)
+            trade_record["return_pct"] = round((entry_price - exit_price) / entry_price * 100, 3)
+            trade_record["pnl_usd"] = round(size * (entry_price - exit_price), 2)
         
         trades = []
         if os.path.exists(TRADES_FILE):
@@ -212,29 +214,41 @@ class LiveHyperliquidTrader:
         
         return trade_record
 
-    def _send_exchange_order(self, is_buy, size, current_price):
-        """Send a market order to Hyperliquid. Returns True on success."""
+    def _sync_exchange_position(self, current_price):
+        """Reconciles the virtual positions with the exchange's actual net position."""
+        target_size = 0.0
+        if self.long_active:
+            target_size += self.long_size
+        if self.short_active:
+            target_size -= self.short_size
+            
         try:
+            # Fetch current position from exchange
+            user_state = self.info.user_state(self.wallet_address)
+            asset_positions = user_state.get("assetPositions", [])
+            current_pos = 0.0
+            for pos in asset_positions:
+                if pos['position']['coin'] == COIN:
+                    current_pos = float(pos['position']['szi'])
+                    break
+                    
+            diff = target_size - current_pos
+            if abs(diff) < 0.00001:
+                return True # Already synced
+                
+            is_buy = diff > 0
+            size_to_trade = abs(diff)
             px = current_price * (1.05 if is_buy else 0.95)
-            res = self.exchange.market_open(COIN, is_buy=is_buy, sz=size, px=px, slippage=0.01)
+            
+            res = self.exchange.market_open(COIN, is_buy=is_buy, sz=size_to_trade, px=px, slippage=0.01)
             if res and res.get('status') == 'ok':
-                logger.info(f"Exchange order OK: {'BUY' if is_buy else 'SELL'} {size} {COIN}")
+                logger.info(f"Target Size: {target_size}. Syncing Exchange Size by {'BUY' if is_buy else 'SELL'} {size_to_trade} {COIN}")
                 return True
             else:
-                logger.error(f"Exchange order FAILED: {res}")
+                logger.error(f"Sync exchange FAILED: {res}")
                 return False
         except Exception as e:
-            logger.error(f"Exchange order exception: {e}")
-            return False
-
-    def _close_exchange_position(self, size):
-        """Close a position on the exchange."""
-        try:
-            res = self.exchange.market_close(COIN, size)
-            logger.info(f"Exchange close: {res}")
-            return True
-        except Exception as e:
-            logger.error(f"Exchange close failed: {e}")
+            logger.error(f"Sync exchange exception: {e}")
             return False
 
     def manage_long(self, current_close, completed_high, completed_low):
@@ -261,15 +275,16 @@ class LiveHyperliquidTrader:
         
         if exit_price is not None:
             logger.info(f"CLOSING LONG: {reason} | Entry ${self.long_entry:.2f} -> Exit ${exit_price:.2f}")
-            self._close_exchange_position(self.long_size)
-            trade = self._record_trade("LONG", self.long_entry, exit_price, self.long_bars, reason)
-            self._notify(f"CLOSED LONG: {reason} | PnL: {trade['pnl_pct']:+.2f}%")
+            trade = self._record_trade("LONG", self.long_entry, exit_price, self.long_bars, reason, self.long_size)
+            self._notify(f"CLOSED LONG: {reason} | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
             self._sync_balance()
             
             self.long_active = False
             self.long_entry = 0.0
             self.long_bars = 0
             self.long_size = 0.0
+            
+            self._sync_exchange_position(current_close)
 
     def manage_short(self, current_close, completed_high, completed_low):
         """Manage the independent short position."""
@@ -295,15 +310,16 @@ class LiveHyperliquidTrader:
         
         if exit_price is not None:
             logger.info(f"CLOSING SHORT: {reason} | Entry ${self.short_entry:.2f} -> Exit ${exit_price:.2f}")
-            self._close_exchange_position(self.short_size)
-            trade = self._record_trade("SHORT", self.short_entry, exit_price, self.short_bars, reason)
-            self._notify(f"CLOSED SHORT: {reason} | PnL: {trade['pnl_pct']:+.2f}%")
+            trade = self._record_trade("SHORT", self.short_entry, exit_price, self.short_bars, reason, self.short_size)
+            self._notify(f"CLOSED SHORT: {reason} | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
             self._sync_balance()
             
             self.short_active = False
             self.short_entry = 0.0
             self.short_bars = 0
             self.short_size = 0.0
+            
+            self._sync_exchange_position(current_close)
 
     def save_state(self, current_close, bull_prob=0.0, bear_prob=0.0):
         """Persist both virtual positions + metrics to disk."""
@@ -393,25 +409,37 @@ class LiveHyperliquidTrader:
             if not self.long_active and bull_prob >= 0.60:
                 logger.info(f"LONG EDGE DETECTED! Prob: {bull_prob*100:.2f}% @ ${current_close:.2f}")
                 trade_sz = self._calc_trade_size(current_close)
-                if self._send_exchange_order(is_buy=True, size=trade_sz, current_price=current_close):
-                    self.long_active = True
-                    self.long_entry = current_close
-                    self.long_bars = 0
-                    self.long_size = trade_sz
+                
+                self.long_active = True
+                self.long_entry = current_close
+                self.long_bars = 0
+                self.long_size = trade_sz
+                
+                if self._sync_exchange_position(current_close):
                     self._notify(f"LONG ENTRY {trade_sz} BTC @ ${current_close:.2f} | Prob: {bull_prob*100:.1f}%")
                     self._sync_balance()
+                else:
+                    logger.error("Failed to sync long entry to exchange. Reverting virtual position.")
+                    self.long_active = False
+                    self.long_size = 0.0
             
             # --- SHORT BOT ---
             if not self.short_active and bear_prob >= 0.50:
                 logger.info(f"SHORT EDGE DETECTED! Prob: {bear_prob*100:.2f}% @ ${current_close:.2f}")
                 trade_sz = self._calc_trade_size(current_close)
-                if self._send_exchange_order(is_buy=False, size=trade_sz, current_price=current_close):
-                    self.short_active = True
-                    self.short_entry = current_close
-                    self.short_bars = 0
-                    self.short_size = trade_sz
+                
+                self.short_active = True
+                self.short_entry = current_close
+                self.short_bars = 0
+                self.short_size = trade_sz
+                
+                if self._sync_exchange_position(current_close):
                     self._notify(f"SHORT ENTRY {trade_sz} BTC @ ${current_close:.2f} | Prob: {bear_prob*100:.1f}%")
                     self._sync_balance()
+                else:
+                    logger.error("Failed to sync short entry to exchange. Reverting virtual position.")
+                    self.short_active = False
+                    self.short_size = 0.0
             
             if not self.long_active and not self.short_active and bull_prob < 0.60 and bear_prob < 0.50:
                 logger.info("No edge detected. Staying flat.")
