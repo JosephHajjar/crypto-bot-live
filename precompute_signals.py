@@ -11,7 +11,7 @@ sys.path.insert(0, '.')
 
 def generate_signals():
     import torch
-    from data.feature_engineer import compute_live_features, get_feature_cols
+    from data.feature_engineer_btc import compute_live_features, get_feature_cols
     from ml.model import AttentionLSTMModel
 
     config_long_path = 'models/holy_grail_config.json'

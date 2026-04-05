@@ -4,7 +4,7 @@ from trade_live import LiveHyperliquidTrader
 import pandas as pd
 import numpy as np
 import torch
-from data.feature_engineer import compute_live_features, get_feature_cols
+from data.feature_engineer_btc import compute_live_features, get_feature_cols
 
 trader = LiveHyperliquidTrader()
 df = trader.fetch_recent_data()

@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import requests
 
-from data.feature_engineer import compute_live_features, get_feature_cols
+from data.feature_engineer_btc import compute_live_features, get_feature_cols
 from ml.model import AttentionLSTMModel
 
 # Triple barrier params (match training)

@@ -8,7 +8,7 @@ import os
 
 # Add root to pythonpath
 sys.path.insert(0, r'c:\Users\asdf\.gemini\antigravity\scratch\ml_trading_bot')
-from data.feature_engineer import compute_live_features, get_feature_cols
+from data.feature_engineer_btc import compute_live_features, get_feature_cols
 from ml.model import AttentionLSTMModel
 
 os.chdir(r'c:\Users\asdf\.gemini\antigravity\scratch\ml_trading_bot')

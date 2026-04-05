@@ -23,7 +23,7 @@ import optuna
 from optuna.trial import TrialState
 
 from data.fetch_data import fetch_klines
-from data.feature_engineer import engineer_features, get_feature_cols
+from data.feature_engineer_btc import engineer_features, get_feature_cols
 from ml.dataset import TimeSeriesDataset
 from ml.model import AttentionLSTMModel
 

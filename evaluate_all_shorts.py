@@ -7,7 +7,7 @@ import pandas as pd
 import sys
 
 from ml.model import AttentionLSTMModel
-from data.feature_engineer import get_feature_cols
+from data.feature_engineer_btc import get_feature_cols
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -18,8 +18,7 @@ def evaluate_models():
     df = pd.read_csv('data_storage/BTC_USDT_15m_short_processed.csv')
     df = df.iloc[-4000:].copy() # Enough data to support seq_len and provide good backtest
     
-    feature_cols = get_feature_cols()    77.8%	+7.08%	0.39%
-    All Time	199	85.4%	+217.77%	1.09%
+    feature_cols = get_feature_cols()
     
     close_prices = df['close'].values
     high_prices = df['high'].values

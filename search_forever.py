@@ -11,7 +11,7 @@ import urllib.request
 from tqdm import tqdm
 
 from data.fetch_data import fetch_klines
-from data.feature_engineer import engineer_features
+from data.feature_engineer_btc import engineer_features
 from ml.dataset import TimeSeriesDataset
 from ml.model import LSTMTradingModel
 

@@ -17,7 +17,7 @@ import optuna
 from optuna.trial import TrialState
 
 from data.fetch_data import fetch_klines
-from data.feature_engineer import engineer_features, get_feature_cols, _triple_barrier_label_short
+from data.feature_engineer_btc import engineer_features, get_feature_cols, _triple_barrier_label_short
 from ml.dataset import TimeSeriesDataset
 from ml.model import AttentionLSTMModel
 

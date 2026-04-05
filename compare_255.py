@@ -4,7 +4,7 @@ import numpy as np
 
 sys.path.insert(0, '.')
 from ml.model import AttentionLSTMModel
-from data.feature_engineer import get_feature_cols
+from data.feature_engineer_btc import get_feature_cols
 
 def run_backtest(df_slice, model, seq_length, device, mode):
     # mode: 'LONG_ONLY' or 'LONG_SHORT'

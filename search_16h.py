@@ -5,7 +5,7 @@ import numpy as np
 
 sys.path.insert(0, '.')
 from ml.model import AttentionLSTMModel
-from data.feature_engineer import compute_live_features, get_feature_cols
+from data.feature_engineer_btc import compute_live_features, get_feature_cols
 from trade_live import LiveHyperliquidTrader, SYMBOL, TIMEFRAME
 
 try:

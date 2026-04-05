@@ -13,7 +13,7 @@ from datetime import datetime
 # Import ML model
 from ml.model import AttentionLSTMModel
 from optimize_short_threshold import fetch_recent_15m
-from data.feature_engineer import compute_live_features, get_feature_cols
+from data.feature_engineer_btc import compute_live_features, get_feature_cols
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

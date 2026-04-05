@@ -7,7 +7,7 @@ bot_dir = 'c:\\Users\\asdf\\.gemini\\antigravity\\scratch\\ml_trading_bot'
 sys.path.append(bot_dir)
 
 from optimize_long_tpsl import fetch_recent_15m, backtest_tpsl
-from data.feature_engineer import compute_live_features, get_feature_cols
+from data.feature_engineer_btc import compute_live_features, get_feature_cols
 from ml.model import AttentionLSTMModel
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

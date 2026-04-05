@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, '.')
 from ml.model import AttentionLSTMModel
 import pandas as pd
-from data.feature_engineer import compute_live_features, get_feature_cols
+from data.feature_engineer_btc import compute_live_features, get_feature_cols
 import requests
 
 def test_dashboard_api():
