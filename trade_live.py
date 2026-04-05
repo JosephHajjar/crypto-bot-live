@@ -342,13 +342,12 @@ class LiveHyperliquidTrader:
                 elif bull_prob >= 0.60:
                     logger.info(f"🔥🔥 LONG EDGE DETECTED! ATTEMPTING LIVE ENTRY @ ~${current_close:.2f}")
                     try:
-                        # Calculate trade size (using roughly 10x leverage on total available balance)
-                        # We use max balance or test amount if balance is extremely small.
-                        target_notional = max(50.0, self.live_balance * 5.0) 
+                        # Calculate trade size (using roughly 5x leverage on total available balance)
+                        target_notional = self.live_balance * 5.0 
                         trade_sz = max(0.0001, round(target_notional / current_close, 5))
                         
                         logger.info(f"Submitting LIVE MARKET OPEN for {trade_sz} {COIN} (Notional: ${target_notional:.2f})...")
-                        res = self.exchange.market_open(COIN, is_buy=True, sz=trade_sz, px=current_close*1.05, sliding_slippage=0.01)
+                        res = self.exchange.market_open(COIN, is_buy=True, sz=trade_sz, px=current_close*1.05, slippage=0.01)
                         if res and res.get('status') == 'ok':
                             self.in_trade = True
                             self.trade_type = "LONG"
@@ -363,10 +362,10 @@ class LiveHyperliquidTrader:
                 elif bear_prob >= 0.50:
                     logger.info(f"🩸🩸 SHORT EDGE DETECTED! ATTEMPTING LIVE ENTRY @ ~${current_close:.2f}")
                     try:
-                        target_notional = max(50.0, self.live_balance * 5.0)
+                        target_notional = self.live_balance * 5.0
                         trade_sz = max(0.0001, round(target_notional / current_close, 5))
                         logger.info(f"Submitting LIVE MARKET SHORT for {trade_sz} {COIN} (Notional: ${target_notional:.2f})...")
-                        res = self.exchange.market_open(COIN, is_buy=False, sz=trade_sz, px=current_close*0.95, sliding_slippage=0.01)
+                        res = self.exchange.market_open(COIN, is_buy=False, sz=trade_sz, px=current_close*0.95, slippage=0.01)
                         if res and res.get('status') == 'ok':
                             self.in_trade = True
                             self.trade_type = "SHORT"
