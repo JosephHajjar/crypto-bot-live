@@ -7,6 +7,13 @@ import json
 import logging
 import urllib.request
 from datetime import datetime
+from dotenv import load_dotenv
+
+from eth_account import Account
+import eth_account
+from hyperliquid.info import Info
+from hyperliquid.exchange import Exchange
+from hyperliquid.utils import constants
 
 import sys
 sys.path.insert(0, '.')
@@ -36,6 +43,18 @@ TRADES_FILE = 'data_storage/live_trades_proportional.json'
 class LiveProportionalTrader:
     def __init__(self):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        
+        # Load Env
+        load_dotenv()
+        self.wallet_address = os.environ.get("HYPERLIQUID_WALLET_ADDRESS").strip() if os.environ.get("HYPERLIQUID_WALLET_ADDRESS") else None
+        self.secret_key = os.environ.get("HYPERLIQUID_API_SECRET").strip() if os.environ.get("HYPERLIQUID_API_SECRET") else None
+        if not self.wallet_address or not self.secret_key:
+             raise ValueError("Hyperliquid API Keys not found in .env!")
+        
+        # Setup Hyperliquid SDK
+        self.account = Account.from_key(self.secret_key)
+        self.info = Info(constants.MAINNET_API_URL, skip_ws=True)
+        self.exchange = Exchange(self.account, constants.MAINNET_API_URL, account_address=self.wallet_address)
         
         # Load Long Model
         with open(CONFIG_LONG_PATH, 'r') as f:
@@ -68,6 +87,8 @@ class LiveProportionalTrader:
         self.entry_price = 0.0
         self.bars_held = 0
         self.paper_balance = 1000.0 # Starting with hypothetical $1000 for pure tracking
+        self.live_balance = 0.0
+        self.trade_size_in_btc = 0.0
         
         # Restore state from disk (survives restarts)
         self._load_persisted_state()
@@ -92,6 +113,78 @@ class LiveProportionalTrader:
                 self.paper_balance = s.get("paper_balance", 1000.0)
             except Exception:
                 pass
+
+    def _sync_balance(self):
+        """Fetch current account balance from Hyperliquid."""
+        try:
+            user_state = self.info.user_state(self.wallet_address)
+            margin_summary = user_state.get("marginSummary", {})
+            perp_balance = float(margin_summary.get("accountValue", 0.0))
+            
+            spot_state = self.info.spot_user_state(self.wallet_address)
+            spot_usdc = 0.0
+            if "balances" in spot_state:
+                for bal in spot_state["balances"]:
+                    if bal.get("coin") == "USDC":
+                        spot_usdc = float(bal.get("total", 0.0))
+                        
+            self.live_balance = spot_usdc + perp_balance
+        except Exception as e:
+            logger.error(f"Failed to sync balance: {e}")
+
+    def _calc_trade_size(self, current_price):
+        """Calculate trade size: 5x leverage on full balance."""
+        usable_balance = self.live_balance
+        target_notional = usable_balance * 5.0
+        return max(0.0001, round(target_notional / current_price, 5))
+
+    def is_live_authorized(self):
+        try:
+            with open('data_storage/active_bot_config.json', 'r') as f:
+                c = json.load(f)
+                return c.get('active_bot') == 'proportional'
+        except Exception:
+            return False
+
+    def _sync_exchange_position(self, current_price, target_position, size_in_btc):
+        """Reconciles the virtual positions with the exchange's actual net position."""
+        if not self.is_live_authorized():
+            logger.info("Bot is inactive (paper mode). Skipping Hyperliquid API execution.")
+            return True
+
+        target_size = 0.0
+        if target_position == 'long':
+            target_size = size_in_btc
+        elif target_position == 'short':
+            target_size = -size_in_btc
+            
+        try:
+            user_state = self.info.user_state(self.wallet_address)
+            asset_positions = user_state.get("assetPositions", [])
+            current_pos = 0.0
+            for pos in asset_positions:
+                if pos['position']['coin'] == COIN:
+                    current_pos = float(pos['position']['szi'])
+                    break
+                    
+            diff = target_size - current_pos
+            if abs(diff) < 0.00001:
+                return True
+                
+            is_buy = diff > 0
+            size_to_trade = abs(diff)
+            px = current_price * (1.05 if is_buy else 0.95)
+            
+            res = self.exchange.market_open(COIN, is_buy=is_buy, sz=size_to_trade, px=px, slippage=0.01)
+            if res and res.get('status') == 'ok':
+                logger.info(f"Target Size: {target_size}. Syncing Exchange Size by {'BUY' if is_buy else 'SELL'} {size_to_trade} {COIN}")
+                return True
+            else:
+                logger.error(f"Sync exchange FAILED: {res}")
+                return False
+        except Exception as e:
+            logger.error(f"Sync exchange exception: {e}")
+            return False
 
     def fetch_recent_data(self):
         import requests
@@ -124,16 +217,20 @@ class LiveProportionalTrader:
         
         if trade_type == "LONG":
             trade_record["return_pct"] = round((exit_price - entry_price) / entry_price * 100, 3)
-            # Rough math based on entire paper balance sizing with 1x leverage, minus simple fees assumption
+            if self.trade_size_in_btc > 0:
+                trade_record["pnl_usd"] = round(self.trade_size_in_btc * (exit_price - entry_price), 2)
         else:
             trade_record["return_pct"] = round((entry_price - exit_price) / entry_price * 100, 3)
-            
+            if self.trade_size_in_btc > 0:
+                trade_record["pnl_usd"] = round(self.trade_size_in_btc * (entry_price - exit_price), 2)
+                
         fees_pct = 0.07 
         net_ret_pct = trade_record["return_pct"] - fees_pct
         
-        trade_record["pnl_usd"] = round(self.paper_balance * (net_ret_pct / 100), 2)
-        
-        self.paper_balance += trade_record["pnl_usd"]
+        if self.trade_size_in_btc == 0:
+            # Paper tracking
+            trade_record["pnl_usd"] = round(self.paper_balance * (net_ret_pct / 100), 2)
+            self.paper_balance += trade_record["pnl_usd"]
         
         trades = []
         if os.path.exists(TRADES_FILE):
@@ -158,7 +255,7 @@ class LiveProportionalTrader:
 
         state = {
             "timestamp": datetime.utcnow().isoformat() + "Z",
-            "paper_balance": round(self.paper_balance, 2),
+            "paper_balance": round(self.live_balance if self.is_live_authorized() else self.paper_balance, 2),
             "current_price": current_close,
             "bull_prob": round(bull_prob * 100, 6),
             "bear_prob": round(bear_prob * 100, 6),
@@ -184,7 +281,9 @@ class LiveProportionalTrader:
             current_close = df['close'].iloc[-1]
             current_time = df['timestamp'].iloc[-1]
             
-            logger.info(f"15m Candle Boundary: {current_time} | BTC ${current_close:.2f} | Paper Balance: ${self.paper_balance:.2f} | Pos: {self.position}")
+            self._sync_balance()
+            
+            logger.info(f"15m Candle Boundary: {current_time} | BTC ${current_close:.2f} | Balance (Live): ${self.live_balance:.2f} (Paper): ${self.paper_balance:.2f} | Pos: {self.position}")
             
             # 2. Compute AI probabilities
             bull_prob = 0.0
@@ -227,17 +326,23 @@ class LiveProportionalTrader:
             if self.position is None:
                 # Initialization run: require a solid edge difference to seed the very first trade
                 if diff_bull > ENTER_MARGIN:
-                    self.position = 'long'
-                    self.entry_price = current_close
-                    self.bars_held = 0
-                    logger.info(f"STARTING FRESH -> LONG @ ${current_close:.2f}")
-                    self._notify(f"PROPORTIONAL BOT INITIALIZED -> LONG @ ${current_close:.2f}")
+                    trade_sz = self._calc_trade_size(current_close) if self.is_live_authorized() else 0.0
+                    if self._sync_exchange_position(current_close, 'long', trade_sz):
+                        self.position = 'long'
+                        self.entry_price = current_close
+                        self.bars_held = 0
+                        self.trade_size_in_btc = trade_sz
+                        logger.info(f"STARTING FRESH -> LONG @ ${current_close:.2f} with {trade_sz} BTC")
+                        self._notify(f"PROPORTIONAL BOT INITIALIZED -> LONG @ ${current_close:.2f}")
                 elif diff_bear > ENTER_MARGIN:
-                    self.position = 'short'
-                    self.entry_price = current_close
-                    self.bars_held = 0
-                    logger.info(f"STARTING FRESH -> SHORT @ ${current_close:.2f}")
-                    self._notify(f"PROPORTIONAL BOT INITIALIZED -> SHORT @ ${current_close:.2f}")
+                    trade_sz = self._calc_trade_size(current_close) if self.is_live_authorized() else 0.0
+                    if self._sync_exchange_position(current_close, 'short', trade_sz):
+                        self.position = 'short'
+                        self.entry_price = current_close
+                        self.bars_held = 0
+                        self.trade_size_in_btc = trade_sz
+                        logger.info(f"STARTING FRESH -> SHORT @ ${current_close:.2f} with {trade_sz} BTC")
+                        self._notify(f"PROPORTIONAL BOT INITIALIZED -> SHORT @ ${current_close:.2f}")
             else:
                 # Reversal logic! Based on optimal flip_margin
                 flipped = False
@@ -248,17 +353,19 @@ class LiveProportionalTrader:
                     target_position = 'long'
                     flipped = True
                     
-                if flipped:
-                    trade_type = "LONG" if self.position == "long" else "SHORT"
-                    logger.info(f"REVERSING EDGE DETECTED! Closing {trade_type} to open {target_position.upper()}.")
-                    
-                    trade = self._record_trade(trade_type, self.entry_price, current_close, self.bars_held, "Edge Reversal Flip")
-                    self._notify(f"PROPORTIONAL CLOSED {trade_type}: Reversal | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
-                    
-                    self.position = target_position
-                    self.entry_price = current_close
-                    self.bars_held = 0
-                    self._notify(f"PROPORTIONAL TARGET {target_position.upper()} @ ${current_close:.2f}")
+                    trade_sz = self._calc_trade_size(current_close) if self.is_live_authorized() else 0.0
+                    if self._sync_exchange_position(current_close, target_position, trade_sz):
+                        trade_type = "LONG" if self.position == "long" else "SHORT"
+                        logger.info(f"REVERSING EDGE DETECTED! Closing {trade_type} to open {target_position.upper()}.")
+                        
+                        trade = self._record_trade(trade_type, self.entry_price, current_close, self.bars_held, "Edge Reversal Flip")
+                        self._notify(f"PROPORTIONAL CLOSED {trade_type}: Reversal | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                        
+                        self.position = target_position
+                        self.entry_price = current_close
+                        self.bars_held = 0
+                        self.trade_size_in_btc = trade_sz
+                        self._notify(f"PROPORTIONAL TARGET {target_position.upper()} @ ${current_close:.2f} with {trade_sz} BTC")
                 else:
                     # Same position, just increment bars
                     self.bars_held += 1

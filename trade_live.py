@@ -214,8 +214,20 @@ class LiveHyperliquidTrader:
         
         return trade_record
 
+    def is_live_authorized(self):
+        try:
+            with open('data_storage/active_bot_config.json', 'r') as f:
+                c = json.load(f)
+                return c.get('active_bot') == 'threshold'
+        except Exception:
+            return False
+
     def _sync_exchange_position(self, current_price):
         """Reconciles the virtual positions with the exchange's actual net position."""
+        if not self.is_live_authorized():
+            logger.info("Bot is inactive (paper mode). Skipping Hyperliquid API execution.")
+            return True
+
         target_size = 0.0
         if self.long_active:
             target_size += self.long_size

@@ -133,6 +133,34 @@ def get_proportional_state():
             return jsonify({"error": "State file locked or corrupt"})
     return jsonify({"error": "No state active"})
 
+@app.route('/api/active_bot_mode')
+def get_active_bot_mode():
+    file_name = 'data_storage/active_bot_config.json'
+    if os.path.exists(file_name):
+        try:
+            with open(file_name, 'r') as f:
+                return jsonify(json.load(f))
+        except Exception:
+            return jsonify({"active_bot": "threshold"})
+    return jsonify({"active_bot": "threshold"})
+
+@app.route('/api/set_active_bot_mode', methods=['POST'])
+def set_active_bot_mode():
+    try:
+        data = request.json
+        if not data or 'active_bot' not in data:
+            return jsonify({"error": "Invalid request"}), 400
+        target = data['active_bot']
+        if target not in ['threshold', 'proportional']:
+            return jsonify({"error": "Invalid target mode"}), 400
+            
+        file_name = 'data_storage/active_bot_config.json'
+        with open(file_name, 'w') as f:
+            json.dump({"active_bot": target}, f)
+        return jsonify({"success": True, "active_bot": target})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/historical_data')
 def get_historical():
     symbol = request.args.get('symbol', 'BTCUSDT')

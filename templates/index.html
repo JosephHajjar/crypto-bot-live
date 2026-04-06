@@ -75,9 +75,16 @@
 
     <div class="nav-tabs" style="justify-content: space-between; align-items: center;">
         <div style="display:flex; gap:30px;">
-            <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live'); switchLiveTab('autonomous');">Autonomous Live Trader</div>
-            <div class="nav-tab" id="tab-btn-prop" onclick="switchMainView('live'); switchLiveTab('proportional');">Proportional Bot (Paper)</div>
+            <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live'); switchLiveTab('autonomous');">Standard Threshold AI</div>
+            <div class="nav-tab" id="tab-btn-prop" onclick="switchMainView('live'); switchLiveTab('proportional');">Continuous Proportional AI</div>
             <!-- <div class="nav-tab" id="tab-btn-replay" onclick="switchMainView('replay')">AI Simulator Replay</div> -->
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:12px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size:0.8rem; color:#8E8E93; font-weight:600; text-transform:uppercase;">Live Trading Engine:</div>
+            <select id="live-engine-select" onchange="setLiveEngine(this.value)" style="background:rgba(0,0,0,0.8); color:#00ffc8; border:1px solid rgba(0,255,200,0.3); border-radius:6px; padding:4px 8px; font-weight:700; font-family:'Inter'; outline:none; cursor:pointer;">
+                <option value="threshold">THRESHOLD (CLASSIC)</option>
+                <option value="proportional">PROPORTIONAL (OPTIMIZED)</option>
+            </select>
         </div>
     </div>
 
@@ -87,6 +94,34 @@
             // Master Live Asset State
             var _activeSymbol = 'BTCUSDT';
             var currentLiveMode = 'autonomous';
+
+            // Sync the Live Trading Engine Switch
+            async function syncLiveEngineSelect() {
+                try {
+                    let res = await fetch('/api/active_bot_mode');
+                    let data = await res.json();
+                    if(data.active_bot) {
+                        document.getElementById('live-engine-select').value = data.active_bot;
+                    }
+                } catch(e) {}
+            }
+            syncLiveEngineSelect();
+
+            async function setLiveEngine(val) {
+                try {
+                    let res = await fetch('/api/set_active_bot_mode', {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({active_bot: val})
+                    });
+                    let data = await res.json();
+                    if(data.success) {
+                        alert("Safely switched active live execution engine to: " + val.toUpperCase() + "\nThe inactive bot will now fall back to paper trading.");
+                    }
+                } catch (e) {
+                    alert("Error switching engine.");
+                }
+            }
+
             function switchLiveTab(mode) {
                 currentLiveMode = mode;
                 var btnLive = document.getElementById('tab-btn-live');
@@ -97,10 +132,10 @@
                 if(btnReplay) btnReplay.classList.remove('active');
                 if (mode === 'autonomous') {
                     if(btnLive) btnLive.classList.add('active');
-                    document.getElementById('live-market-title').innerText = 'Live BTC Market (Autonomous)';
+                    document.getElementById('live-market-title').innerText = 'Live BTC Market (Threshold Bot)';
                 } else if (mode === 'proportional') {
                     if(btnProp) btnProp.classList.add('active');
-                    document.getElementById('live-market-title').innerText = 'Live BTC Market (Proportional)';
+                    document.getElementById('live-market-title').innerText = 'Live BTC Market (Proportional Bot)';
                 }
                 if (typeof fetchLiveState === 'function') fetchLiveState();
             }
