@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-04-06T05:37:34.832769Z",
+  "paper_balance": 6.36,
+  "current_price": 69210.11,
+  "bull_prob": 0.012635,
+  "bear_prob": 0.086236,
+  "master_control": "PROP",
+  "in_trade": false,
+  "trade_type": null,
+  "entry_price": 0.0,
+  "bars_held": 0,
+  "open_pnl_pct": 0.0,
+  "open_pnl_usd": 0.0,
+  "take_profit_target": 0.0,
+  "stop_loss_target": 0.0,
+  "trade_amount_btc": 0.0,
+  "trade_amount_usd": 0.0
+}

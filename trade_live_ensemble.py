@@ -399,7 +399,7 @@ class LiveEnsembleTrader:
                       
                       diff_bull = bull_prob - bear_prob
                       diff_bear = bear_prob - bull_prob
-                      ENTER_MARGIN = 0.105
+                      ENTER_MARGIN = 0.0008
                       FLIP_MARGIN = 0.0008
                       
                       if self.position is None:
