@@ -14,7 +14,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def precompute_probs():
     print("Pre-computing model probabilities once for fast grid search...")
     df = pd.read_csv('data_storage/BTC_USDT_15m_processed.csv')
-    df = df.iloc[-15000:].copy() # More data a bit, approx 150 days
+    df = df.iloc[-2880:].copy() # Last 30 days (4/hr * 24hr * 30)
     
     with open('models/holy_grail_config.json', 'r') as f:
         cfg_long = json.load(f)

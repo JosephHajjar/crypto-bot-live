@@ -256,7 +256,7 @@
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:0.55rem; color:var(--text-muted); font-weight:600; letter-spacing:0.5px;">
                     <span>0%</span>
-                    <span>0.08% TRIGGER</span>
+                    <span>22.88% TRIGGER</span>
                 </div>
             </div>
         </div>
@@ -579,13 +579,13 @@
                     if (gapEl) {
                         var absDiff = Math.abs(state.bull_prob - state.bear_prob); 
                         gapEl.innerText = absDiff.toFixed(6) + '%';
-                        gapEl.style.color = absDiff >= 0.08 ? '#34d399' : '#a78bfa'; 
+                        gapEl.style.color = absDiff >= 0.2288 ? '#34d399' : '#a78bfa'; 
                         
-                        // Simplified meter: 0% -> 0.08% maps to 0-100% bar width
-                        var pctFill = Math.min((absDiff / 0.08) * 100, 100);
+                        // Simplified meter: 0% -> 22.88% maps to 0-100% bar width
+                        var pctFill = Math.min((absDiff / 0.2288) * 100, 100);
                         if(meterFill) {
                             meterFill.style.width = pctFill + '%';
-                            if (absDiff >= 0.08) {
+                            if (absDiff >= 0.2288) {
                                 meterFill.style.background = state.bull_prob > state.bear_prob
                                     ? 'linear-gradient(90deg, #34d399, #22d3ee)'
                                     : 'linear-gradient(90deg, #f87171, #fb923c)';
@@ -595,7 +595,7 @@
                         }
                         
                         if(statusBadge) {
-                            if (absDiff < 0.08) {
+                            if (absDiff < 0.2288) {
                                 statusBadge.innerText = "BELOW THRESHOLD";
                                 statusBadge.style.color = "#a78bfa";
                                 statusBadge.style.background = "rgba(167, 139, 250, 0.12)";

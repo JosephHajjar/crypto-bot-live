@@ -407,8 +407,9 @@ class LiveEnsembleTrader:
                       
                       diff_bull = bull_prob - bear_prob
                       diff_bear = bear_prob - bull_prob
-                      ENTER_MARGIN = 0.0008
+                      ENTER_MARGIN = 0.2288
                       FLIP_MARGIN = 0.0008
+                      FLAT_MARGIN = -0.0666
                       
                       if self.position is None:
                            if diff_bull > ENTER_MARGIN:
@@ -431,25 +432,40 @@ class LiveEnsembleTrader:
                                      self._notify(f"PROP BASELINE -> SHORT @ ${current_close:.2f}")
                       else:
                            flipped = False
-                           if self.position == 'long' and diff_bear >= FLIP_MARGIN:
-                                target_position = 'short'
-                                flipped = True
-                           elif self.position == 'short' and diff_bull >= FLIP_MARGIN:
-                                target_position = 'long'
-                                flipped = True
+                           went_flat = False
+                           
+                           if self.position == 'long':
+                                if diff_bear >= FLIP_MARGIN:
+                                     target_position = 'short'
+                                     flipped = True
+                                elif diff_bull < FLAT_MARGIN:
+                                     target_position = 'flat'
+                                     went_flat = True
+                           elif self.position == 'short':
+                                if diff_bull >= FLIP_MARGIN:
+                                     target_position = 'long'
+                                     flipped = True
+                                elif diff_bear < FLAT_MARGIN:
+                                     target_position = 'flat'
+                                     went_flat = True
                                 
-                           if flipped:
-                                trade_sz = self._calc_trade_size(current_close)
+                           if flipped or went_flat:
+                                trade_sz = self._calc_trade_size(current_close) if flipped else 0.0
                                 if self._sync_exchange_position(current_close, target_position, trade_sz):
                                      trade_type = "LONG" if self.position == "long" else "SHORT"
-                                     logger.info(f"PROP REVERSING! Closing {trade_type} to open {target_position.upper()}.")
-                                     trade = self._record_trade(trade_type, self.entry_price, current_close, self.bars_held, "PROP Reversal Flip")
-                                     self._notify(f"PROP REVERSAL {trade_type} -> {target_position.upper()} | PnL: {trade['return_pct']:+.2f}%")
+                                     if flipped:
+                                          logger.info(f"PROP REVERSING! Closing {trade_type} to open {target_position.upper()}.")
+                                     else:
+                                          logger.info(f"PROP GOING FLAT! Closing {trade_type}.")
+                                          
+                                     reason = "PROP Reversal Flip" if flipped else "PROP Momentum Dropped (Flat)"
+                                     trade = self._record_trade(trade_type, self.entry_price, current_close, self.bars_held, reason)
+                                     self._notify(f"{reason} {trade_type} -> {target_position.upper()} | PnL: {trade['return_pct']:+.2f}%")
                                      
-                                     self.position = target_position
-                                     self.entry_price = current_close
+                                     self.position = target_position if flipped else None
+                                     self.entry_price = current_close if flipped else 0.0
                                      self.bars_held = 0
-                                     self.trade_size_in_btc = trade_sz
+                                     self.trade_size_in_btc = trade_sz if flipped else 0.0
                            else:
                                 self.bars_held += 1
                                 
