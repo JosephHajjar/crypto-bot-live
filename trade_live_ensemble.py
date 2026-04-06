@@ -96,6 +96,7 @@ class LiveEnsembleTrader:
         self.active_sl = 0.0
         self.live_balance = 0.0
         self.trade_size_in_btc = 0.0
+        self.last_error = None
         
         self._load_persisted_state()
         logger.info(f"Loaded Ensemble AI Trader on {self.device}. Current Commander: {self.master_control}")
@@ -151,21 +152,27 @@ class LiveEnsembleTrader:
                     
             diff = target_size - current_pos
             if abs(diff) < 0.00001:
+                self.last_error = None
                 return True
                 
             is_buy = diff > 0
             size_to_trade = abs(diff)
-            px = current_price * (1.05 if is_buy else 0.95)
             
-            res = self.exchange.market_open(COIN, is_buy=is_buy, sz=size_to_trade, px=px, slippage=0.01)
+            logger.info(f"Attempting order: {target_position} sz={size_to_trade:.6f} BTC is_buy={is_buy} balance=${self.live_balance:.2f}")
+            res = self.exchange.market_open(COIN, is_buy=is_buy, sz=size_to_trade, slippage=0.01)
             if res and res.get('status') == 'ok':
                 logger.info(f"Target Size: {target_size}. Syncing Exchange Size by {'BUY' if is_buy else 'SELL'} {size_to_trade} {COIN}")
+                self.last_error = None
                 return True
             else:
-                logger.error(f"Sync exchange FAILED: {res}")
+                err_msg = f"Sync exchange FAILED: {res}"
+                logger.error(err_msg)
+                self.last_error = err_msg
                 return False
         except Exception as e:
-            logger.error(f"Sync exchange exception: {e}")
+            err_msg = f"Sync exchange exception: {e}"
+            logger.error(err_msg)
+            self.last_error = err_msg
             return False
 
     def fetch_recent_data(self):
@@ -232,7 +239,8 @@ class LiveEnsembleTrader:
             "take_profit_target": self.active_tp, 
             "stop_loss_target": self.active_sl,
             "trade_amount_btc": self.trade_size_in_btc,
-            "trade_amount_usd": round(self.trade_size_in_btc * current_close, 2)
+            "trade_amount_usd": round(self.trade_size_in_btc * current_close, 2),
+            "last_error": self.last_error
         }
         with open(STATE_FILE, "w") as f: json.dump(state, f, indent=2)
 
