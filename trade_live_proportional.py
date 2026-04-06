@@ -217,30 +217,51 @@ class LiveProportionalTrader:
                 logger.info(f"AI Models -> Bullish Edge: {bull_prob*100:.4f}% | Bearish Edge: {bear_prob*100:.4f}%")
 
             # 3. CONTINUOUS ENTRY LOGIC
-            target_position = 'long' if bull_prob > bear_prob else 'short'
+            # Margin config (Hyperoptimized values)
+            ENTER_MARGIN = 0.105
+            FLIP_MARGIN = 0.0008
+            
+            diff_bull = bull_prob - bear_prob
+            diff_bear = bear_prob - bull_prob
             
             if self.position is None:
-                # Initialization run
-                self.position = target_position
-                self.entry_price = current_close
-                self.bars_held = 0
-                logger.info(f"STARTING FRESH -> {target_position.upper()} @ ${current_close:.2f}")
-                self._notify(f"PROPORTIONAL BOT INITIALIZED -> {target_position.upper()} @ ${current_close:.2f}")
-            elif self.position != target_position:
-                # Reversal logic!
-                trade_type = "LONG" if self.position == "long" else "SHORT"
-                logger.info(f"REVERSING EDGE DETECTED! Closing {trade_type} to open {target_position.upper()}.")
-                
-                trade = self._record_trade(trade_type, self.entry_price, current_close, self.bars_held, "Edge Reversal Flip")
-                self._notify(f"PROPORTIONAL CLOSED {trade_type}: Reversal | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
-                
-                self.position = target_position
-                self.entry_price = current_close
-                self.bars_held = 0
-                self._notify(f"PROPORTIONAL TARGET {target_position.upper()} @ ${current_close:.2f}")
+                # Initialization run: require a solid edge difference to seed the very first trade
+                if diff_bull > ENTER_MARGIN:
+                    self.position = 'long'
+                    self.entry_price = current_close
+                    self.bars_held = 0
+                    logger.info(f"STARTING FRESH -> LONG @ ${current_close:.2f}")
+                    self._notify(f"PROPORTIONAL BOT INITIALIZED -> LONG @ ${current_close:.2f}")
+                elif diff_bear > ENTER_MARGIN:
+                    self.position = 'short'
+                    self.entry_price = current_close
+                    self.bars_held = 0
+                    logger.info(f"STARTING FRESH -> SHORT @ ${current_close:.2f}")
+                    self._notify(f"PROPORTIONAL BOT INITIALIZED -> SHORT @ ${current_close:.2f}")
             else:
-                # Same position, just increment bars
-                self.bars_held += 1
+                # Reversal logic! Based on optimal flip_margin
+                flipped = False
+                if self.position == 'long' and diff_bear >= FLIP_MARGIN:
+                    target_position = 'short'
+                    flipped = True
+                elif self.position == 'short' and diff_bull >= FLIP_MARGIN:
+                    target_position = 'long'
+                    flipped = True
+                    
+                if flipped:
+                    trade_type = "LONG" if self.position == "long" else "SHORT"
+                    logger.info(f"REVERSING EDGE DETECTED! Closing {trade_type} to open {target_position.upper()}.")
+                    
+                    trade = self._record_trade(trade_type, self.entry_price, current_close, self.bars_held, "Edge Reversal Flip")
+                    self._notify(f"PROPORTIONAL CLOSED {trade_type}: Reversal | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                    
+                    self.position = target_position
+                    self.entry_price = current_close
+                    self.bars_held = 0
+                    self._notify(f"PROPORTIONAL TARGET {target_position.upper()} @ ${current_close:.2f}")
+                else:
+                    # Same position, just increment bars
+                    self.bars_held += 1
                 
             self.save_state(current_close, bull_prob=bull_prob, bear_prob=bear_prob)
                     
