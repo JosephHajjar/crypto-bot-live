@@ -105,12 +105,16 @@
                 <h3 id="live-winrate-header">Win Rate (0 Trades)</h3>
                 <div class="value neutral" id="live-winrate">0.0%</div>
             </div>
-            <div class="card" style="padding-bottom:12px;">
-                <h3>AI Edge</h3>
-                <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <div class="card" style="padding-bottom:12px; grid-column:span 2;">
+                <h3>Consensus AI Edge</h3>
+                <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;">
                     <div>
                         <div style="font-size:0.75rem;color:#00ffc8;font-weight:700;">LONG (BULL)</div>
                         <div class="value neutral" id="live-bull-edge" style="font-size:1.4rem;">--%</div>
+                    </div>
+                    <div style="text-align:center; padding:0 10px;">
+                        <div style="font-size:0.65rem;color:#8E8E93;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Network Gap</div>
+                        <div id="live-edge-gap" style="font-size:1.1rem;font-weight:700;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:6px;margin-top:4px;">--%</div>
                     </div>
                     <div>
                         <div style="font-size:0.75rem;color:#ff3366;font-weight:700;text-align:right;">SHORT (BEAR)</div>
@@ -424,17 +428,25 @@
             
             var bullEl = document.getElementById('live-bull-edge');
             var bearEl = document.getElementById('live-bear-edge');
+            var gapEl = document.getElementById('live-edge-gap');
             if (bullEl && bearEl && state.bull_prob !== undefined && state.bear_prob !== undefined) {
                 if (state.bull_prob > 0 || state.bear_prob > 0) {
                     bullEl.innerText = state.bull_prob.toFixed(6) + '%';
                     bullEl.className = 'value ' + (state.bull_prob >= 60 ? 'positive' : 'neutral');
                     bearEl.innerText = state.bear_prob.toFixed(6) + '%';
                     bearEl.className = 'value ' + (state.bear_prob >= 50 ? 'negative' : 'neutral');
+                    
+                    if (gapEl) {
+                        var absDiff = Math.abs(state.bull_prob - state.bear_prob); // This is in % metric format (e.g. 0.08% gap)
+                        gapEl.innerText = absDiff.toFixed(6) + '%';
+                        gapEl.style.color = absDiff >= 0.08 ? '#ffcc00' : '#8E8E93'; 
+                    }
                 } else {
                     bullEl.innerText = '--%';
                     bullEl.className = 'value neutral';
                     bearEl.innerText = '--%';
                     bearEl.className = 'value neutral';
+                    if(gapEl) { gapEl.innerText = '--%'; gapEl.style.color = '#8E8E93'; }
                 }
             }
             

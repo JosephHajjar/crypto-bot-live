@@ -59,13 +59,12 @@ def load_data_and_predict():
             
     return unix_times, close_prices, all_bull, all_bear, MAX_SEQ_LEN
 
-def evaluate_strategy(times, close_prices, all_bull, all_bear, max_seq, use_entry_margin=True):
+def evaluate_strategy(times, close_prices, all_bull, all_bear, max_seq, flip_margin=0.0008, start_balance=6.36):
     position = None
     entry_price = 0
     trades = []
     
-    ENTRY_MARGIN = 0.105 if use_entry_margin else 0.0008
-    FLIP_MARGIN = 0.0008
+    ENTRY_MARGIN = flip_margin  # Same as flip
     
     for idx in range(len(all_bull)):
         prob_bull = all_bull[idx]
@@ -84,41 +83,48 @@ def evaluate_strategy(times, close_prices, all_bull, all_bear, max_seq, use_entr
                     position = 'long' if prob_bull > prob_bear else 'short'
                     entry_price = c_p
             else:
-                if diff > FLIP_MARGIN:
+                if diff >= flip_margin:
                     target_position = 'long' if prob_bull > prob_bear else 'short'
                     if target_position != position:
-                        pnl = (c_p - entry_price) / entry_price * 100 if position == 'long' else (entry_price - c_p) / entry_price * 100
-                        trades.append({'time': dt, 'pnl': pnl, 'type': position, 'entry': entry_price, 'exit': c_p})
+                        pnl_pct = (c_p - entry_price) / entry_price if position == 'long' else (entry_price - c_p) / entry_price
+                        # Subtract Hyperliquid Taker Fee (0.035%) for Both Entry and Exit = 0.07% total per flip
+                        pnl_net = pnl_pct - 0.0007
+                        trades.append({'time': dt, 'pnl_net': pnl_net, 'type': position, 'entry': entry_price, 'exit': c_p})
                         position = target_position
                         entry_price = c_p
                         
     return trades
 
-def print_stats(name, trades):
+def print_stats(name, trades, start_balance=6.36):
     if not trades: 
         print(f"\n--- {name} RESULTS ---\nNo trades executed.")
         return
     
+    balance = start_balance
+    leverage = 5.0
+    
+    for t in trades:
+        # PnL net was calculated as 1x percentage. Multiply by leverage (5x) for compounding
+        compounded_return = t['pnl_net'] * leverage
+        balance = balance + (balance * compounded_return)
+        
     df_trades = pd.DataFrame(trades)
-    total_pnl = df_trades['pnl'].sum()
-    win_rate = (df_trades['pnl'] > 0).mean() * 100
-    fees = 0.07 * len(trades)
-    pnl_with_fees = total_pnl - fees
+    win_rate = (df_trades['pnl_net'] > 0).mean() * 100
     
     print(f"\n--- {name} RESULTS ---")
+    print(f"Starting Balance: ${start_balance:.2f}")
     print(f"Total Trades: {len(trades)}")
-    print(f"Win Rate:     {win_rate:.1f}%")
-    print(f"Raw ROI:      {total_pnl:.2f}%")
-    print(f"Fee (-0.07%): -{fees:.2f}%")
-    print(f"Net ROI:      {pnl_with_fees:.2f}%")
+    print(f"Win Rate (post-fee): {win_rate:.1f}%")
+    print(f"Ending Balance:   ${balance:.2f} ({(balance-start_balance)/start_balance*100:.2f}%)")
 
 def main():
     u, c, bull, bear, m = load_data_and_predict()
-    t1 = evaluate_strategy(u, c, bull, bear, m, use_entry_margin=True)
-    print_stats("WITH Initial Margin Seeding (0.105)", t1)
     
-    t2 = evaluate_strategy(u, c, bull, bear, m, use_entry_margin=False)
-    print_stats("WITHOUT Initial Seeding (Jumps right in @ 0.0008)", t2)
+    t1 = evaluate_strategy(u, c, bull, bear, m, flip_margin=0.0008, start_balance=6.36)
+    print_stats("WITH Optimized Buffer Zone (0.0008 Margin)", t1, 6.36)
+    
+    t2 = evaluate_strategy(u, c, bull, bear, m, flip_margin=0.0, start_balance=6.36)
+    print_stats("WITHOUT Buffer Zone (Zero Margin, Flipping Instantly)", t2, 6.36)
 
 if __name__ == '__main__':
     main()
