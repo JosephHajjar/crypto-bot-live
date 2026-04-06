@@ -326,6 +326,29 @@ class LiveEnsembleTrader:
             
             self._sync_balance()
             
+            # --- Physical External verification ---
+            if self.position is not None:
+                try:
+                    user_st = self.info.user_state(self.wallet_address)
+                    current_pos_size = 0.0
+                    for pos in user_st.get("assetPositions", []):
+                        if pos['position']['coin'] == COIN:
+                            current_pos_size = float(pos['position']['szi'])
+                            break
+                    if abs(current_pos_size) < 0.00001:
+                        logger.warning(f"EXTERNAL CLOSE DETECTED! AI expected {self.position.upper()} but Hyperliquid holds 0.0 {COIN}. Resetting state.")
+                        trade = self._record_trade(self.position.upper(), self.entry_price, current_close, self.bars_held, "Closed Externally")
+                        self._notify(f"EXTERNAL CLOSE OVERRIDE | Resetting position. | PnL: {trade['return_pct']:+.2f}%")
+                        self.position = None
+                        self.entry_price = 0.0
+                        self.bars_held = 0
+                        self.active_tp = 0.0
+                        self.active_sl = 0.0
+                        self.trade_size_in_btc = 0.0
+                except Exception as e:
+                    logger.error(f"Failed to verify physical API positions: {e}")
+            # -------------------------------------
+            
             # --- Dynamic Regime Volatility Analysis ---
             closes = df['close'].values
             returns = (closes[1:] - closes[:-1]) / closes[:-1]
