@@ -224,14 +224,17 @@ class LiveEnsembleTrader:
 
     def save_state(self, current_close, bull_prob=0.0, bear_prob=0.0):
         open_pnl_pct = 0.0
+        open_pnl_usd = 0.0
         if self.position == 'long' and self.entry_price > 0:
             open_pnl_pct = (current_close - self.entry_price) / self.entry_price * 100
+            open_pnl_usd = self.trade_size_in_btc * (current_close - self.entry_price)
         elif self.position == 'short' and self.entry_price > 0:
             open_pnl_pct = (self.entry_price - current_close) / self.entry_price * 100
+            open_pnl_usd = self.trade_size_in_btc * (self.entry_price - current_close)
 
         state = {
             "timestamp": datetime.utcnow().isoformat() + "Z",
-            "paper_balance": round(self.live_balance, 2), # Ensemble is native live
+            "paper_balance": round(self.live_balance - open_pnl_usd, 2), # Strip Unrealized PnL, let UI append it via websocket
             "current_price": current_close,
             "bull_prob": round(bull_prob * 100, 6),
             "bear_prob": round(bear_prob * 100, 6),

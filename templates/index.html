@@ -696,8 +696,8 @@
                 }
 
                 // Sync Multi-Timeframe UI & Total Equity
-                // paper_balance is natively synced to Hyperliquid margin accountValue which inherently includes Unrealized PnL
-                var totalEquity = state.paper_balance;
+                // paper_balance is the Base Bankroll without Unrealized PnL. We manually perfectly inject live_pnl natively using the 30fps websocket API
+                var totalEquity = state.paper_balance + live_pnl;
                 var bankEl = document.getElementById('live-total-bankroll');
                 if (bankEl) bankEl.innerText = '$' + totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -834,10 +834,20 @@
 
                 // Build the scrolling explicit Trade Log
                 var logEl = document.getElementById('live-trade-log');
-                if (totalTrades === 0) {
+                var openHtml = '';
+                if (state.in_trade) {
+                    var isWin = state.open_pnl_usd >= 0;
+                    openHtml = '<div class="' + (isWin ? 'win' : 'loss') + '" style="margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.04); padding-bottom:8px; background: rgba(52, 211, 153, 0.05); padding: 8px; border-radius: 6px; box-shadow: 0 0 10px rgba(52, 211, 153, 0.1);">' +
+                        '<b style="color:#34d399; text-transform: uppercase;">● IN PROGRESS (' + state.trade_type + ')</b> | Entry: $' + state.entry_price.toFixed(2) + ' → Live: $' + live_price.toFixed(2) + '<br>' +
+                        '<span style="font-weight:700;">' + (isWin ? '+' : '') + '$' + state.open_pnl_usd.toFixed(2) + ' (' + state.open_pnl_pct.toFixed(2) + '%)</span> | ' + state.bars_held + ' bars<br>' +
+                        '<span style="font-size:0.75rem;opacity:0.6;font-family:\'Inter\';">Awaiting exit signals...</span>' +
+                        '</div>';
+                }
+
+                if (totalTrades === 0 && !state.in_trade) {
                     logEl.innerHTML = '<div style="color:#4a5568;">No completed trades yet.</div>';
                 } else {
-                    logEl.innerHTML = tradesList.map((t, i) => {
+                    var historyHtml = tradesList.map((t, i) => {
                         var isWin = t.pnl_usd >= 0;
                         return '<div class="' + (isWin ? 'win' : 'loss') + '" style="margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.04); padding-bottom:8px;">' +
                             '<b style="color:#fff;">#' + (i + 1) + '</b> | Entry: $' + t.entry_price.toFixed(2) + ' → Exit: $' + t.exit_price.toFixed(2) + '<br>' +
@@ -845,6 +855,8 @@
                             '<span style="font-size:0.75rem;opacity:0.6;font-family:\'Inter\';">' + t.reason + '</span>' +
                             '</div>';
                     }).reverse().join('');
+                    
+                    logEl.innerHTML = openHtml + historyHtml;
                 }
 
                 // Sync visual chart
