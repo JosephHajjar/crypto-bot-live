@@ -300,7 +300,19 @@ class LiveEnsembleTrader:
             
             self._sync_balance()
             
-            logger.info(f"15m Candle Boundary: {current_time} | BTC ${current_close:.2f} | Commander: {self.master_control} | Pos: {self.position}")
+            # --- Dynamic Regime Volatility Analysis ---
+            closes = df['close'].values
+            returns = (closes[1:] - closes[:-1]) / closes[:-1]
+            volatility_monthly = np.std(returns) * np.sqrt(2880) * 100
+            
+            if self.position is None:
+                if volatility_monthly >= 10.50:
+                    self.master_control = 'PROP'
+                else:
+                    self.master_control = 'ALT'
+            # ----------------------------------------
+            
+            logger.info(f"15m Cycle: {current_time} | BTC ${current_close:.2f} | Volatility: {volatility_monthly:.2f}% | Regime: {self.master_control}")
             
             bull_prob = 0.0
             bear_prob = 0.0
