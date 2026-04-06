@@ -121,6 +121,19 @@ def get_state():
             return jsonify({"error": "State file locked or corrupt"})
     return jsonify({"error": "No state active"})
 
+@app.route('/api/live_trades')
+def get_live_trades():
+    file_name = 'data_storage/live_trades_ensemble.json'
+    if not os.path.exists(file_name):
+        file_name = 'data_storage/live_trades.json'
+    if os.path.exists(file_name):
+        try:
+            with open(file_name, 'r') as f:
+                return jsonify(json.load(f))
+        except Exception:
+            pass
+    return jsonify([])
+
 @app.route('/api/historical_data')
 def get_historical():
     symbol = request.args.get('symbol', 'BTCUSDT')
