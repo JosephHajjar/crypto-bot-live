@@ -155,8 +155,8 @@ class LiveEnsembleTrader:
                 self.last_error = None
                 return True
                 
-            is_buy = diff > 0
-            size_to_trade = abs(diff)
+            is_buy = bool(diff > 0)
+            size_to_trade = float(abs(diff))
             
             logger.info(f"Attempting order: {target_position} sz={size_to_trade:.6f} BTC is_buy={is_buy} balance=${self.live_balance:.2f}")
             res = self.exchange.market_open(COIN, is_buy=is_buy, sz=size_to_trade, slippage=0.01)
