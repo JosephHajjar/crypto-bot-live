@@ -98,6 +98,9 @@ class LiveEnsembleTrader:
         self.trade_size_in_btc = 0.0
         self.last_error = None
         
+        self.peak_price = 0.0
+        self.trailing_armed = False
+        
         self._load_persisted_state()
         logger.info(f"Loaded Ensemble AI Trader on {self.device}. Current Commander: {self.master_control}")
 
@@ -117,6 +120,9 @@ class LiveEnsembleTrader:
                 self.active_tp = s.get("take_profit_target", 0.0)
                 self.active_sl = s.get("stop_loss_target", 0.0)
                 self.trade_size_in_btc = s.get("trade_amount_btc", 0.0)
+                
+                self.peak_price = s.get("peak_price", 0.0)
+                self.trailing_armed = s.get("trailing_armed", False)
             except Exception:
                 pass
 
@@ -135,7 +141,7 @@ class LiveEnsembleTrader:
             logger.error(f"Failed to sync balance: {e}")
 
     def _calc_trade_size(self, current_price):
-        target_notional = self.live_balance * 5.0
+        target_notional = self.live_balance * 10.0
         return max(0.0001, round(target_notional / current_price, 5))
 
     def _sync_exchange_position(self, current_price, target_position, size_in_btc):
@@ -240,12 +246,14 @@ class LiveEnsembleTrader:
             "stop_loss_target": self.active_sl,
             "trade_amount_btc": self.trade_size_in_btc,
             "trade_amount_usd": round(self.trade_size_in_btc * current_close, 2),
-            "last_error": self.last_error
+            "last_error": self.last_error,
+            "peak_price": self.peak_price,
+            "trailing_armed": self.trailing_armed
         }
         with open(STATE_FILE, "w") as f: json.dump(state, f, indent=2)
 
     def check_tp_sl(self):
-        if self.master_control != 'ALT' or self.position is None:
+        if self.position is None:
             return
             
         try:
@@ -260,20 +268,38 @@ class LiveEnsembleTrader:
         exit_price = None
         reason = None
         
-        if self.position == 'long':
-            if live_price <= self.active_sl:
-                exit_price = live_price
-                reason = f"ALT LONG Stop Loss (-{self.long_sl*100}%)"
-            elif live_price >= self.active_tp:
-                exit_price = live_price
-                reason = f"ALT LONG Take Profit (+{self.long_tp*100}%)"
-        elif self.position == 'short':
-             if live_price >= self.active_sl:
-                exit_price = live_price
-                reason = f"ALT SHORT Stop Loss (+{self.short_sl*100}%)"
-             elif live_price <= self.active_tp:
-                exit_price = live_price
-                reason = f"ALT SHORT Take Profit (-{self.short_tp*100}%)"
+        # Check Manual Liquidity Override First
+        if os.path.exists('data_storage/manual_override.json'):
+            try:
+                with open('data_storage/manual_override.json', 'r') as f:
+                    override = json.load(f)
+                    target = float(override.get('manual_target', 0))
+                    # Ensure override is not stale (e.g. > 12 hours old)
+                    if target > 0 and (time.time() - override.get('timestamp', 0) < 43200):
+                        if self.position == 'long' and live_price >= target:
+                            exit_price = live_price
+                            reason = f"Human Liquidity Override (Target: {target})"
+                        elif self.position == 'short' and live_price <= target:
+                            exit_price = live_price
+                            reason = f"Human Liquidity Override (Target: {target})"
+            except Exception: pass
+        
+        # Standard ALT TP/SL Logic (Only if no manual override triggered)
+        if exit_price is None and self.master_control == 'ALT':
+            if self.position == 'long':
+                if live_price <= self.active_sl:
+                    exit_price = live_price
+                    reason = f"ALT LONG Stop Loss (-{self.long_sl*100}%)"
+                elif live_price >= self.active_tp:
+                    exit_price = live_price
+                    reason = f"ALT LONG Take Profit (+{self.long_tp*100}%)"
+            elif self.position == 'short':
+                 if live_price >= self.active_sl:
+                    exit_price = live_price
+                    reason = f"ALT SHORT Stop Loss (+{self.short_sl*100}%)"
+                 elif live_price <= self.active_tp:
+                    exit_price = live_price
+                    reason = f"ALT SHORT Take Profit (-{self.short_tp*100}%)"
                 
         if exit_price is not None:
              logger.info(f"CLOSING {self.position.upper()} (FAST POLL): {reason} | Entry ${self.entry_price:.2f} -> Exit ${exit_price:.2f}")
