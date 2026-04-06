@@ -105,21 +105,37 @@
                 <h3 id="live-winrate-header">Win Rate (0 Trades)</h3>
                 <div class="value neutral" id="live-winrate">0.0%</div>
             </div>
-            <div class="card" style="padding-bottom:12px; grid-column:span 2;">
-                <h3>Consensus AI Edge</h3>
-                <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;">
+            <div class="card" style="padding-bottom:16px; grid-column:span 2;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3>AI Consensus Engine</h3>
+                    <div id="ai-status-badge" style="font-size:0.65rem; padding:4px 8px; border-radius:12px; font-weight:700; letter-spacing:0.5px; background:rgba(255,255,255,0.1); color:#8E8E93; text-transform:uppercase;">ANALYZING CHOP</div>
+                </div>
+                
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                     <div>
-                        <div style="font-size:0.75rem;color:#00ffc8;font-weight:700;">LONG (BULL)</div>
-                        <div class="value neutral" id="live-bull-edge" style="font-size:1.4rem;">--%</div>
+                        <div style="font-size:0.7rem;color:#00ffc8;font-weight:700;letter-spacing:1px;">BULL EDGE</div>
+                        <div class="value neutral" id="live-bull-edge" style="font-size:1.2rem;">--%</div>
                     </div>
-                    <div style="text-align:center; padding:0 10px;">
-                        <div style="font-size:0.65rem;color:#8E8E93;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Network Gap</div>
-                        <div id="live-edge-gap" style="font-size:1.1rem;font-weight:700;background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:6px;margin-top:4px;">--%</div>
+                    <div style="text-align:center;">
+                        <div style="font-size:0.65rem;color:#bb86fc;font-weight:700;letter-spacing:1px;">DISCREPANCY</div>
+                        <div id="live-edge-gap" style="font-size:1.1rem;font-weight:700;color:#fff;">--%</div>
                     </div>
-                    <div>
-                        <div style="font-size:0.75rem;color:#ff3366;font-weight:700;text-align:right;">SHORT (BEAR)</div>
-                        <div class="value neutral" id="live-bear-edge" style="font-size:1.4rem;text-align:right;">--%</div>
+                    <div style="text-align:right;">
+                        <div style="font-size:0.7rem;color:#ff3366;font-weight:700;letter-spacing:1px;">BEAR EDGE</div>
+                        <div class="value neutral" id="live-bear-edge" style="font-size:1.2rem;">--%</div>
                     </div>
+                </div>
+                
+                <div style="position:relative; width:100%; height:12px; background:rgba(255,255,255,0.05); border-radius:6px; overflow:hidden; margin-top:8px;">
+                    <!-- Visual Progress Bar -->
+                    <div id="gap-meter-fill" style="position:absolute; top:0; left:0; height:100%; width:0%; background:linear-gradient(90deg, #bb86fc, #00ffc8); transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s;"></div>
+                    <!-- Trade Trigger Threshold Line (0.08% scaled out of assumed 0.20% max) -->
+                    <div style="position:absolute; top:0; left:40%; height:100%; width:2px; background:rgba(255,255,255,0.6); z-index:2;" title="0.08% Trade Entry Threshold"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.6rem; color:#8E8E93; font-weight:600; font-family:'Inter';">
+                    <span>0% Gap</span>
+                    <span style="margin-right:20px;">0.08% Trigger</span>
+                    <span>0.2%+ Max</span>
                 </div>
             </div>
         </div>
@@ -429,17 +445,47 @@
             var bullEl = document.getElementById('live-bull-edge');
             var bearEl = document.getElementById('live-bear-edge');
             var gapEl = document.getElementById('live-edge-gap');
+            var meterFill = document.getElementById('gap-meter-fill');
+            var statusBadge = document.getElementById('ai-status-badge');
+            
             if (bullEl && bearEl && state.bull_prob !== undefined && state.bear_prob !== undefined) {
                 if (state.bull_prob > 0 || state.bear_prob > 0) {
                     bullEl.innerText = state.bull_prob.toFixed(6) + '%';
-                    bullEl.className = 'value ' + (state.bull_prob >= 60 ? 'positive' : 'neutral');
+                    bullEl.className = 'value ' + (state.bull_prob > state.bear_prob ? 'positive' : 'neutral');
                     bearEl.innerText = state.bear_prob.toFixed(6) + '%';
-                    bearEl.className = 'value ' + (state.bear_prob >= 50 ? 'negative' : 'neutral');
+                    bearEl.className = 'value ' + (state.bear_prob > state.bull_prob ? 'negative' : 'neutral');
                     
                     if (gapEl) {
-                        var absDiff = Math.abs(state.bull_prob - state.bear_prob); // This is in % metric format (e.g. 0.08% gap)
+                        var absDiff = Math.abs(state.bull_prob - state.bear_prob); 
                         gapEl.innerText = absDiff.toFixed(6) + '%';
-                        gapEl.style.color = absDiff >= 0.08 ? '#ffcc00' : '#8E8E93'; 
+                        gapEl.style.color = absDiff >= 0.08 ? '#00ffc8' : '#bb86fc'; 
+                        
+                        // Update UI Meter
+                        // Max assumed margin for visual scale is 0.20%. Map 0-0.20% to 0-100% width.
+                        var pctFill = Math.min((absDiff / 0.20) * 100, 100);
+                        if(meterFill) {
+                            meterFill.style.width = pctFill + '%';
+                            meterFill.style.background = absDiff >= 0.08 ? (state.bull_prob > state.bear_prob ? '#00ffc8' : '#ff3366') : 'linear-gradient(90deg, #bb86fc, #bb86fc)';
+                        }
+                        
+                        // Update Status
+                        if(statusBadge) {
+                            if (absDiff < 0.08) {
+                                statusBadge.innerText = "WAITING - GAP TOO SMALL";
+                                statusBadge.style.color = "#bb86fc";
+                                statusBadge.style.background = "rgba(187, 134, 252, 0.15)";
+                            } else {
+                                if (state.bull_prob > state.bear_prob) {
+                                    statusBadge.innerText = "ACTION CONFIRMED - LONG";
+                                    statusBadge.style.color = "#00ffc8";
+                                    statusBadge.style.background = "rgba(0, 255, 200, 0.15)";
+                                } else {
+                                    statusBadge.innerText = "ACTION CONFIRMED - SHORT";
+                                    statusBadge.style.color = "#ff3366";
+                                    statusBadge.style.background = "rgba(255, 51, 102, 0.15)";
+                                }
+                            }
+                        }
                     }
                 } else {
                     bullEl.innerText = '--%';
@@ -447,6 +493,8 @@
                     bearEl.innerText = '--%';
                     bearEl.className = 'value neutral';
                     if(gapEl) { gapEl.innerText = '--%'; gapEl.style.color = '#8E8E93'; }
+                    if(meterFill) { meterFill.style.width = '0%'; }
+                    if(statusBadge) { statusBadge.innerText = 'OFFLINE'; statusBadge.style.color = '#8E8E93'; statusBadge.style.background = 'rgba(255,255,255,0.1)'; }
                 }
             }
             
