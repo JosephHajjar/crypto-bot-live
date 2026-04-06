@@ -75,7 +75,8 @@
 
     <div class="nav-tabs" style="justify-content: space-between; align-items: center;">
         <div style="display:flex; gap:30px;">
-            <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live')">Autonomous Live Trader</div>
+            <div class="nav-tab active" id="tab-btn-live" onclick="switchMainView('live'); switchLiveTab('autonomous');">Autonomous Live Trader</div>
+            <div class="nav-tab" id="tab-btn-prop" onclick="switchMainView('live'); switchLiveTab('proportional');">Proportional Bot (Paper)</div>
             <!-- <div class="nav-tab" id="tab-btn-replay" onclick="switchMainView('replay')">AI Simulator Replay</div> -->
         </div>
     </div>
@@ -85,6 +86,24 @@
         <script>
             // Master Live Asset State
             var _activeSymbol = 'BTCUSDT';
+            var currentLiveMode = 'autonomous';
+            function switchLiveTab(mode) {
+                currentLiveMode = mode;
+                var btnLive = document.getElementById('tab-btn-live');
+                var btnProp = document.getElementById('tab-btn-prop');
+                var btnReplay = document.getElementById('tab-btn-replay');
+                if(btnLive) btnLive.classList.remove('active');
+                if(btnProp) btnProp.classList.remove('active');
+                if(btnReplay) btnReplay.classList.remove('active');
+                if (mode === 'autonomous') {
+                    if(btnLive) btnLive.classList.add('active');
+                    document.getElementById('live-market-title').innerText = 'Live BTC Market (Autonomous)';
+                } else if (mode === 'proportional') {
+                    if(btnProp) btnProp.classList.add('active');
+                    document.getElementById('live-market-title').innerText = 'Live BTC Market (Proportional)';
+                }
+                if (typeof fetchLiveState === 'function') fetchLiveState();
+            }
         </script>
         <!-- OVERVIEW METRICS GRID -->
         <div class="dashboard-grid" style="grid-template-columns: repeat(6, 1fr); margin-bottom:20px; margin-top:0;">
@@ -254,15 +273,19 @@
         if(viewId === 'live') {
             document.getElementById('view-live').style.display = 'block';
             document.getElementById('view-replay').style.display = 'none';
-            document.getElementById('tab-btn-live').classList.add('active');
-            document.getElementById('tab-btn-replay').classList.remove('active');
+            var btnReplay = document.getElementById('tab-btn-replay');
+            if(btnReplay) btnReplay.classList.remove('active');
             if(!liveChart) setTimeout(initLiveEngine, 100);
             else setTimeout(() => liveChart.resize(document.getElementById('live_chart').clientWidth, 480), 100);
         } else {
             document.getElementById('view-live').style.display = 'none';
             document.getElementById('view-replay').style.display = 'block';
-            document.getElementById('tab-btn-live').classList.remove('active');
-            document.getElementById('tab-btn-replay').classList.add('active');
+            var btnLive = document.getElementById('tab-btn-live');
+            var btnProp = document.getElementById('tab-btn-prop');
+            var btnReplay = document.getElementById('tab-btn-replay');
+            if(btnLive) btnLive.classList.remove('active');
+            if(btnProp) btnProp.classList.remove('active');
+            if(btnReplay) btnReplay.classList.add('active');
             if(repChart) setTimeout(() => { repChart.resize(document.getElementById('replay_chart').clientWidth, 480); }, 100);
             else setTimeout(initReplayEngine, 100);
         }
@@ -291,7 +314,8 @@
 
     async function fetchLiveState() {
         try {
-            var res = await fetch(`/api/state?symbol=${_activeSymbol}`);
+            var fetchUrl = currentLiveMode === 'proportional' ? `/api/proportional_state?symbol=${_activeSymbol}` : `/api/state?symbol=${_activeSymbol}`;
+            var res = await fetch(fetchUrl);
             var state = await res.json();
             
             if (state.error || state.timestamp === undefined) {
@@ -391,7 +415,8 @@
             }
 
             // Fetch explicitly global Historic Live Ledger
-            var tradesRes = await fetch(`/api/live_trades?symbol=${_activeSymbol}`);
+            var fetchTradesUrl = currentLiveMode === 'proportional' ? `/api/proportional_trades?symbol=${_activeSymbol}` : `/api/live_trades?symbol=${_activeSymbol}`;
+            var tradesRes = await fetch(fetchTradesUrl);
             var tradesList = [];
             try { tradesList = await tradesRes.json(); } catch(e) {}
             
