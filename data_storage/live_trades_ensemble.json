@@ -1,15 +1,26 @@
 [
   {
-    "timestamp": "2026-04-07T21:21:10.563926Z",
+    "timestamp": "2026-04-07T21:45:07Z",
     "trade_type": "LONG",
-    "action": "ADOPTED",
+    "entry_price": 68062.0,
+    "exit_price": 69895.0,
+    "return_pct": 2.693,
+    "pnl_usd": 0.97,
+    "bars_held": 0,
+    "reason": "Position adopted from user, closed by bot (ALT LONG override/resize)",
+    "size_btc": 0.00053,
+    "adopted": true
+  },
+  {
+    "timestamp": "2026-04-07T21:45:08Z",
+    "trade_type": "LONG",
+    "action": "ENTRY",
     "entry_price": 69896.0,
     "exit_price": null,
     "return_pct": null,
     "pnl_usd": null,
     "bars_held": 0,
-    "reason": "Position adopted from Hyperliquid. Entry $69896.00, Size 0.00079 BTC, LONG",
-    "size_btc": 0.00079,
-    "adopted": true
+    "reason": "Bot opened new LONG position (ALT mode, 99.9% bullish edge)",
+    "size_btc": 0.00079
   }
 ]
