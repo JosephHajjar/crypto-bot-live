@@ -181,20 +181,9 @@ class LiveEnsembleTrader:
                     self.master_control = 'ALT'
                     return
                 
-                # Case 2: Bot has position but entry price disagrees -> correct
-                if abs(self.entry_price - exchange_entry) > 0.01:
-                    logger.warning(f"STARTUP SYNC: Entry price mismatch! Bot=${self.entry_price:.2f} vs Exchange=${exchange_entry:.2f}. Correcting to exchange value.")
-                    self.entry_price = exchange_entry
-                    self.trade_size_in_btc = exchange_abs_size
-                    
-                    if self.position == 'long':
-                        self.active_tp = exchange_entry * (1 + self.long_tp)
-                        self.active_sl = exchange_entry * (1 - self.long_sl)
-                    else:
-                        self.active_tp = exchange_entry * (1 - self.short_tp)
-                        self.active_sl = exchange_entry * (1 + self.short_sl)
-                
-                # Also correct size if it differs
+                # Case 2: Bot has position — only correct size, NOT entry price.
+                # Exchange entryPx is a weighted average that shifts when trades are added,
+                # but the bot's entry_price is the actual entry for THIS specific trade.
                 if abs(self.trade_size_in_btc - exchange_abs_size) > 0.00001:
                     logger.warning(f"STARTUP SYNC: Size mismatch! Bot={self.trade_size_in_btc} vs Exchange={exchange_abs_size}. Correcting.")
                     self.trade_size_in_btc = exchange_abs_size
