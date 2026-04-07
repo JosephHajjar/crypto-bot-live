@@ -121,6 +121,23 @@ def get_state():
             return jsonify({"error": "State file locked or corrupt"})
     return jsonify({"error": "No state active"})
 
+@app.route('/api/set_target', methods=['POST'])
+def set_target():
+    try:
+        data = request.json
+        target_price = float(data.get('target', 0))
+        if target_price > 0:
+            with open('data_storage/manual_override.json', 'w') as f:
+                json.dump({"manual_target": target_price, "timestamp": time.time()}, f)
+            return jsonify({"success": True, "target": target_price})
+        elif target_price == 0:
+            if os.path.exists('data_storage/manual_override.json'):
+                os.remove('data_storage/manual_override.json')
+            return jsonify({"success": True, "cleared": True})
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    return jsonify({"error": "Invalid request"})
+
 @app.route('/api/historical_data')
 def get_historical():
     symbol = request.args.get('symbol', 'BTCUSDT')

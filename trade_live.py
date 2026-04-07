@@ -146,16 +146,9 @@ class LiveHyperliquidTrader:
         try:
             user_state = self.info.user_state(self.wallet_address)
             margin_summary = user_state.get("marginSummary", {})
-            perp_balance = float(margin_summary.get("accountValue", 0.0))
-            
-            spot_state = self.info.spot_user_state(self.wallet_address)
-            spot_usdc = 0.0
-            if "balances" in spot_state:
-                for bal in spot_state["balances"]:
-                    if bal.get("coin") == "USDC":
-                        spot_usdc = float(bal.get("total", 0.0))
-                        
-            self.live_balance = spot_usdc + perp_balance
+            # In Hyperliquid's unified account, accountValue IS the portfolio value
+            # (includes margin + unrealized PnL). Do NOT add spot USDC on top — it's the same pool.
+            self.live_balance = float(margin_summary.get("accountValue", 0.0))
         except Exception as e:
             logger.error(f"Failed to sync balance: {e}")
 

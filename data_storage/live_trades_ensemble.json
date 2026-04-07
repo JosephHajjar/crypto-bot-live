@@ -1,0 +1,15 @@
+[
+  {
+    "timestamp": "2026-04-07T21:21:10.563926Z",
+    "trade_type": "LONG",
+    "action": "ADOPTED",
+    "entry_price": 68062.0,
+    "exit_price": null,
+    "return_pct": null,
+    "pnl_usd": null,
+    "bars_held": 0,
+    "reason": "Position adopted from Hyperliquid (manually opened by user). Entry $68062.00, Size 0.00053 BTC, LONG",
+    "size_btc": 0.00053,
+    "adopted": true
+  }
+]

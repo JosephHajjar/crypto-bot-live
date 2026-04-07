@@ -102,6 +102,7 @@ class LiveEnsembleTrader:
         self.trailing_armed = False
         
         self._load_persisted_state()
+        self._sync_from_exchange()
         logger.info(f"Loaded Ensemble AI Trader on {self.device}. Current Commander: {self.master_control}")
 
     def _load_persisted_state(self):
@@ -126,17 +127,88 @@ class LiveEnsembleTrader:
             except Exception:
                 pass
 
+    def _sync_from_exchange(self):
+        """On startup, validate bot state against real Hyperliquid position.
+        
+        Cases handled:
+        1. Bot has no position, exchange has one -> adopt the exchange position
+        2. Bot has a position, exchange entry price differs -> correct entry price
+        3. Bot has a position, exchange has none -> reset to flat
+        """
+        try:
+            user_state = self.info.user_state(self.wallet_address)
+            
+            # Find BTC position
+            exchange_pos = None
+            for pos in user_state.get("assetPositions", []):
+                if pos['position']['coin'] == COIN:
+                    exchange_pos = pos['position']
+                    break
+            
+            exchange_size = float(exchange_pos['szi']) if exchange_pos else 0.0
+            exchange_entry = float(exchange_pos['entryPx']) if exchange_pos else 0.0
+            exchange_direction = 'long' if exchange_size > 0 else ('short' if exchange_size < 0 else None)
+            exchange_abs_size = abs(exchange_size)
+            
+            # Case 3: Bot thinks it has a position, but exchange is flat
+            if self.position is not None and exchange_abs_size < 0.00001:
+                logger.warning(f"STARTUP SYNC: Bot has {self.position.upper()} but exchange is FLAT. Resetting bot state.")
+                self.position = None
+                self.entry_price = 0.0
+                self.bars_held = 0
+                self.active_tp = 0.0
+                self.active_sl = 0.0
+                self.trade_size_in_btc = 0.0
+                return
+            
+            # Case: Exchange has a position
+            if exchange_abs_size >= 0.00001:
+                # Case 1: Bot is flat but exchange has position -> adopt
+                if self.position is None:
+                    logger.info(f"STARTUP SYNC: Adopting exchange {exchange_direction.upper()} position | Entry ${exchange_entry:.2f} | Size {exchange_abs_size} BTC")
+                    self.position = exchange_direction
+                    self.entry_price = exchange_entry
+                    self.bars_held = 0
+                    self.trade_size_in_btc = exchange_abs_size
+                    
+                    if exchange_direction == 'long':
+                        self.active_tp = exchange_entry * (1 + self.long_tp)
+                        self.active_sl = exchange_entry * (1 - self.long_sl)
+                    else:
+                        self.active_tp = exchange_entry * (1 - self.short_tp)
+                        self.active_sl = exchange_entry * (1 + self.short_sl)
+                    
+                    self.master_control = 'ALT'
+                    return
+                
+                # Case 2: Bot has position but entry price disagrees -> correct
+                if abs(self.entry_price - exchange_entry) > 0.01:
+                    logger.warning(f"STARTUP SYNC: Entry price mismatch! Bot=${self.entry_price:.2f} vs Exchange=${exchange_entry:.2f}. Correcting to exchange value.")
+                    self.entry_price = exchange_entry
+                    self.trade_size_in_btc = exchange_abs_size
+                    
+                    if self.position == 'long':
+                        self.active_tp = exchange_entry * (1 + self.long_tp)
+                        self.active_sl = exchange_entry * (1 - self.long_sl)
+                    else:
+                        self.active_tp = exchange_entry * (1 - self.short_tp)
+                        self.active_sl = exchange_entry * (1 + self.short_sl)
+                
+                # Also correct size if it differs
+                if abs(self.trade_size_in_btc - exchange_abs_size) > 0.00001:
+                    logger.warning(f"STARTUP SYNC: Size mismatch! Bot={self.trade_size_in_btc} vs Exchange={exchange_abs_size}. Correcting.")
+                    self.trade_size_in_btc = exchange_abs_size
+                    
+        except Exception as e:
+            logger.error(f"Failed to sync from exchange on startup: {e}")
+
     def _sync_balance(self):
         try:
             user_state = self.info.user_state(self.wallet_address)
             margin_summary = user_state.get("marginSummary", {})
-            perp_balance = float(margin_summary.get("accountValue", 0.0))
-            spot_state = self.info.spot_user_state(self.wallet_address)
-            spot_usdc = 0.0
-            if "balances" in spot_state:
-                for bal in spot_state["balances"]:
-                    if bal.get("coin") == "USDC": spot_usdc = float(bal.get("total", 0.0))
-            self.live_balance = spot_usdc + perp_balance
+            # In Hyperliquid's unified account, accountValue IS the portfolio value
+            # (includes margin + unrealized PnL). Do NOT add spot USDC on top — it's the same pool.
+            self.live_balance = float(margin_summary.get("accountValue", 0.0))
         except Exception as e:
             logger.error(f"Failed to sync balance: {e}")
 
@@ -301,8 +373,22 @@ class LiveEnsembleTrader:
                     exit_price = live_price
                     reason = f"ALT SHORT Stop Loss (+{self.short_sl*100}%)"
                  elif live_price <= self.active_tp:
+                     exit_price = live_price
+                     reason = f"ALT SHORT Take Profit (-{self.short_tp*100}%)"
+                
+        # CATASTROPHE STOP-LOSS (All Models / All Modes - 7.5% Hard Cap to prevent liquidation)
+        CATASTROPHE_CAP = 0.075
+        if exit_price is None:
+            if self.position == 'long':
+                cat_sl = self.entry_price * (1 - CATASTROPHE_CAP)
+                if live_price <= cat_sl:
                     exit_price = live_price
-                    reason = f"ALT SHORT Take Profit (-{self.short_tp*100}%)"
+                    reason = f"CATASTROPHE LONG STOP LOSS (-{CATASTROPHE_CAP*100}%)"
+            elif self.position == 'short':
+                cat_sl = self.entry_price * (1 + CATASTROPHE_CAP)
+                if live_price >= cat_sl:
+                    exit_price = live_price
+                    reason = f"CATASTROPHE SHORT STOP LOSS (-{CATASTROPHE_CAP*100}%)"
                 
         if exit_price is not None:
              logger.info(f"CLOSING {self.position.upper()} (FAST POLL): {reason} | Entry ${self.entry_price:.2f} -> Exit ${exit_price:.2f}")
