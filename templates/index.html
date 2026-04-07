@@ -753,9 +753,11 @@
                 try { tradesList = await tradesRes.json(); } catch (e) { }
 
                 var totalTrades = tradesList.length || 0;
-                var wins = tradesList.filter(t => t.pnl_usd > 0).length;
-                var winRate = totalTrades > 0 ? (wins / totalTrades * 100).toFixed(1) + '%' : '0.0%';
-                var realizedPnl = tradesList.reduce((acc, t) => acc + (t.pnl_usd || 0), 0);
+                // Filter: only completed trades (with exit_price) count for stats
+                var completedTrades = tradesList.filter(t => t.exit_price !== null && t.pnl_usd !== null);
+                var wins = completedTrades.filter(t => t.pnl_usd > 0).length;
+                var winRate = completedTrades.length > 0 ? (wins / completedTrades.length * 100).toFixed(1) + '%' : '0.0%';
+                var realizedPnl = completedTrades.reduce((acc, t) => acc + (t.pnl_usd || 0), 0);
                 var totalPnl = realizedPnl + live_pnl;
 
                 // Apply Total Metrics to UI Grid
@@ -768,7 +770,7 @@
                 realPnlEl.className = 'value ' + (realizedPnl > 0 ? 'positive' : (realizedPnl < 0 ? 'negative' : 'neutral'));
 
                 var winH = document.getElementById('live-winrate-header');
-                if (winH) winH.innerText = 'Win Rate (' + totalTrades + ' Trades)';
+                if (winH) winH.innerText = 'Win Rate (' + completedTrades.length + ' Trades)';
                 var winE = document.getElementById('live-winrate');
                 if (winE) winE.innerText = winRate;
 
@@ -844,10 +846,10 @@
                         '</div>';
                 }
 
-                if (totalTrades === 0 && !state.in_trade) {
+                if (completedTrades.length === 0 && !state.in_trade) {
                     logEl.innerHTML = '<div style="color:#4a5568;">No completed trades yet.</div>';
                 } else {
-                    var historyHtml = tradesList.map((t, i) => {
+                    var historyHtml = completedTrades.map((t, i) => {
                         var isWin = t.pnl_usd >= 0;
                         return '<div class="' + (isWin ? 'win' : 'loss') + '" style="margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.04); padding-bottom:8px;">' +
                             '<b style="color:#fff;">#' + (i + 1) + '</b> | Entry: $' + t.entry_price.toFixed(2) + ' → Exit: $' + t.exit_price.toFixed(2) + '<br>' +
