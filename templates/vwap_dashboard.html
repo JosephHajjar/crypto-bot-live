@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institutional VWAP Execution Matrix</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
+
+        :root {
+            --bg-primary: #09090b;
+            --bg-card: rgba(22, 22, 26, 0.7);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --text-primary: #fafafa;
+            --text-secondary: #71717a;
+            --text-muted: #52525b;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
+            --accent-purple: #a78bfa;
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 16px;
+            background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(167, 139, 250, 0.08), transparent);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 1080px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .nav-btn {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #8b95a5;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        
+        .nav-btn:hover {
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .chart-box {
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            background: #050511;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Institutional VWAP Execution Matrix</h1>
+
+    <div class="dashboard-container">
+        <div class="toolbar">
+            <div style="font-weight: 600; color:var(--accent-purple); font-family:'Outfit'; font-size:1.1rem; letter-spacing:1px;">
+                SYMBOL: NQ=F (NASDAQ 100) <span style="font-size:0.7rem; color:var(--text-muted); font-family:'Inter'; margin-left:8px;">[15 MIN DELAY VIA YAHOO]</span>
+            </div>
+            <div>
+                <a href="/" class="nav-btn">← Back to Main Dashboard</a>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <div id="vwap_chart" style="height: 600px; width: 100%;"></div>
+        </div>
+        
+        <div id="status" style="margin-top:16px; text-align:center; color:var(--text-muted); font-size:0.8rem;">
+            Loading computational matrix...
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lightweight-charts@3.8.0/dist/lightweight-charts.standalone.production.js"></script>
+    <script>
+        var dp = document.getElementById('vwap_chart');
+        var chart = LightweightCharts.createChart(dp, {
+            width: dp.clientWidth, height: 600,
+            layout: { backgroundColor: '#050511', textColor: '#8b95a5' },
+            grid: { vertLines: { color: 'rgba(255,255,255,0.03)' }, horzLines: { color: 'rgba(255,255,255,0.03)' } },
+            crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+            rightPriceScale: { borderColor: 'rgba(255,255,255,0.1)' },
+            timeScale: { borderColor: 'rgba(255,255,255,0.1)', timeVisible: true }
+        });
+
+        var candles = chart.addCandlestickSeries({ upColor: '#34d399', downColor: '#f87171', borderVisible: false, wickUpColor: '#34d399', wickDownColor: '#f87171' });
+        var vwapSeries = chart.addLineSeries({ color: '#a78bfa', lineWidth: 2, title: 'VWAP' });
+        var upperSeries = chart.addLineSeries({ color: 'rgba(167, 139, 250, 0.4)', lineWidth: 1, lineStyle: 2, title: '+2.5σ' });
+        var lowerSeries = chart.addLineSeries({ color: 'rgba(167, 139, 250, 0.4)', lineWidth: 1, lineStyle: 2, title: '-2.5σ' });
+
+        window.addEventListener('resize', function () { chart.resize(dp.clientWidth, 600); });
+
+        async function fetchVwapData() {
+            try {
+                document.getElementById('status').innerText = "Downloading Nasdaq 100 matrix (+15m delay)...";
+                var res = await fetch('/api/vwap_data?symbol=NQ=F&interval=5m&period=5d');
+                var json = await res.json();
+                
+                if (json.error) {
+                    document.getElementById('status').innerText = "Error: " + json.error;
+                    return;
+                }
+                
+                var data = json.data;
+                var candleData = [];
+                var vData = [];
+                var uData = [];
+                var lData = [];
+                var markers = [];
+                
+                var simActiveVwapTrade = null;
+                
+                for(var i=0; i<data.length; i++) {
+                    var d = data[i];
+                    candleData.push({ time: d.time, open: d.open, high: d.high, low: d.low, close: d.close });
+                    
+                    if (d.vwap !== null) vData.push({ time: d.time, value: d.vwap });
+                    if (d.upper !== null) uData.push({ time: d.time, value: d.upper });
+                    if (d.lower !== null) lData.push({ time: d.time, value: d.lower });
+                    
+                    if (i > 0) {
+                        var prev = data[i-1];
+                        if (d.vwap !== null && prev.upper !== null) {
+                            // Exits
+                            if (simActiveVwapTrade === 'SHORT') {
+                                if (d.low <= d.vwap) {
+                                    markers.push({time: d.time, position: 'aboveBar', color: '#a78bfa', shape: 'circle', text: 'TP EXIT'});
+                                    simActiveVwapTrade = null;
+                                }
+                            } else if (simActiveVwapTrade === 'LONG') {
+                                if (d.high >= d.vwap) {
+                                    markers.push({time: d.time, position: 'belowBar', color: '#a78bfa', shape: 'circle', text: 'TP EXIT'});
+                                    simActiveVwapTrade = null;
+                                }
+                            }
+                            
+                            // Entries
+                            if (simActiveVwapTrade === null) {
+                                if (d.high >= d.upper && prev.high < prev.upper && d.bias !== 'BULLISH') {
+                                    markers.push({time: d.time, position: 'aboveBar', color: '#f87171', shape: 'arrowDown', text: 'VWAP SELL'});
+                                    simActiveVwapTrade = 'SHORT';
+                                } else if (d.low <= d.lower && prev.low > prev.lower && d.bias !== 'BEARISH') {
+                                    markers.push({time: d.time, position: 'belowBar', color: '#34d399', shape: 'arrowUp', text: 'VWAP BUY'});
+                                    simActiveVwapTrade = 'LONG';
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                candles.setData(candleData);
+                vwapSeries.setData(vData);
+                upperSeries.setData(uData);
+                lowerSeries.setData(lData);
+                
+                markers.sort((a,b) => a.time - b.time);
+                candles.setMarkers(markers);
+                
+                document.getElementById('status').innerText = "Matrix synced. Loaded " + data.length + " candles.";
+                
+            } catch(e) {
+                document.getElementById('status').innerText = "Failed to load: " + e.message;
+            }
+        }
+        
+        fetchVwapData();
+        setInterval(fetchVwapData, 60000); // 1m refresh interval
+    </script>
+</body>
+
+</html>

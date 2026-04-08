@@ -159,6 +159,97 @@ def compute_supertrend(df, length=10, multiplier=3.0):
 def index():
     return render_template('index.html')
 
+@app.route('/vwap')
+def vwap_dashboard():
+    return render_template('vwap_dashboard.html')
+
+@app.route('/api/vwap_data')
+def get_vwap_data():
+    import yfinance as yf
+    symbol = request.args.get('symbol', 'NQ=F')
+    period = request.args.get('period', '3d')
+    interval = request.args.get('interval', '5m')
+    
+    try:
+        df = yf.download(symbol, period=period, interval=interval, progress=False)
+        if len(df) == 0:
+            return jsonify({"error": f"No data returned for {symbol}"})
+            
+        if hasattr(df.columns, 'nlevels') and df.columns.nlevels > 1:
+            clean = pd.DataFrame()
+            clean['open'] = df['Open'][symbol]
+            clean['high'] = df['High'][symbol]
+            clean['low'] = df['Low'][symbol]
+            clean['close'] = df['Close'][symbol]
+            clean['volume'] = df['Volume'][symbol]
+            df = clean
+        else:
+            df = df.rename(columns={'Open':'open', 'High':'high', 'Low':'low', 'Close':'close', 'Volume':'volume'})
+            
+        df.index = df.index.tz_convert('America/New_York') if df.index.tz else df.index.tz_localize('UTC').tz_convert('America/New_York')
+        
+        df['typ'] = (df['high'] + df['low'] + df['close']) / 3
+        df['typ_x_vol'] = df['typ'] * df['volume']
+        session_starts = (df.index.time == pd.to_datetime('09:30').time())
+        df['session_id'] = session_starts.cumsum()
+        
+        df['cum_vol'] = df.groupby('session_id')['volume'].cumsum()
+        df['cum_typ_x_vol'] = df.groupby('session_id')['typ_x_vol'].cumsum()
+        df['vwap'] = df['cum_typ_x_vol'] / df['cum_vol']
+        
+        df['vwap_dev_sq'] = df['volume'] * ((df['typ'] - df['vwap']) ** 2)
+        df['cum_vwap_dev_sq'] = df.groupby('session_id')['vwap_dev_sq'].cumsum()
+        df['vwap_var'] = df['cum_vwap_dev_sq'] / df['cum_vol']
+        df['vwap_std'] = np.sqrt(df['vwap_var'])
+        df['upper_band'] = df['vwap'] + (2.5 * df['vwap_std'])
+        df['lower_band'] = df['vwap'] - (2.5 * df['vwap_std'])
+        
+        df['prev_close'] = df['close'].shift(1)
+        df['tr1'] = df['high'] - df['low']
+        df['tr2'] = abs(df['high'] - df['prev_close'])
+        df['tr3'] = abs(df['low'] - df['prev_close'])
+        df['tr'] = df[['tr1', 'tr2', 'tr3']].max(axis=1)
+        df['atr_14'] = df['tr'].rolling(14).mean()
+        
+        df_1h = df.resample('1h').agg({'close': 'last'}).dropna()
+        df_1h['sma_20'] = df_1h['close'].rolling(20).mean()
+        
+        out_data = []
+        for i in range(20, len(df)):
+            row = df.iloc[i]
+            t = df.index[i]
+            
+            bias = 'NONE'
+            prev_1h_cands = df_1h[df_1h.index < t.floor('1h')]
+            if len(prev_1h_cands) >= 1:
+                last_1h = prev_1h_cands.iloc[-1]
+                if pd.notna(last_1h['sma_20']):
+                    if last_1h['close'] > last_1h['sma_20']: bias = 'BULLISH'
+                    elif last_1h['close'] < last_1h['sma_20']: bias = 'BEARISH'
+            
+            out_data.append({
+                "time": int(t.timestamp()),
+                "time_str": t.strftime('%Y-%m-%d %H:%M:%S'),
+                "open": float(row['open']),
+                "high": float(row['high']),
+                "low": float(row['low']),
+                "close": float(row['close']),
+                "volume": float(row['volume']),
+                "vwap": float(row['vwap']) if pd.notna(row['vwap']) else None,
+                "upper": float(row['upper_band']) if pd.notna(row['upper_band']) else None,
+                "lower": float(row['lower_band']) if pd.notna(row['lower_band']) else None,
+                "bias": bias,
+                "atr": float(row['atr_14']) if pd.notna(row['atr_14']) else 0.0,
+                "cum_vol": float(row['cum_vol']) if pd.notna(row['cum_vol']) else 0.0
+            })
+            
+        return jsonify({"data": out_data})
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)})
+
 @app.route('/api/state')
 def get_state():
     symbol = request.args.get('symbol', 'BTCUSDT')
