@@ -159,188 +159,6 @@ def compute_supertrend(df, length=10, multiplier=3.0):
 def index():
     return render_template('index.html')
 
-@app.route('/vwap')
-def vwap_dashboard():
-    return render_template('vwap_dashboard.html')
-
-@app.route('/api/vwap_data')
-def get_vwap_data():
-    import yfinance as yf
-    from datetime import datetime, timedelta
-    
-    symbol = request.args.get('symbol', 'NQ=F')
-    start_date = request.args.get('start_date', None)
-    end_date = request.args.get('end_date', None)
-    
-    sigma_mult = 3.1
-    atr_mult = 2.6
-    
-    try:
-        if start_date and end_date:
-            s_dt = datetime.strptime(start_date, '%Y-%m-%d')
-            e_dt = datetime.strptime(end_date, '%Y-%m-%d')
-            # Add one day to end_date because yfinance end_date is exclusive
-            e_dt = e_dt + timedelta(days=1)
-            df = yf.download(symbol, start=s_dt.strftime('%Y-%m-%d'), end=e_dt.strftime('%Y-%m-%d'), interval='5m', progress=False)
-        else:
-            df = yf.download(symbol, period='5d', interval='5m', progress=False)
-            
-        if len(df) == 0:
-            return jsonify({"error": f"No data returned for {symbol} on those dates."})
-            
-        if hasattr(df.columns, 'nlevels') and df.columns.nlevels > 1:
-            clean = pd.DataFrame()
-            clean['open'] = df['Open'][symbol]
-            clean['high'] = df['High'][symbol]
-            clean['low'] = df['Low'][symbol]
-            clean['close'] = df['Close'][symbol]
-            clean['volume'] = df['Volume'][symbol]
-            df = clean
-        else:
-            df = df.rename(columns={'Open':'open', 'High':'high', 'Low':'low', 'Close':'close', 'Volume':'volume'})
-            
-        df.index = df.index.tz_convert('America/New_York') if df.index.tz else df.index.tz_localize('UTC').tz_convert('America/New_York')
-        
-        df['typ'] = (df['high'] + df['low'] + df['close']) / 3
-        df['typ_x_vol'] = df['typ'] * df['volume']
-        session_starts = (df.index.time == pd.to_datetime('09:30').time())
-        df['session_id'] = session_starts.cumsum()
-        
-        df['cum_vol'] = df.groupby('session_id')['volume'].cumsum()
-        df['cum_typ_x_vol'] = df.groupby('session_id')['typ_x_vol'].cumsum()
-        df['vwap'] = df['cum_typ_x_vol'] / df['cum_vol']
-        
-        df['vwap_dev_sq'] = df['volume'] * ((df['typ'] - df['vwap']) ** 2)
-        df['cum_vwap_dev_sq'] = df.groupby('session_id')['vwap_dev_sq'].cumsum()
-        df['vwap_var'] = df['cum_vwap_dev_sq'] / df['cum_vol']
-        df['vwap_std'] = np.sqrt(df['vwap_var'])
-        df['upper_band'] = df['vwap'] + (sigma_mult * df['vwap_std'])
-        df['lower_band'] = df['vwap'] - (sigma_mult * df['vwap_std'])
-        df['vwap_velocity'] = df['vwap'].diff(3)
-        
-        df['prev_close'] = df['close'].shift(1)
-        df['tr1'] = df['high'] - df['low']
-        df['tr2'] = abs(df['high'] - df['prev_close'])
-        df['tr3'] = abs(df['low'] - df['prev_close'])
-        df['tr'] = df[['tr1', 'tr2', 'tr3']].max(axis=1)
-        df['atr_14'] = df['tr'].rolling(14).mean()
-        
-        df_1h = df.resample('1h').agg({'close': 'last'}).dropna()
-        df_1h['sma_20'] = df_1h['close'].rolling(20).mean()
-        
-        out_data = []
-        markers = []
-        stats = {"wins": 0, "losses": 0, "total": 0, "pnl_pct": 0.0}
-        
-        active_trade = None
-        
-        for i in range(20, len(df)):
-            row = df.iloc[i]
-            t = df.index[i]
-            c_time = t.time()
-            ts = int(t.timestamp())
-            
-            # 1. PROCESS EXITS
-            if active_trade is not None:
-                sl = active_trade['sl']
-                entry = active_trade['entry']
-                current_vwap = row['vwap']
-                vwap_speed = row['vwap_velocity'] if pd.notna(row['vwap_velocity']) else 0
-                tp = active_trade['tp_base']
-                
-                # Check for Early Velocity Trap Exit
-                if active_trade['type'] == 'SHORT' and vwap_speed > 15.0:
-                    tp = current_vwap + (1.0 * row['vwap_std'])
-                elif active_trade['type'] == 'LONG' and vwap_speed < -15.0:
-                    tp = current_vwap - (1.0 * row['vwap_std'])
-                else:
-                    tp = current_vwap
-                
-                resolved = False
-                
-                if active_trade['type'] == 'SHORT':
-                    if row['low'] <= tp:
-                        ret = (entry - tp) / entry
-                        stats['wins'] += 1
-                        stats['pnl_pct'] += ret * 100
-                        markers.append({"time": ts, "position": "aboveBar", "color": "#a78bfa", "shape": "circle", "text": f"TP WIN ({ret*100:.1f}%)"})
-                        resolved = True
-                    elif row['high'] >= sl:
-                        ret = (entry - sl) / entry
-                        stats['losses'] += 1
-                        stats['pnl_pct'] += ret * 100
-                        markers.append({"time": ts, "position": "aboveBar", "color": "#f97316", "shape": "circle", "text": f"SL LOSS ({ret*100:.1f}%)"})
-                        resolved = True
-                else: # LONG
-                    if row['high'] >= tp:
-                        ret = (tp - entry) / entry
-                        stats['wins'] += 1
-                        stats['pnl_pct'] += ret * 100
-                        markers.append({"time": ts, "position": "belowBar", "color": "#a78bfa", "shape": "circle", "text": f"TP WIN ({ret*100:.1f}%)"})
-                        resolved = True
-                    elif row['low'] <= sl:
-                        ret = (sl - entry) / entry
-                        stats['losses'] += 1
-                        stats['pnl_pct'] += ret * 100
-                        markers.append({"time": ts, "position": "belowBar", "color": "#f97316", "shape": "circle", "text": f"SL LOSS ({ret*100:.1f}%)"})
-                        resolved = True
-                        
-                # End of Day Exit Check? For UI we can skip true forced EOD exits or just let it carry. We'll let it carry.
-                if resolved:
-                    active_trade = None
-                    stats['total'] += 1
-            
-            # 2. HTF BIAS
-            bias = 'NONE'
-            prev_1h_cands = df_1h[df_1h.index < t.floor('1h')]
-            if len(prev_1h_cands) >= 1:
-                last_1h = prev_1h_cands.iloc[-1]
-                if pd.notna(last_1h['sma_20']):
-                    if last_1h['close'] > last_1h['sma_20']: bias = 'BULLISH'
-                    elif last_1h['close'] < last_1h['sma_20']: bias = 'BEARISH'
-                    
-            upper = row['upper_band']
-            lower = row['lower_band']
-            atr = row['atr_14'] if pd.notna(row['atr_14']) else 10.0
-            
-            # 3. ENTRIES
-            if active_trade is None and pd.notna(upper) and pd.notna(lower) and row['cum_vol'] > (row['volume'] * 5):
-                prev_row = df.iloc[i-1]
-                
-                if row['high'] >= upper and prev_row['high'] < prev_row['upper_band'] and bias in ['BEARISH', 'NONE']:
-                    entry = upper
-                    sl = entry + (atr_mult * atr)
-                    active_trade = {'type': 'SHORT', 'entry': entry, 'sl': sl, 'tp_base': row['vwap']}
-                    markers.append({"time": ts, "position": "aboveBar", "color": "#f87171", "shape": "arrowDown", "text": "VWAP SELL"})
-                
-                elif row['low'] <= lower and prev_row['low'] > prev_row['lower_band'] and bias in ['BULLISH', 'NONE']:
-                    entry = lower
-                    sl = entry - (atr_mult * atr)
-                    active_trade = {'type': 'LONG', 'entry': entry, 'sl': sl, 'tp_base': row['vwap']}
-                    markers.append({"time": ts, "position": "belowBar", "color": "#34d399", "shape": "arrowUp", "text": "VWAP BUY"})
-
-            out_data.append({
-                "time": ts,
-                "open": float(row['open']),
-                "high": float(row['high']),
-                "low": float(row['low']),
-                "close": float(row['close']),
-                "volume": float(row['volume']),
-                "vwap": float(row['vwap']) if pd.notna(row['vwap']) else None,
-                "upper": float(row['upper_band']) if pd.notna(row['upper_band']) else None,
-                "lower": float(row['lower_band']) if pd.notna(row['lower_band']) else None
-            })
-            
-        stats['win_rate'] = round((stats['wins'] / stats['total']) * 100, 1) if stats['total'] > 0 else 0.0
-        stats['pnl_pct'] = round(stats['pnl_pct'], 2)
-            
-        return jsonify({"data": out_data, "markers": markers, "stats": stats})
-        
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({"error": str(e)})
-
 @app.route('/api/state')
 def get_state():
     symbol = request.args.get('symbol', 'BTCUSDT')
@@ -633,6 +451,77 @@ def get_bot_signals():
         import traceback; traceback.print_exc()
         return jsonify({"error": str(e), "signals": []})
 
+@app.route('/poly')
+def poly_dashboard():
+    return render_template('poly_dashboard.html')
+
+@app.route('/api/poly_backtest')
+def get_poly_backtest():
+    import random
+    
+    initial_capital = float(request.args.get('capital', 1000.0))
+    trades = int(request.args.get('trades', 1000))
+    implied_ceiling = float(request.args.get('implied', 0.05))
+    
+    capital = initial_capital
+    out_data = []
+    wins = 0
+    losses = 0
+    
+    # Generate timestamp starting arbitrarily from 1 year ago
+    import time
+    start_ts = int(time.time()) - (trades * 86400)
+    
+    for i in range(trades):
+        bet_size = capital * 0.05  # Kelly 5%
+        
+        implied_yes_price = random.uniform(0.01, implied_ceiling)
+        no_price = 1.0 - implied_yes_price
+        
+        # True statistical probability of a miracle
+        true_prob_yes = random.uniform(0.0001, 0.005)
+        
+        contracts_bought = bet_size / no_price
+        event_resolves_yes = random.random() < true_prob_yes
+        
+        if not event_resolves_yes:
+            payout = contracts_bought * 1.00
+            profit = payout - bet_size
+            capital += profit
+            wins += 1
+            marker = {"time": start_ts, "position": "belowBar", "color": "var(--accent-green)", "shape": "arrowUp", "text": "WIN"}
+        else:
+            capital -= bet_size
+            losses += 1
+            marker = {"time": start_ts, "position": "aboveBar", "color": "orange", "shape": "arrowDown", "text": "LOSS"}
+            
+        out_data.append({
+            "time": start_ts,
+            "value": capital,
+            "marker": marker
+        })
+        
+        start_ts += 86400 # 1 day per resolution
+        
+        if capital <= 0:
+            break
+            
+    win_rate = (wins / (wins + losses) * 100) if (wins + losses) > 0 else 0
+    roi = ((capital - initial_capital) / initial_capital) * 100
+    
+    stats = {
+        "final_capital": round(capital, 2),
+        "roi_pct": round(roi, 2),
+        "win_rate": round(win_rate, 2),
+        "total_trades": len(out_data)
+    }
+    
+    # We detach markers for LW Charts
+    markers = [d["marker"] for d in out_data]
+    series_data = [{"time": d["time"], "value": d["value"]} for d in out_data]
+    
+    return jsonify({"data": series_data, "markers": markers, "stats": stats})
+
 if __name__ == '__main__':
     print("Dashboard Running! Go to: http://127.0.0.1:5001")
-    app.run(port=5001, debug=False, use_reloader=False, threaded=True)
+    app.run(host='0.0.0.0', port=5001, debug=False, use_reloader=False, threaded=True)
