@@ -204,7 +204,7 @@ class LiveEnsembleTrader:
         if self.live_balance < 0.50:  # Minimum $0.50 to trade
             logger.warning(f"Balance too low to trade: ${self.live_balance:.2f}")
             return 0
-        target_notional = self.live_balance * 10.0
+        target_notional = self.live_balance * 15.0  # 15x leverage
         return max(0.0001, round(target_notional / current_price, 5))
 
     def _sync_exchange_position(self, current_price, target_position, size_in_btc):
