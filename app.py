@@ -170,14 +170,17 @@ def get_vwap_data():
     
     symbol = request.args.get('symbol', 'NQ=F')
     start_date = request.args.get('start_date', None)
+    end_date = request.args.get('end_date', None)
     
     sigma_mult = 3.1
     atr_mult = 2.6
     
     try:
-        if start_date:
+        if start_date and end_date:
             s_dt = datetime.strptime(start_date, '%Y-%m-%d')
-            e_dt = s_dt + timedelta(days=7)
+            e_dt = datetime.strptime(end_date, '%Y-%m-%d')
+            # Add one day to end_date because yfinance end_date is exclusive
+            e_dt = e_dt + timedelta(days=1)
             df = yf.download(symbol, start=s_dt.strftime('%Y-%m-%d'), end=e_dt.strftime('%Y-%m-%d'), interval='5m', progress=False)
         else:
             df = yf.download(symbol, period='5d', interval='5m', progress=False)

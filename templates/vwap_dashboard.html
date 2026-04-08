@@ -166,8 +166,12 @@
 
         <div class="sandbox-panel">
             <div>
-                <label>Forensic Date Audit</label><br>
-                <input type="date" id="inp-date" style="width: 140px;">
+                <label>Start Date</label><br>
+                <input type="date" id="inp-start-date" style="width: 140px;">
+            </div>
+            <div>
+                <label>End Date</label><br>
+                <input type="date" id="inp-end-date" style="width: 140px;">
             </div>
             <div class="stat-box" style="margin-left: 16px;">
                 <div class="stat-pill">Win Rate: <span id="stat-wr" style="color:var(--accent-purple);">--%</span></div>
@@ -205,21 +209,22 @@
 
         window.addEventListener('resize', function () { chart.resize(dp.clientWidth, 600); });
 
-        // Set default date directly via JS
-        var d = new Date();
-        d.setDate(d.getDate() - 5);
-        document.getElementById('inp-date').valueAsDate = d;
+        // Set default dates directly via JS
+        var dStart = new Date();
+        dStart.setDate(dStart.getDate() - 5);
+        document.getElementById('inp-start-date').valueAsDate = dStart;
+        
+        var dEnd = new Date();
+        document.getElementById('inp-end-date').valueAsDate = dEnd;
 
         async function fetchVwapData() {
             try {
-                var selectedDate = document.getElementById('inp-date').value;
+                var sDate = document.getElementById('inp-start-date').value;
+                var eDate = document.getElementById('inp-end-date').value;
                 
-                document.getElementById('status').innerText = "Simulating quantitative logic for week of " + selectedDate + " [LOCKED: 3.1σ / 2.6 ATR]...";
+                document.getElementById('status').innerText = "Simulating quantitative logic for " + sDate + " to " + eDate + " [LOCKED: 3.1σ / 2.6 ATR]...";
                 
-                var url = `/api/vwap_data?symbol=NQ=F`;
-                if (selectedDate) {
-                    url += `&start_date=${selectedDate}`;
-                }
+                var url = `/api/vwap_data?symbol=NQ=F&start_date=${sDate}&end_date=${eDate}`;
                 
                 var res = await fetch(url);
                 var json = await res.json();
