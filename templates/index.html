@@ -701,8 +701,8 @@
                 }
 
                 // Sync Multi-Timeframe UI & Total Equity
-                // paper_balance is the Base Bankroll without Unrealized PnL. We manually perfectly inject live_pnl natively using the 30fps websocket API
-                var totalEquity = state.paper_balance + live_pnl;
+                // paper_balance comes from Hyperliquid accountValue which already includes unrealized PnL
+                var totalEquity = state.paper_balance;
                 var bankEl = document.getElementById('live-total-bankroll');
                 if (bankEl) bankEl.innerText = '$' + totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 

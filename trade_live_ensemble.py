@@ -195,19 +195,8 @@ class LiveEnsembleTrader:
         try:
             user_state = self.info.user_state(self.wallet_address)
             margin_summary = user_state.get("marginSummary", {})
-            perps_value = float(margin_summary.get("accountValue", 0.0))
-            
-            # Also include spot USDC (Hyperliquid can use it as perps margin)
-            spot_usdc = 0.0
-            try:
-                spot = self.info.spot_user_state(self.wallet_address)
-                for bal in spot.get('balances', []):
-                    if bal['coin'] == 'USDC':
-                        spot_usdc = float(bal.get('total', 0))
-                        break
-            except Exception:
-                pass
-            self.live_balance = perps_value + spot_usdc
+            # In unified account mode, accountValue already includes spot USDC
+            self.live_balance = float(margin_summary.get("accountValue", 0.0))
         except Exception as e:
             logger.error(f"Failed to sync balance: {e}")
 

@@ -33,19 +33,8 @@ def _get_exchange_state():
         info = Info(constants.MAINNET_API_URL, skip_ws=True)
         user_state = info.user_state(wallet)
         margin = user_state.get("marginSummary", {})
-        perps_value = float(margin.get("accountValue", 0.0))
-        
-        # Also check spot USDC balance (Hyperliquid separates spot and perps)
-        spot_usdc = 0.0
-        try:
-            spot = info.spot_user_state(wallet)
-            for bal in spot.get('balances', []):
-                if bal['coin'] == 'USDC':
-                    spot_usdc = float(bal.get('total', 0))
-                    break
-        except Exception:
-            pass
-        account_value = perps_value + spot_usdc
+        # In unified account mode, accountValue already includes spot USDC
+        account_value = float(margin.get("accountValue", 0.0))
         
         exchange_pos = None
         for pos in user_state.get("assetPositions", []):
