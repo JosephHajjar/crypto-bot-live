@@ -113,13 +113,65 @@ def index():
 def get_state():
     symbol = request.args.get('symbol', 'BTCUSDT')
     file_name = 'data_storage/live_state_ensemble.json'
+    state = {}
     if os.path.exists(file_name):
         try:
             with open(file_name, 'r') as f:
-                return jsonify(json.load(f))
+                state = json.load(f)
         except Exception:
             return jsonify({"error": "State file locked or corrupt"})
-    return jsonify({"error": "No state active"})
+    
+    # Always overlay real Hyperliquid data so dashboard shows truth
+    try:
+        from hyperliquid.info import Info
+        from hyperliquid.utils import constants
+        wallet = os.environ.get("HYPERLIQUID_WALLET_ADDRESS", "").strip()
+        if wallet:
+            info = Info(constants.MAINNET_API_URL, skip_ws=True)
+            user_state = info.user_state(wallet)
+            margin = user_state.get("marginSummary", {})
+            account_value = float(margin.get("accountValue", 0.0))
+            
+            # Find BTC position
+            exchange_pos = None
+            for pos in user_state.get("assetPositions", []):
+                if pos['position']['coin'] == 'BTC':
+                    exchange_pos = pos['position']
+                    break
+            
+            exchange_size = float(exchange_pos['szi']) if exchange_pos else 0.0
+            exchange_entry = float(exchange_pos['entryPx']) if exchange_pos else 0.0
+            exchange_unrealized = float(exchange_pos.get('unrealizedPnl', 0)) if exchange_pos else 0.0
+            has_position = abs(exchange_size) >= 0.00001
+            
+            # Override state with exchange truth
+            state['paper_balance'] = account_value
+            state['in_trade'] = has_position
+            if has_position:
+                direction = 'LONG' if exchange_size > 0 else 'SHORT'
+                state['trade_type'] = direction
+                state['entry_price'] = exchange_entry
+                state['trade_amount_btc'] = abs(exchange_size)
+                notional = abs(exchange_size) * exchange_entry
+                state['trade_amount_usd'] = round(notional, 2)
+                # Recalculate open PnL from exchange
+                if exchange_entry > 0:
+                    pnl_pct = ((float(exchange_pos.get('returnOnEquity', 0))) * 100) if exchange_pos else 0
+                    state['open_pnl_usd'] = round(exchange_unrealized, 4)
+                    state['open_pnl_pct'] = round(pnl_pct, 4)
+            else:
+                state['trade_type'] = None
+                state['entry_price'] = 0.0
+                state['trade_amount_btc'] = 0.0
+                state['trade_amount_usd'] = 0.0
+                state['open_pnl_usd'] = 0.0
+                state['open_pnl_pct'] = 0.0
+    except Exception as e:
+        state['exchange_error'] = str(e)
+    
+    if not state:
+        return jsonify({"error": "No state active"})
+    return jsonify(state)
 
 @app.route('/api/set_target', methods=['POST'])
 def set_target():

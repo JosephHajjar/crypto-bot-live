@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-08T04:41:00.124649Z",
+  "timestamp": "2026-04-08T04:45:02.879105Z",
   "paper_balance": 0.0,
-  "current_price": 71629.19,
-  "bull_prob": 99.936181,
-  "bear_prob": 0.086806,
+  "current_price": 71611.07,
+  "bull_prob": 99.892187,
+  "bear_prob": 0.087293,
   "master_control": "ALT",
   "in_trade": false,
   "trade_type": null,
