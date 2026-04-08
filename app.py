@@ -169,6 +169,8 @@ def get_vwap_data():
     symbol = request.args.get('symbol', 'NQ=F')
     period = request.args.get('period', '3d')
     interval = request.args.get('interval', '5m')
+    sigma_mult = float(request.args.get('sigma', '2.5'))
+    atr_mult = float(request.args.get('atr', '1.5'))
     
     try:
         df = yf.download(symbol, period=period, interval=interval, progress=False)
@@ -201,8 +203,9 @@ def get_vwap_data():
         df['cum_vwap_dev_sq'] = df.groupby('session_id')['vwap_dev_sq'].cumsum()
         df['vwap_var'] = df['cum_vwap_dev_sq'] / df['cum_vol']
         df['vwap_std'] = np.sqrt(df['vwap_var'])
-        df['upper_band'] = df['vwap'] + (2.5 * df['vwap_std'])
-        df['lower_band'] = df['vwap'] - (2.5 * df['vwap_std'])
+        df['upper_band'] = df['vwap'] + (sigma_mult * df['vwap_std'])
+        df['lower_band'] = df['vwap'] - (sigma_mult * df['vwap_std'])
+        df['vwap_velocity'] = df['vwap'].diff(3)
         
         df['prev_close'] = df['close'].shift(1)
         df['tr1'] = df['high'] - df['low']
@@ -215,10 +218,68 @@ def get_vwap_data():
         df_1h['sma_20'] = df_1h['close'].rolling(20).mean()
         
         out_data = []
+        markers = []
+        stats = {"wins": 0, "losses": 0, "total": 0, "pnl_pct": 0.0}
+        
+        active_trade = None
+        
         for i in range(20, len(df)):
             row = df.iloc[i]
             t = df.index[i]
+            c_time = t.time()
+            ts = int(t.timestamp())
             
+            # 1. PROCESS EXITS
+            if active_trade is not None:
+                sl = active_trade['sl']
+                entry = active_trade['entry']
+                current_vwap = row['vwap']
+                vwap_speed = row['vwap_velocity'] if pd.notna(row['vwap_velocity']) else 0
+                tp = active_trade['tp_base']
+                
+                # Check for Early Velocity Trap Exit
+                if active_trade['type'] == 'SHORT' and vwap_speed > 15.0:
+                    tp = current_vwap + (1.0 * row['vwap_std'])
+                elif active_trade['type'] == 'LONG' and vwap_speed < -15.0:
+                    tp = current_vwap - (1.0 * row['vwap_std'])
+                else:
+                    tp = current_vwap
+                
+                resolved = False
+                
+                if active_trade['type'] == 'SHORT':
+                    if row['low'] <= tp:
+                        ret = (entry - tp) / entry
+                        stats['wins'] += 1
+                        stats['pnl_pct'] += ret * 100
+                        markers.append({"time": ts, "position": "aboveBar", "color": "#a78bfa", "shape": "circle", "text": f"TP WIN ({ret*100:.1f}%)"})
+                        resolved = True
+                    elif row['high'] >= sl:
+                        ret = (entry - sl) / entry
+                        stats['losses'] += 1
+                        stats['pnl_pct'] += ret * 100
+                        markers.append({"time": ts, "position": "aboveBar", "color": "#f97316", "shape": "circle", "text": f"SL LOSS ({ret*100:.1f}%)"})
+                        resolved = True
+                else: # LONG
+                    if row['high'] >= tp:
+                        ret = (tp - entry) / entry
+                        stats['wins'] += 1
+                        stats['pnl_pct'] += ret * 100
+                        markers.append({"time": ts, "position": "belowBar", "color": "#a78bfa", "shape": "circle", "text": f"TP WIN ({ret*100:.1f}%)"})
+                        resolved = True
+                    elif row['low'] <= sl:
+                        ret = (sl - entry) / entry
+                        stats['losses'] += 1
+                        stats['pnl_pct'] += ret * 100
+                        markers.append({"time": ts, "position": "belowBar", "color": "#f97316", "shape": "circle", "text": f"SL LOSS ({ret*100:.1f}%)"})
+                        resolved = True
+                        
+                # End of Day Exit Check? For UI we can skip true forced EOD exits or just let it carry. We'll let it carry.
+                if resolved:
+                    active_trade = None
+                    stats['total'] += 1
+            
+            # 2. HTF BIAS
             bias = 'NONE'
             prev_1h_cands = df_1h[df_1h.index < t.floor('1h')]
             if len(prev_1h_cands) >= 1:
@@ -226,10 +287,29 @@ def get_vwap_data():
                 if pd.notna(last_1h['sma_20']):
                     if last_1h['close'] > last_1h['sma_20']: bias = 'BULLISH'
                     elif last_1h['close'] < last_1h['sma_20']: bias = 'BEARISH'
+                    
+            upper = row['upper_band']
+            lower = row['lower_band']
+            atr = row['atr_14'] if pd.notna(row['atr_14']) else 10.0
             
+            # 3. ENTRIES
+            if active_trade is None and pd.notna(upper) and pd.notna(lower) and row['cum_vol'] > (row['volume'] * 5):
+                prev_row = df.iloc[i-1]
+                
+                if row['high'] >= upper and prev_row['high'] < prev_row['upper_band'] and bias in ['BEARISH', 'NONE']:
+                    entry = upper
+                    sl = entry + (atr_mult * atr)
+                    active_trade = {'type': 'SHORT', 'entry': entry, 'sl': sl, 'tp_base': row['vwap']}
+                    markers.append({"time": ts, "position": "aboveBar", "color": "#f87171", "shape": "arrowDown", "text": "VWAP SELL"})
+                
+                elif row['low'] <= lower and prev_row['low'] > prev_row['lower_band'] and bias in ['BULLISH', 'NONE']:
+                    entry = lower
+                    sl = entry - (atr_mult * atr)
+                    active_trade = {'type': 'LONG', 'entry': entry, 'sl': sl, 'tp_base': row['vwap']}
+                    markers.append({"time": ts, "position": "belowBar", "color": "#34d399", "shape": "arrowUp", "text": "VWAP BUY"})
+
             out_data.append({
-                "time": int(t.timestamp()),
-                "time_str": t.strftime('%Y-%m-%d %H:%M:%S'),
+                "time": ts,
                 "open": float(row['open']),
                 "high": float(row['high']),
                 "low": float(row['low']),
@@ -237,13 +317,13 @@ def get_vwap_data():
                 "volume": float(row['volume']),
                 "vwap": float(row['vwap']) if pd.notna(row['vwap']) else None,
                 "upper": float(row['upper_band']) if pd.notna(row['upper_band']) else None,
-                "lower": float(row['lower_band']) if pd.notna(row['lower_band']) else None,
-                "bias": bias,
-                "atr": float(row['atr_14']) if pd.notna(row['atr_14']) else 0.0,
-                "cum_vol": float(row['cum_vol']) if pd.notna(row['cum_vol']) else 0.0
+                "lower": float(row['lower_band']) if pd.notna(row['lower_band']) else None
             })
             
-        return jsonify({"data": out_data})
+        stats['win_rate'] = round((stats['wins'] / stats['total']) * 100, 1) if stats['total'] > 0 else 0.0
+        stats['pnl_pct'] = round(stats['pnl_pct'], 2)
+            
+        return jsonify({"data": out_data, "markers": markers, "stats": stats})
         
     except Exception as e:
         import traceback
