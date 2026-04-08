@@ -202,6 +202,9 @@ class LiveEnsembleTrader:
             logger.error(f"Failed to sync balance: {e}")
 
     def _calc_trade_size(self, current_price):
+        if self.live_balance < 0.50:  # Minimum $0.50 to trade
+            logger.warning(f"Balance too low to trade: ${self.live_balance:.2f}")
+            return 0
         target_notional = self.live_balance * 10.0
         return max(0.0001, round(target_notional / current_price, 5))
 
@@ -489,7 +492,7 @@ class LiveEnsembleTrader:
                  self.master_control = 'ALT'
                  if self.position != 'long':
                       trade_sz = self._calc_trade_size(current_close)
-                      if self._sync_exchange_position(current_close, 'long', trade_sz):
+                      if trade_sz > 0 and self._sync_exchange_position(current_close, 'long', trade_sz):
                            self.position = 'long'
                            self.entry_price = current_close
                            self.active_tp = current_close * (1 + self.long_tp)
@@ -513,7 +516,7 @@ class LiveEnsembleTrader:
                  self.master_control = 'ALT'
                  if self.position != 'short':
                       trade_sz = self._calc_trade_size(current_close)
-                      if self._sync_exchange_position(current_close, 'short', trade_sz):
+                      if trade_sz > 0 and self._sync_exchange_position(current_close, 'short', trade_sz):
                            self.position = 'short'
                            self.entry_price = current_close
                            self.active_tp = current_close * (1 - self.short_tp)
@@ -553,7 +556,7 @@ class LiveEnsembleTrader:
                       if self.position is None:
                            if diff_bull > ENTER_MARGIN:
                                 trade_sz = self._calc_trade_size(current_close)
-                                if self._sync_exchange_position(current_close, 'long', trade_sz):
+                                if trade_sz > 0 and self._sync_exchange_position(current_close, 'long', trade_sz):
                                      self.position = 'long'
                                      self.entry_price = current_close
                                      self.bars_held = 0
@@ -562,7 +565,7 @@ class LiveEnsembleTrader:
                                      self._notify(f"PROP BASELINE -> LONG @ ${current_close:.2f}")
                            elif diff_bear > ENTER_MARGIN:
                                 trade_sz = self._calc_trade_size(current_close)
-                                if self._sync_exchange_position(current_close, 'short', trade_sz):
+                                if self._sync_exchange_position(current_close, 'short', trade_sz) if trade_sz > 0 else False:
                                      self.position = 'short'
                                      self.entry_price = current_close
                                      self.bars_held = 0

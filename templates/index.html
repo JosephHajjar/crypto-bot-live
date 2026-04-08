@@ -354,10 +354,6 @@
                 <div id="live-total-pnl-pct" style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">0.00%</div>
             </div>
             <div class="card">
-                <h3>Portfolio Growth</h3>
-                <div class="value neutral" id="live-portfolio-growth">0.00%</div>
-            </div>
-            <div class="card">
                 <h3>Open P&L</h3>
                 <div class="value neutral" id="live-pnl">$0.00</div>
                 <div id="live-pnl-pct" style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">0.00%</div>
@@ -780,14 +776,6 @@
                     var netPct = (totalPnl / state.paper_balance) * 100;
                     totPnlPctEl.innerText = (netPct >= 0 ? '+' : '') + netPct.toFixed(2) + '%';
                     totPnlPctEl.style.color = netPct > 0 ? 'var(--accent-green)' : (netPct < 0 ? 'var(--accent-red)' : 'var(--text-secondary)');
-                }
-
-                // Portfolio Growth % = (current equity / starting bankroll - 1) * 100
-                var growthEl = document.getElementById('live-portfolio-growth');
-                if (growthEl && state.paper_balance > 0) {
-                    var growthPct = ((totalEquity / state.paper_balance) - 1) * 100;
-                    growthEl.innerText = (growthPct >= 0 ? '+' : '') + growthPct.toFixed(2) + '%';
-                    growthEl.className = 'value ' + (growthPct > 0 ? 'positive' : (growthPct < 0 ? 'negative' : 'neutral'));
                 }
 
                 var winH = document.getElementById('live-winrate-header');
