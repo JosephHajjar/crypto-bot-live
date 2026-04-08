@@ -166,19 +166,15 @@
 
         <div class="sandbox-panel">
             <div>
-                <label>Sigma Multiplier</label><br>
-                <input type="number" id="inp-sigma" value="2.5" step="0.1">
+                <label>Forensic Date Audit</label><br>
+                <input type="date" id="inp-date" style="width: 140px;">
             </div>
-            <div>
-                <label>ATR Stop Multiplier</label><br>
-                <input type="number" id="inp-atr" value="1.5" step="0.1">
-            </div>
-            <div class="stat-box">
+            <div class="stat-box" style="margin-left: 16px;">
                 <div class="stat-pill">Win Rate: <span id="stat-wr" style="color:var(--accent-purple);">--%</span></div>
                 <div class="stat-pill">Est. PnL: <span id="stat-pnl" style="color:var(--accent-green);">--%</span></div>
                 <div class="stat-pill">Trades: <span id="stat-trades" style="color:var(--text-primary);">--</span></div>
             </div>
-            <button class="sync-btn" onclick="fetchVwapData()">Sync Matrix</button>
+            <button class="sync-btn" onclick="fetchVwapData()">Run Historic Simulation</button>
         </div>
 
         <div class="chart-box">
@@ -209,14 +205,23 @@
 
         window.addEventListener('resize', function () { chart.resize(dp.clientWidth, 600); });
 
+        // Set default date directly via JS
+        var d = new Date();
+        d.setDate(d.getDate() - 5);
+        document.getElementById('inp-date').valueAsDate = d;
+
         async function fetchVwapData() {
             try {
-                var sigma = document.getElementById('inp-sigma').value;
-                var atr = document.getElementById('inp-atr').value;
+                var selectedDate = document.getElementById('inp-date').value;
                 
-                document.getElementById('status').innerText = "Simulating quantitative logic (" + sigma + "σ / " + atr + " ATR)...";
+                document.getElementById('status').innerText = "Simulating quantitative logic for week of " + selectedDate + " [LOCKED: 3.1σ / 2.6 ATR]...";
                 
-                var res = await fetch(`/api/vwap_data?symbol=NQ=F&interval=5m&period=5d&sigma=${sigma}&atr=${atr}`);
+                var url = `/api/vwap_data?symbol=NQ=F`;
+                if (selectedDate) {
+                    url += `&start_date=${selectedDate}`;
+                }
+                
+                var res = await fetch(url);
                 var json = await res.json();
                 
                 if (json.error) {

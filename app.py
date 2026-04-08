@@ -166,16 +166,24 @@ def vwap_dashboard():
 @app.route('/api/vwap_data')
 def get_vwap_data():
     import yfinance as yf
+    from datetime import datetime, timedelta
+    
     symbol = request.args.get('symbol', 'NQ=F')
-    period = request.args.get('period', '3d')
-    interval = request.args.get('interval', '5m')
-    sigma_mult = float(request.args.get('sigma', '2.5'))
-    atr_mult = float(request.args.get('atr', '1.5'))
+    start_date = request.args.get('start_date', None)
+    
+    sigma_mult = 3.1
+    atr_mult = 2.6
     
     try:
-        df = yf.download(symbol, period=period, interval=interval, progress=False)
+        if start_date:
+            s_dt = datetime.strptime(start_date, '%Y-%m-%d')
+            e_dt = s_dt + timedelta(days=7)
+            df = yf.download(symbol, start=s_dt.strftime('%Y-%m-%d'), end=e_dt.strftime('%Y-%m-%d'), interval='5m', progress=False)
+        else:
+            df = yf.download(symbol, period='5d', interval='5m', progress=False)
+            
         if len(df) == 0:
-            return jsonify({"error": f"No data returned for {symbol}"})
+            return jsonify({"error": f"No data returned for {symbol} on those dates."})
             
         if hasattr(df.columns, 'nlevels') and df.columns.nlevels > 1:
             clean = pd.DataFrame()
