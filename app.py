@@ -7,9 +7,58 @@ import numpy as np
 import time
 from ta.trend import EMAIndicator, MACD
 from ta.volume import VolumeWeightedAveragePrice
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# ---- Cached Hyperliquid state (refreshes every 10s, not every request) ----
+_hl_cache = {"data": None, "last_fetch": 0}
+_HL_CACHE_TTL = 10  # seconds
+
+def _get_exchange_state():
+    """Fetch real Hyperliquid account state with 10s caching."""
+    now = time.time()
+    if _hl_cache["data"] is not None and (now - _hl_cache["last_fetch"]) < _HL_CACHE_TTL:
+        return _hl_cache["data"]
+    
+    try:
+        from hyperliquid.info import Info
+        from hyperliquid.utils import constants
+        wallet = os.environ.get("HYPERLIQUID_WALLET_ADDRESS", "").strip()
+        if not wallet:
+            return None
+        info = Info(constants.MAINNET_API_URL, skip_ws=True)
+        user_state = info.user_state(wallet)
+        margin = user_state.get("marginSummary", {})
+        account_value = float(margin.get("accountValue", 0.0))
+        
+        exchange_pos = None
+        for pos in user_state.get("assetPositions", []):
+            if pos['position']['coin'] == 'BTC':
+                exchange_pos = pos['position']
+                break
+        
+        exchange_size = float(exchange_pos['szi']) if exchange_pos else 0.0
+        exchange_entry = float(exchange_pos['entryPx']) if exchange_pos else 0.0
+        exchange_unrealized = float(exchange_pos.get('unrealizedPnl', 0)) if exchange_pos else 0.0
+        has_position = abs(exchange_size) >= 0.00001
+        
+        result = {
+            "account_value": account_value,
+            "has_position": has_position,
+            "size": exchange_size,
+            "entry": exchange_entry,
+            "unrealized": exchange_unrealized,
+        }
+        _hl_cache["data"] = result
+        _hl_cache["last_fetch"] = now
+        return result
+    except Exception as e:
+        print(f"Hyperliquid fetch error: {e}")
+        return _hl_cache["data"]  # Return stale data on error
 
 # ---- Lazy-loaded AI Models for Bot Signals ----
 _bot_model_long = None
@@ -122,52 +171,24 @@ def get_state():
             return jsonify({"error": "State file locked or corrupt"})
     
     # Always overlay real Hyperliquid data so dashboard shows truth
-    try:
-        from hyperliquid.info import Info
-        from hyperliquid.utils import constants
-        wallet = os.environ.get("HYPERLIQUID_WALLET_ADDRESS", "").strip()
-        if wallet:
-            info = Info(constants.MAINNET_API_URL, skip_ws=True)
-            user_state = info.user_state(wallet)
-            margin = user_state.get("marginSummary", {})
-            account_value = float(margin.get("accountValue", 0.0))
-            
-            # Find BTC position
-            exchange_pos = None
-            for pos in user_state.get("assetPositions", []):
-                if pos['position']['coin'] == 'BTC':
-                    exchange_pos = pos['position']
-                    break
-            
-            exchange_size = float(exchange_pos['szi']) if exchange_pos else 0.0
-            exchange_entry = float(exchange_pos['entryPx']) if exchange_pos else 0.0
-            exchange_unrealized = float(exchange_pos.get('unrealizedPnl', 0)) if exchange_pos else 0.0
-            has_position = abs(exchange_size) >= 0.00001
-            
-            # Override state with exchange truth
-            state['paper_balance'] = account_value
-            state['in_trade'] = has_position
-            if has_position:
-                direction = 'LONG' if exchange_size > 0 else 'SHORT'
-                state['trade_type'] = direction
-                state['entry_price'] = exchange_entry
-                state['trade_amount_btc'] = abs(exchange_size)
-                notional = abs(exchange_size) * exchange_entry
-                state['trade_amount_usd'] = round(notional, 2)
-                # Recalculate open PnL from exchange
-                if exchange_entry > 0:
-                    pnl_pct = ((float(exchange_pos.get('returnOnEquity', 0))) * 100) if exchange_pos else 0
-                    state['open_pnl_usd'] = round(exchange_unrealized, 4)
-                    state['open_pnl_pct'] = round(pnl_pct, 4)
-            else:
-                state['trade_type'] = None
-                state['entry_price'] = 0.0
-                state['trade_amount_btc'] = 0.0
-                state['trade_amount_usd'] = 0.0
-                state['open_pnl_usd'] = 0.0
-                state['open_pnl_pct'] = 0.0
-    except Exception as e:
-        state['exchange_error'] = str(e)
+    hl = _get_exchange_state()
+    if hl is not None:
+        state['paper_balance'] = hl['account_value']
+        state['in_trade'] = hl['has_position']
+        if hl['has_position']:
+            direction = 'LONG' if hl['size'] > 0 else 'SHORT'
+            state['trade_type'] = direction
+            state['entry_price'] = hl['entry']
+            state['trade_amount_btc'] = abs(hl['size'])
+            state['trade_amount_usd'] = round(abs(hl['size']) * hl['entry'], 2)
+            state['open_pnl_usd'] = round(hl['unrealized'], 4)
+        else:
+            state['trade_type'] = None
+            state['entry_price'] = 0.0
+            state['trade_amount_btc'] = 0.0
+            state['trade_amount_usd'] = 0.0
+            state['open_pnl_usd'] = 0.0
+            state['open_pnl_pct'] = 0.0
     
     if not state:
         return jsonify({"error": "No state active"})
