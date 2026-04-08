@@ -469,17 +469,32 @@ class LiveEnsembleTrader:
             if self.master_control == 'ALT' and self.position is not None:
                  max_hold = self.long_max_hold if self.position == 'long' else self.short_max_hold
                  if self.bars_held >= max_hold:
-                      logger.info(f"CLOSING {self.position.upper()}: ALT Time Barrier")
-                      trade = self._record_trade(self.position.upper(), self.entry_price, current_close, self.bars_held, "ALT Time Barrier")
-                      self._notify(f"CLOSED {self.position.upper()}: Time Barrier | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
-                      self.master_control = 'PROP'
-                      self.position = None
-                      self.entry_price = 0.0
-                      self.bars_held = 0
-                      self.active_tp = 0.0
-                      self.active_sl = 0.0
-                      self.trade_size_in_btc = 0.0
-                      self._sync_exchange_position(current_close, 'flat', 0.0)
+                      # DYNAMIC MAX HOLD EXCEPTION
+                      # If the Edge is still HEAVY, ignore the time barrier and keep riding!
+                      is_heavy_edge = False
+                      if self.position == 'long' and bull_prob >= 0.60:
+                           is_heavy_edge = True
+                      elif self.position == 'short' and bear_prob >= 0.50:
+                           is_heavy_edge = True
+                           
+                      if is_heavy_edge:
+                           logger.info(f"ALT Time Barrier Hit, but AI Edge is HEAVY. Overriding and extending the hold!")
+                      else:
+                           logger.info(f"CLOSING {self.position.upper()}: ALT Time Barrier (Edge Exhausted)")
+                           trade = self._record_trade(self.position.upper(), self.entry_price, current_close, self.bars_held, "ALT Time Barrier (Exhausted Edge)")
+                           self._notify(f"CLOSED {self.position.upper()}: Time Barrier | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                           self.master_control = 'PROP'
+                           self.position = None
+                           self.entry_price = 0.0
+                           self.bars_held = 0
+                           self.active_tp = 0.0
+                           self.active_sl = 0.0
+                           self.trade_size_in_btc = 0.0
+                           self._sync_exchange_position(current_close, 'flat', 0.0)
+                           
+                           # FIX: Prevent the immediate rapid-reentry glitch.
+                           self.save_state(current_close, bull_prob=bull_prob, bear_prob=bear_prob)
+                           return
 
             # Evaluate Hierarchy
             alt_wants_long = bull_prob >= 0.60
