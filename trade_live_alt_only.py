@@ -612,8 +612,20 @@ class AltOnlyTrader:
 
 
 if __name__ == "__main__":
-    trader = AltOnlyTrader()
-    # Run one step immediately
-    trader.step()
-    # Then loop forever
-    trader.run_forever()
+    try:
+        trader = AltOnlyTrader()
+        # Run one step immediately
+        trader.step()
+        # Then loop forever
+        trader.run_forever()
+    except Exception as e:
+        import traceback
+        crash_msg = f"FATAL CRASH: {e}\n{traceback.format_exc()}"
+        print(crash_msg)
+        # Write crash info to a file the debug endpoint can read
+        try:
+            with open('alt_bot_crash.log', 'w') as f:
+                f.write(crash_msg)
+        except Exception:
+            pass
+        raise

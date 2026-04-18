@@ -322,6 +322,11 @@ def get_debug():
         "state_file_exists": state_exists,
         "state_file_size": state_size,
         "data_storage_contents": os.listdir('data_storage') if os.path.exists('data_storage') else [],
+        "crash_log": open('alt_bot_crash.log', 'r').read() if os.path.exists('alt_bot_crash.log') else None,
+        "env_wallet_set": bool(os.environ.get("HYPERLIQUID_WALLET_ADDRESS", "").strip()),
+        "env_secret_set": bool(os.environ.get("HYPERLIQUID_API_SECRET", "").strip()),
+        "cwd": os.getcwd(),
+        "cwd_contents": os.listdir('.'),
     })
 
 @app.route('/api/set_target', methods=['POST'])
