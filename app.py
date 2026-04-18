@@ -585,6 +585,48 @@ def get_bot_signals():
         import traceback; traceback.print_exc()
         return jsonify({"error": str(e), "signals": []})
 
+# ---- Background Bot Thread (runs inside same process to save RAM) ----
+_bot_thread_started = False
+
+def _run_bot_in_background():
+    """Run the ALT-only trading bot in a background thread."""
+    import threading
+    global _bot_thread_started
+    if _bot_thread_started:
+        return
+    _bot_thread_started = True
+
+    def bot_worker():
+        try:
+            print("[BOT THREAD] Importing AltOnlyTrader...")
+            from trade_live_alt_only import AltOnlyTrader
+            print("[BOT THREAD] Creating trader instance...")
+            trader = AltOnlyTrader()
+            print("[BOT THREAD] Running initial step...")
+            trader.step()
+            print("[BOT THREAD] Entering main loop...")
+            trader.run_forever()
+        except Exception as e:
+            import traceback
+            crash_msg = f"[BOT THREAD] FATAL: {e}\n{traceback.format_exc()}"
+            print(crash_msg)
+            try:
+                with open('alt_bot_crash.log', 'w') as f:
+                    f.write(crash_msg)
+            except Exception:
+                pass
+
+    t = threading.Thread(target=bot_worker, daemon=True)
+    t.start()
+    print("[BOT THREAD] Background trading bot thread started.")
+
+# Auto-start bot when running under gunicorn (cloud) 
+# Check if we're NOT in local dev mode
+if os.environ.get("RENDER") or os.environ.get("GUNICORN_CMD_ARGS"):
+    _run_bot_in_background()
+
 if __name__ == '__main__':
+    # When running locally, also start the bot thread
+    _run_bot_in_background()
     print("Dashboard Running! Go to: http://127.0.0.1:5001")
     app.run(host='0.0.0.0', port=5001, debug=False, use_reloader=False, threaded=True)
