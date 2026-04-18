@@ -17,6 +17,8 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 # ---- Cached Hyperliquid state (refreshes every 10s, not every request) ----
 _hl_cache = {"data": None, "last_fetch": 0}
 _HL_CACHE_TTL = 10  # seconds
+# Track when we first saw the current position so we can compute bars_held
+_position_tracker = {"entry_time": None, "entry_price": None, "direction": None}
 
 def _get_exchange_state():
     """Fetch real Hyperliquid account state with 10s caching."""
@@ -33,8 +35,22 @@ def _get_exchange_state():
         info = Info(constants.MAINNET_API_URL, skip_ws=True)
         user_state = info.user_state(wallet)
         margin = user_state.get("marginSummary", {})
-        # In unified account mode, accountValue already includes spot USDC
-        account_value = float(margin.get("accountValue", 0.0))
+        # Perps balance
+        perps_value = float(margin.get("accountValue", 0.0))
+        
+        # Spot USDC balance
+        spot_usdc = 0.0
+        try:
+            spot_state = info.spot_user_state(wallet)
+            for bal in spot_state.get("balances", []):
+                if bal.get("coin") == "USDC":
+                    spot_usdc = float(bal.get("total", 0.0))
+                    break
+        except Exception:
+            pass
+        
+        # Total = perps + spot
+        account_value = perps_value + spot_usdc
         
         exchange_pos = None
         for pos in user_state.get("assetPositions", []):
@@ -47,12 +63,36 @@ def _get_exchange_state():
         exchange_unrealized = float(exchange_pos.get('unrealizedPnl', 0)) if exchange_pos else 0.0
         has_position = abs(exchange_size) >= 0.00001
         
+        # Track position entry time for bars_held calculation
+        if has_position:
+            direction = 'LONG' if exchange_size > 0 else 'SHORT'
+            # If this is a new position (or direction/price changed significantly), record entry time
+            if (_position_tracker["entry_time"] is None or 
+                _position_tracker["direction"] != direction or
+                (_position_tracker["entry_price"] is not None and 
+                 abs(exchange_entry - _position_tracker["entry_price"]) / max(exchange_entry, 1) > 0.01)):
+                _position_tracker["entry_time"] = now
+                _position_tracker["entry_price"] = exchange_entry
+                _position_tracker["direction"] = direction
+        else:
+            # Position closed, reset tracker
+            _position_tracker["entry_time"] = None
+            _position_tracker["entry_price"] = None
+            _position_tracker["direction"] = None
+        
+        # Calculate bars_held: how many 15-minute bars since entry
+        bars_held = 0
+        if has_position and _position_tracker["entry_time"] is not None:
+            elapsed_seconds = now - _position_tracker["entry_time"]
+            bars_held = max(1, int(elapsed_seconds / 900))  # 900s = 15 minutes
+        
         result = {
             "account_value": account_value,
             "has_position": has_position,
             "size": exchange_size,
             "entry": exchange_entry,
             "unrealized": exchange_unrealized,
+            "bars_held": bars_held,
         }
         _hl_cache["data"] = result
         _hl_cache["last_fetch"] = now
@@ -162,7 +202,7 @@ def index():
 @app.route('/api/state')
 def get_state():
     symbol = request.args.get('symbol', 'BTCUSDT')
-    file_name = 'data_storage/live_state_ensemble.json'
+    file_name = 'data_storage/live_state_alt.json'
     state = {}
     if os.path.exists(file_name):
         try:
@@ -183,6 +223,39 @@ def get_state():
             state['trade_amount_btc'] = abs(hl['size'])
             state['trade_amount_usd'] = round(abs(hl['size']) * hl['entry'], 2)
             state['open_pnl_usd'] = round(hl['unrealized'], 4)
+            
+            # Compute open_pnl_pct from entry vs current price
+            current_price = state.get('current_price', 0)
+            if current_price > 0 and hl['entry'] > 0:
+                if direction == 'LONG':
+                    state['open_pnl_pct'] = round((current_price - hl['entry']) / hl['entry'] * 100, 3)
+                else:
+                    state['open_pnl_pct'] = round((hl['entry'] - current_price) / hl['entry'] * 100, 3)
+            
+            # Compute bars_held from trade log or position tracker
+            bars_held = hl.get('bars_held', 0)
+            # Also try to find the actual entry time from trade log
+            try:
+                trades_file = 'data_storage/live_trades_ensemble.json'
+                if os.path.exists(trades_file):
+                    with open(trades_file, 'r') as f:
+                        trades = json.load(f)
+                    if trades:
+                        last_trade = trades[-1]
+                        # If the last logged trade has the same entry price as the current position,
+                        # use its timestamp to compute how long we've been holding
+                        last_ts_str = last_trade.get('timestamp', '')
+                        if last_ts_str:
+                            from datetime import datetime, timezone
+                            last_ts = datetime.fromisoformat(last_ts_str.replace('Z', '+00:00'))
+                            now_utc = datetime.now(timezone.utc)
+                            elapsed = (now_utc - last_ts).total_seconds()
+                            computed_bars = max(1, int(elapsed / 900))  # 15-min bars
+                            bars_held = max(bars_held, computed_bars)
+            except Exception:
+                pass
+            
+            state['bars_held'] = bars_held
         else:
             state['trade_type'] = None
             state['entry_price'] = 0.0
@@ -190,6 +263,7 @@ def get_state():
             state['trade_amount_usd'] = 0.0
             state['open_pnl_usd'] = 0.0
             state['open_pnl_pct'] = 0.0
+            state['bars_held'] = 0
     
     if not state:
         return jsonify({"error": "No state active"})
@@ -272,7 +346,7 @@ def get_historical():
 @app.route('/api/live_trades')
 def get_live_trades():
     symbol = request.args.get('symbol', 'BTCUSDT')
-    file_name = 'data_storage/live_trades_ensemble.json'
+    file_name = 'data_storage/live_trades_alt.json'
     if os.path.exists(file_name):
         try:
             with open(file_name, "r") as f:
@@ -450,77 +524,6 @@ def get_bot_signals():
     except Exception as e:
         import traceback; traceback.print_exc()
         return jsonify({"error": str(e), "signals": []})
-
-@app.route('/poly')
-def poly_dashboard():
-    return render_template('poly_dashboard.html')
-
-@app.route('/api/poly_backtest')
-def get_poly_backtest():
-    import random
-    
-    initial_capital = float(request.args.get('capital', 1000.0))
-    trades = int(request.args.get('trades', 1000))
-    implied_ceiling = float(request.args.get('implied', 0.05))
-    
-    capital = initial_capital
-    out_data = []
-    wins = 0
-    losses = 0
-    
-    # Generate timestamp starting arbitrarily from 1 year ago
-    import time
-    start_ts = int(time.time()) - (trades * 86400)
-    
-    for i in range(trades):
-        bet_size = capital * 0.05  # Kelly 5%
-        
-        implied_yes_price = random.uniform(0.01, implied_ceiling)
-        no_price = 1.0 - implied_yes_price
-        
-        # True statistical probability of a miracle
-        true_prob_yes = random.uniform(0.0001, 0.005)
-        
-        contracts_bought = bet_size / no_price
-        event_resolves_yes = random.random() < true_prob_yes
-        
-        if not event_resolves_yes:
-            payout = contracts_bought * 1.00
-            profit = payout - bet_size
-            capital += profit
-            wins += 1
-            marker = {"time": start_ts, "position": "belowBar", "color": "var(--accent-green)", "shape": "arrowUp", "text": "WIN"}
-        else:
-            capital -= bet_size
-            losses += 1
-            marker = {"time": start_ts, "position": "aboveBar", "color": "orange", "shape": "arrowDown", "text": "LOSS"}
-            
-        out_data.append({
-            "time": start_ts,
-            "value": capital,
-            "marker": marker
-        })
-        
-        start_ts += 86400 # 1 day per resolution
-        
-        if capital <= 0:
-            break
-            
-    win_rate = (wins / (wins + losses) * 100) if (wins + losses) > 0 else 0
-    roi = ((capital - initial_capital) / initial_capital) * 100
-    
-    stats = {
-        "final_capital": round(capital, 2),
-        "roi_pct": round(roi, 2),
-        "win_rate": round(win_rate, 2),
-        "total_trades": len(out_data)
-    }
-    
-    # We detach markers for LW Charts
-    markers = [d["marker"] for d in out_data]
-    series_data = [{"time": d["time"], "value": d["value"]} for d in out_data]
-    
-    return jsonify({"data": series_data, "markers": markers, "stats": stats})
 
 if __name__ == '__main__':
     print("Dashboard Running! Go to: http://127.0.0.1:5001")

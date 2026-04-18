@@ -4,10 +4,10 @@
 
 restart_ensemble_bot() {
     while true; do
-        echo "[BOT SUPERVISOR] Starting trade_live_ensemble.py..."
-        python trade_live_ensemble.py
+        echo "[BOT SUPERVISOR] Starting trade_live_alt_only.py..."
+        python trade_live_alt_only.py
         EXIT_CODE=$?
-        echo "[BOT SUPERVISOR] trade_live_ensemble.py exited with code $EXIT_CODE. Restarting in 10s..."
+        echo "[BOT SUPERVISOR] trade_live_alt_only.py exited with code $EXIT_CODE. Restarting in 10s..."
         sleep 10
     done
 }
