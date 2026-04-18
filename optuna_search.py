@@ -473,13 +473,18 @@ def main():
     if device.type == 'cuda':
         print(f"GPU: {torch.cuda.get_device_name(0)}")
     
-    # 3. Create Optuna study (Bayesian optimization)
+    # 3. Create Optuna study (Bayesian optimization) — persisted to SQLite for resume
+    db_path = os.path.join(DATA_DIR, 'optuna_study.db')
+    storage = f'sqlite:///{db_path}'
     study = optuna.create_study(
         direction='maximize',
         study_name='trading_bot_v2',
+        storage=storage,
+        load_if_exists=True,
         pruner=optuna.pruners.MedianPruner(n_startup_trials=10, n_warmup_steps=5),
-        sampler=optuna.samplers.TPESampler(seed=42, n_startup_trials=15)
+        sampler=optuna.samplers.TPESampler(n_startup_trials=15)
     )
+    print(f"Study loaded from {db_path} — {len(study.trials)} previous trials found")
     
     objective = create_objective(df_train, df_val, df_test, processed_path, train_end, device)
     

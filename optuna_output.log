@@ -6185,3 +6185,561 @@ Dataset: 34143 sequences of length 128, 41 features.
 [Trial #794] seq=128, hidden=64, layers=2, heads=2, drop=0.46, lr=0.00071, batch=64, epochs=31, class_w=2.7
 Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
 Dataset: 34143 sequences of length 128, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-05 12:30:00
+Successfully saved 36643 candles to data_storage\BTC_USDT_15m.csv
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\BTC_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.5%, SL=0.75%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 35858 samples to data_storage\BTC_USDT_15m_processed.csv
+Target distribution: {0: 33064, 1: 2794} (7.8% positive)
+
+Data splits -> Train: 25100 | Val: 5379 | Test: 5379
+Target distribution (train): {0: 23549, 1: 1551}
+Target distribution (val): {0: 4864, 1: 515}
+Target distribution (test): {0: 4651, 1: 728}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+Study loaded from data_storage\optuna_study.db — 0 previous trials found
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.5% / SL=0.75% / MaxHold=16 bars
+============================================================
+
+
+[Trial #0] seq=128, hidden=128, layers=1, heads=8, drop=0.41, lr=0.00063, batch=64, epochs=17, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 86.1% | WorstFold: -91.2% | Sharpe: 0.29 | MaxDD: -10.1% | Trades: 97 | W/L: 44/53
+  REJECTED: Max Drawdown of -10.1% exceeded -7.0% limit
+
+[Trial #1] seq=64, hidden=64, layers=1, heads=4, drop=0.28, lr=0.00015, batch=128, epochs=27, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 59.9% | WorstFold: -91.8% | Sharpe: -1.42 | MaxDD: -12.1% | Trades: 111 | W/L: 44/67
+  REJECTED: Max Drawdown of -12.1% exceeded -7.0% limit
+
+[Trial #2] seq=64, hidden=256, layers=1, heads=4, drop=0.37, lr=0.00013, batch=64, epochs=26, class_w=4.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 239.7% | WorstFold: -80.0% | Sharpe: 1.91 | MaxDD: -7.9% | Trades: 73 | W/L: 35/38
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #3] seq=96, hidden=128, layers=1, heads=2, drop=0.37, lr=0.00176, batch=256, epochs=26, class_w=4.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: 97.3% | WorstFold: -87.4% | Sharpe: -0.10 | MaxDD: -10.7% | Trades: 104 | W/L: 46/58
+  REJECTED: Max Drawdown of -10.7% exceeded -7.0% limit
+
+[Trial #4] seq=48, hidden=128, layers=1, heads=8, drop=0.49, lr=0.00070, batch=256, epochs=12, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: -11.5% | WorstFold: -93.7% | Sharpe: -2.52 | MaxDD: -10.3% | Trades: 90 | W/L: 41/49
+  REJECTED: Max Drawdown of -10.3% exceeded -7.0% limit
+
+[Trial #5] seq=128, hidden=128, layers=2, heads=8, drop=0.22, lr=0.00020, batch=128, epochs=35, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-18 12:15:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\BTC_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.5%, SL=0.75%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 35858 samples to data_storage\BTC_USDT_15m_processed.csv
+Target distribution: {0: 33064, 1: 2794} (7.8% positive)
+
+Data splits -> Train: 25100 | Val: 5379 | Test: 5379
+Target distribution (train): {0: 23549, 1: 1551}
+Target distribution (val): {0: 4864, 1: 515}
+Target distribution (test): {0: 4651, 1: 728}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+Study loaded from data_storage\optuna_study.db — 6 previous trials found
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.5% / SL=0.75% / MaxHold=16 bars
+============================================================
+
+
+[Trial #6] seq=64, hidden=128, layers=2, heads=4, drop=0.24, lr=0.00091, batch=64, epochs=31, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 134.7% | WorstFold: -90.6% | Sharpe: -0.45 | MaxDD: -10.6% | Trades: 96 | W/L: 41/55
+  REJECTED: Max Drawdown of -10.6% exceeded -7.0% limit
+
+[Trial #7] seq=48, hidden=256, layers=3, heads=4, drop=0.34, lr=0.00010, batch=128, epochs=13, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: -26.0% | WorstFold: -91.7% | Sharpe: -2.17 | MaxDD: -10.5% | Trades: 124 | W/L: 56/68
+  REJECTED: Max Drawdown of -10.5% exceeded -7.0% limit
+
+[Trial #8] seq=128, hidden=128, layers=3, heads=8, drop=0.30, lr=0.00013, batch=128, epochs=26, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -70.2% | WorstFold: -98.1% | Sharpe: -7.00 | MaxDD: -17.8% | Trades: 111 | W/L: 43/68
+  REJECTED: Max Drawdown of -17.8% exceeded -7.0% limit
+
+[Trial #9] seq=64, hidden=128, layers=1, heads=2, drop=0.42, lr=0.00044, batch=64, epochs=22, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: -19.7% | WorstFold: -80.3% | Sharpe: -2.13 | MaxDD: -7.9% | Trades: 81 | W/L: 36/45
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #10] seq=48, hidden=64, layers=1, heads=2, drop=0.18, lr=0.00013, batch=128, epochs=24, class_w=4.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 51.6% | WorstFold: -83.5% | Sharpe: -0.60 | MaxDD: -8.2% | Trades: 124 | W/L: 58/66
+  REJECTED: Max Drawdown of -8.2% exceeded -7.0% limit
+
+[Trial #11] seq=64, hidden=64, layers=3, heads=2, drop=0.26, lr=0.00120, batch=256, epochs=23, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 7.1% | WorstFold: -42.6% | Sharpe: 0.08 | MaxDD: -9.0% | Trades: 78 | W/L: 38/40
+  REJECTED: Max Drawdown of -9.0% exceeded -7.0% limit
+
+[Trial #12] seq=48, hidden=128, layers=1, heads=2, drop=0.42, lr=0.00018, batch=256, epochs=14, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: -13.9% | WorstFold: -89.4% | Sharpe: -1.27 | MaxDD: -13.9% | Trades: 129 | W/L: 55/74
+  REJECTED: Max Drawdown of -13.9% exceeded -7.0% limit
+
+[Trial #13] seq=64, hidden=128, layers=2, heads=2, drop=0.45, lr=0.00057, batch=128, epochs=11, class_w=4.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 57.9% | WorstFold: -95.8% | Sharpe: -3.29 | MaxDD: -16.1% | Trades: 113 | W/L: 48/65
+  REJECTED: Max Drawdown of -16.1% exceeded -7.0% limit
+
+[Trial #14] seq=128, hidden=256, layers=3, heads=2, drop=0.41, lr=0.00011, batch=256, epochs=26, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 19.5% | WorstFold: -57.2% | Sharpe: 0.29 | MaxDD: -6.3% | Trades: 106 | W/L: 51/55
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -61.1% | Sharpe: -3.47 | Trades: 134 | W/L: 53/81
+
+[Trial #15] seq=48, hidden=256, layers=3, heads=8, drop=0.14, lr=0.00032, batch=256, epochs=31, class_w=2.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+
+[Trial #16] seq=128, hidden=256, layers=2, heads=8, drop=0.49, lr=0.00029, batch=64, epochs=18, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -6.9% | WorstFold: -79.9% | Sharpe: -0.78 | MaxDD: -10.8% | Trades: 94 | W/L: 39/55
+  REJECTED: Max Drawdown of -10.8% exceeded -7.0% limit
+
+[Trial #17] seq=32, hidden=256, layers=2, heads=8, drop=0.37, lr=0.00238, batch=64, epochs=19, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35826 sequences of length 32, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #18] seq=128, hidden=256, layers=2, heads=8, drop=0.44, lr=0.00026, batch=256, epochs=35, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 153.8% | WorstFold: -70.8% | Sharpe: 2.57 | MaxDD: -8.5% | Trades: 82 | W/L: 39/43
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #19] seq=128, hidden=256, layers=3, heads=8, drop=0.40, lr=0.00122, batch=64, epochs=17, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #20] seq=128, hidden=64, layers=2, heads=2, drop=0.33, lr=0.00045, batch=256, epochs=15, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -67.3% | WorstFold: -99.6% | Sharpe: -8.01 | MaxDD: -20.3% | Trades: 134 | W/L: 48/86
+  REJECTED: Max Drawdown of -20.3% exceeded -7.0% limit
+
+[Trial #21] seq=32, hidden=128, layers=2, heads=2, drop=0.46, lr=0.00021, batch=64, epochs=21, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35826 sequences of length 32, 41 features.
+  Val -> AvgROI: -16.3% | WorstFold: -52.9% | Sharpe: -1.08 | MaxDD: -7.6% | Trades: 91 | W/L: 36/55
+  REJECTED: Max Drawdown of -7.6% exceeded -7.0% limit
+
+[Trial #22] seq=128, hidden=64, layers=1, heads=4, drop=0.25, lr=0.00018, batch=128, epochs=30, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 29.6% | WorstFold: -69.3% | Sharpe: 0.52 | MaxDD: -10.4% | Trades: 113 | W/L: 57/56
+  REJECTED: Max Drawdown of -10.4% exceeded -7.0% limit
+
+[Trial #23] seq=96, hidden=64, layers=1, heads=4, drop=0.21, lr=0.00038, batch=128, epochs=29, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: -50.6% | WorstFold: -90.2% | Sharpe: -3.61 | MaxDD: -13.0% | Trades: 110 | W/L: 47/63
+  REJECTED: Max Drawdown of -13.0% exceeded -7.0% limit
+
+[Trial #24] seq=128, hidden=64, layers=1, heads=4, drop=0.30, lr=0.00011, batch=128, epochs=28, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -6.8% | WorstFold: -89.6% | Sharpe: -1.29 | MaxDD: -13.7% | Trades: 112 | W/L: 47/65
+  REJECTED: Max Drawdown of -13.7% exceeded -7.0% limit
+
+[Trial #25] seq=128, hidden=64, layers=3, heads=4, drop=0.28, lr=0.00078, batch=256, epochs=35, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 54.1% | WorstFold: -83.0% | Sharpe: 0.67 | MaxDD: -12.1% | Trades: 91 | W/L: 46/45
+  REJECTED: Max Drawdown of -12.1% exceeded -7.0% limit
+
+[Trial #26] seq=96, hidden=64, layers=2, heads=4, drop=0.34, lr=0.00021, batch=128, epochs=20, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: -56.8% | WorstFold: -99.3% | Sharpe: -5.97 | MaxDD: -20.6% | Trades: 138 | W/L: 52/86
+  REJECTED: Max Drawdown of -20.6% exceeded -7.0% limit
+
+[Trial #27] seq=32, hidden=256, layers=1, heads=8, drop=0.41, lr=0.00015, batch=64, epochs=16, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35826 sequences of length 32, 41 features.
+  Val -> AvgROI: 169.6% | WorstFold: -35.9% | Sharpe: 3.13 | MaxDD: -7.2% | Trades: 106 | W/L: 57/49
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #28] seq=64, hidden=256, layers=1, heads=8, drop=0.39, lr=0.00054, batch=64, epochs=24, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 165.9% | WorstFold: -88.4% | Sharpe: 1.51 | MaxDD: -10.2% | Trades: 81 | W/L: 37/44
+  REJECTED: Max Drawdown of -10.2% exceeded -7.0% limit
+
+[Trial #29] seq=128, hidden=64, layers=3, heads=2, drop=0.19, lr=0.00025, batch=128, epochs=33, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -65.9% | WorstFold: -93.7% | Sharpe: -6.10 | MaxDD: -11.5% | Trades: 127 | W/L: 50/77
+  REJECTED: Max Drawdown of -11.5% exceeded -7.0% limit
+
+[Trial #30] seq=64, hidden=128, layers=1, heads=4, drop=0.11, lr=0.00016, batch=256, epochs=27, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 30.3% | WorstFold: -92.4% | Sharpe: -1.97 | MaxDD: -11.3% | Trades: 106 | W/L: 45/61
+  REJECTED: Max Drawdown of -11.3% exceeded -7.0% limit
+
+[Trial #31] seq=128, hidden=256, layers=2, heads=4, drop=0.38, lr=0.00121, batch=64, epochs=25, class_w=4.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -5.1% | WorstFold: -84.0% | Sharpe: 4.28 | MaxDD: -8.0% | Trades: 15 | W/L: 4/11
+  REJECTED: Only 15 trades (need 30+)
+
+[Trial #32] seq=64, hidden=256, layers=1, heads=4, drop=0.38, lr=0.00013, batch=64, epochs=27, class_w=4.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 45.4% | WorstFold: -80.0% | Sharpe: 0.49 | MaxDD: -9.1% | Trades: 93 | W/L: 47/46
+  REJECTED: Max Drawdown of -9.1% exceeded -7.0% limit
+
+[Trial #33] seq=64, hidden=256, layers=1, heads=4, drop=0.36, lr=0.00010, batch=64, epochs=26, class_w=4.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: -35.0% | WorstFold: -94.3% | Sharpe: -4.49 | MaxDD: -12.2% | Trades: 89 | W/L: 37/52
+  REJECTED: Max Drawdown of -12.2% exceeded -7.0% limit
+
+[Trial #34] seq=96, hidden=128, layers=1, heads=4, drop=0.47, lr=0.00063, batch=64, epochs=22, class_w=4.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: 378.4% | WorstFold: -83.7% | Sharpe: 3.63 | MaxDD: -9.6% | Trades: 90 | W/L: 42/48
+  REJECTED: Max Drawdown of -9.6% exceeded -7.0% limit
+
+[Trial #35] seq=64, hidden=256, layers=1, heads=4, drop=0.32, lr=0.00089, batch=256, epochs=29, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 451.8% | WorstFold: -69.3% | Sharpe: 5.13 | MaxDD: -7.8% | Trades: 81 | W/L: 45/36
+  REJECTED: Max Drawdown of -7.8% exceeded -7.0% limit
+
+[Trial #36] seq=64, hidden=128, layers=1, heads=8, drop=0.28, lr=0.00014, batch=64, epochs=25, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 62.7% | WorstFold: -87.7% | Sharpe: 0.07 | MaxDD: -7.9% | Trades: 84 | W/L: 38/46
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #37] seq=64, hidden=256, layers=1, heads=2, drop=0.43, lr=0.00012, batch=64, epochs=32, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 239.0% | WorstFold: -76.7% | Sharpe: 3.79 | MaxDD: -9.2% | Trades: 86 | W/L: 46/40
+  REJECTED: Max Drawdown of -9.2% exceeded -7.0% limit
+
+[Trial #38] seq=128, hidden=128, layers=1, heads=4, drop=0.35, lr=0.00035, batch=128, epochs=23, class_w=5.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -0.4% | WorstFold: -86.2% | Sharpe: -1.71 | MaxDD: -9.9% | Trades: 77 | W/L: 33/44
+  REJECTED: Max Drawdown of -9.9% exceeded -7.0% limit
+
+[Trial #39] seq=64, hidden=256, layers=2, heads=2, drop=0.40, lr=0.00022, batch=256, epochs=10, class_w=4.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: -43.6% | WorstFold: -90.3% | Sharpe: -3.41 | MaxDD: -15.1% | Trades: 131 | W/L: 52/79
+  REJECTED: Max Drawdown of -15.1% exceeded -7.0% limit
+
+[Trial #40] seq=32, hidden=128, layers=1, heads=4, drop=0.32, lr=0.00016, batch=128, epochs=27, class_w=4.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35826 sequences of length 32, 41 features.
+  Val -> AvgROI: 7.9% | WorstFold: -90.8% | Sharpe: -3.14 | MaxDD: -10.6% | Trades: 106 | W/L: 44/62
+  REJECTED: Max Drawdown of -10.6% exceeded -7.0% limit
+
+[Trial #41] seq=48, hidden=64, layers=3, heads=8, drop=0.23, lr=0.00046, batch=64, epochs=20, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: -3.3% | WorstFold: -73.5% | Sharpe: -1.08 | MaxDD: -9.9% | Trades: 88 | W/L: 37/51
+  REJECTED: Max Drawdown of -9.9% exceeded -7.0% limit
+
+[Trial #42] seq=96, hidden=128, layers=1, heads=2, drop=0.43, lr=0.00294, batch=256, epochs=25, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: 7.9% | WorstFold: -45.3% | Sharpe: 0.09 | MaxDD: -9.0% | Trades: 93 | W/L: 42/51
+  REJECTED: Max Drawdown of -9.0% exceeded -7.0% limit
+
+[Trial #43] seq=96, hidden=128, layers=1, heads=2, drop=0.28, lr=0.00188, batch=256, epochs=28, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: 161.1% | WorstFold: -89.8% | Sharpe: -0.47 | MaxDD: -10.3% | Trades: 89 | W/L: 41/48
+  REJECTED: Max Drawdown of -10.3% exceeded -7.0% limit
+
+[Trial #44] seq=96, hidden=128, layers=1, heads=2, drop=0.39, lr=0.00137, batch=256, epochs=24, class_w=4.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: 179.9% | WorstFold: -85.7% | Sharpe: 0.42 | MaxDD: -10.0% | Trades: 105 | W/L: 47/58
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #45] seq=96, hidden=128, layers=1, heads=2, drop=0.36, lr=0.00169, batch=256, epochs=13, class_w=4.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: 22.5% | WorstFold: -98.7% | Sharpe: -5.13 | MaxDD: -18.1% | Trades: 125 | W/L: 49/76
+  REJECTED: Max Drawdown of -18.1% exceeded -7.0% limit
+
+[Trial #46] seq=48, hidden=128, layers=1, heads=2, drop=0.46, lr=0.00098, batch=256, epochs=26, class_w=2.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 64.9% | WorstFold: -90.9% | Sharpe: -0.34 | MaxDD: -10.0% | Trades: 83 | W/L: 39/44
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #47] seq=64, hidden=256, layers=2, heads=8, drop=0.42, lr=0.00012, batch=256, epochs=23, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 15.6% | WorstFold: -98.8% | Sharpe: -4.09 | MaxDD: -18.4% | Trades: 94 | W/L: 38/56
+  REJECTED: Max Drawdown of -18.4% exceeded -7.0% limit
+
+[Trial #48] seq=128, hidden=128, layers=3, heads=2, drop=0.29, lr=0.00175, batch=128, epochs=30, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #49] seq=128, hidden=256, layers=2, heads=2, drop=0.37, lr=0.00014, batch=64, epochs=21, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 61.1% | WorstFold: -72.1% | Sharpe: 1.07 | MaxDD: -8.8% | Trades: 87 | W/L: 39/48
+  REJECTED: Max Drawdown of -8.8% exceeded -7.0% limit
+
+[Trial #50] seq=64, hidden=64, layers=1, heads=8, drop=0.35, lr=0.00019, batch=256, epochs=28, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: -34.8% | WorstFold: -90.9% | Sharpe: -2.67 | MaxDD: -13.6% | Trades: 127 | W/L: 55/72
+  REJECTED: Max Drawdown of -13.6% exceeded -7.0% limit
+
+[Trial #51] seq=48, hidden=256, layers=1, heads=4, drop=0.48, lr=0.00025, batch=64, epochs=26, class_w=4.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 178.5% | WorstFold: -83.1% | Sharpe: 2.20 | MaxDD: -7.8% | Trades: 85 | W/L: 43/42
+  REJECTED: Max Drawdown of -7.8% exceeded -7.0% limit
+
+[Trial #52] seq=48, hidden=128, layers=1, heads=8, drop=0.49, lr=0.00068, batch=256, epochs=11, class_w=2.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 134.8% | WorstFold: -93.0% | Sharpe: 0.73 | MaxDD: -11.1% | Trades: 81 | W/L: 36/45
+  REJECTED: Max Drawdown of -11.1% exceeded -7.0% limit
+
+[Trial #53] seq=48, hidden=128, layers=1, heads=8, drop=0.41, lr=0.00053, batch=256, epochs=12, class_w=2.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 10.0% | WorstFold: -81.5% | Sharpe: -0.31 | MaxDD: -7.2% | Trades: 85 | W/L: 39/46
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #54] seq=48, hidden=128, layers=1, heads=8, drop=0.45, lr=0.00091, batch=256, epochs=14, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 75.6% | WorstFold: 15.6% | Sharpe: 2.79 | MaxDD: -5.6% | Trades: 76 | W/L: 39/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 0.9% | Sharpe: 0.15 | Trades: 83 | W/L: 39/44
+  ** MODEL SAVED: models/trial_54.pth **
+
+[Trial #55] seq=48, hidden=128, layers=1, heads=8, drop=0.45, lr=0.00106, batch=256, epochs=17, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 63.5% | WorstFold: -97.1% | Sharpe: -1.48 | MaxDD: -13.9% | Trades: 81 | W/L: 35/46
+  REJECTED: Max Drawdown of -13.9% exceeded -7.0% limit
+
+[Trial #56] seq=128, hidden=128, layers=1, heads=8, drop=0.47, lr=0.00086, batch=128, epochs=14, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 6.7% | WorstFold: -47.3% | Sharpe: 0.31 | MaxDD: -9.7% | Trades: 112 | W/L: 54/58
+  REJECTED: Max Drawdown of -9.7% exceeded -7.0% limit
+
+[Trial #57] seq=32, hidden=64, layers=1, heads=8, drop=0.44, lr=0.00152, batch=256, epochs=18, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35826 sequences of length 32, 41 features.
+  Val -> AvgROI: 164.4% | WorstFold: -96.6% | Sharpe: -0.54 | MaxDD: -13.2% | Trades: 86 | W/L: 38/48
+  REJECTED: Max Drawdown of -13.2% exceeded -7.0% limit
+
+[Trial #58] seq=96, hidden=128, layers=2, heads=2, drop=0.40, lr=0.00219, batch=256, epochs=14, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #59] seq=128, hidden=64, layers=3, heads=4, drop=0.43, lr=0.00041, batch=128, epochs=15, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -66.1% | WorstFold: -91.1% | Sharpe: -5.24 | MaxDD: -10.7% | Trades: 111 | W/L: 41/70
+  REJECTED: Max Drawdown of -10.7% exceeded -7.0% limit
+
+[Trial #60] seq=64, hidden=256, layers=1, heads=8, drop=0.33, lr=0.00073, batch=64, epochs=24, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: -12.1% | WorstFold: -96.8% | Sharpe: -3.29 | MaxDD: -13.0% | Trades: 90 | W/L: 36/54
+  REJECTED: Max Drawdown of -13.0% exceeded -7.0% limit
+
+[Trial #61] seq=48, hidden=128, layers=1, heads=2, drop=0.30, lr=0.00107, batch=256, epochs=30, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 152.7% | WorstFold: -79.7% | Sharpe: 1.45 | MaxDD: -8.8% | Trades: 98 | W/L: 50/48
+  REJECTED: Max Drawdown of -8.8% exceeded -7.0% limit
+
+[Trial #62] seq=48, hidden=128, layers=1, heads=8, drop=0.50, lr=0.00060, batch=256, epochs=12, class_w=2.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: -7.0% | WorstFold: -94.7% | Sharpe: -3.06 | MaxDD: -13.8% | Trades: 93 | W/L: 43/50
+  REJECTED: Max Drawdown of -13.8% exceeded -7.0% limit
+
+[Trial #63] seq=48, hidden=128, layers=1, heads=8, drop=0.46, lr=0.00080, batch=256, epochs=12, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 84.1% | WorstFold: -99.7% | Sharpe: -5.13 | MaxDD: -21.9% | Trades: 81 | W/L: 31/50
+  REJECTED: Max Drawdown of -21.9% exceeded -7.0% limit
+
+[Trial #64] seq=48, hidden=128, layers=1, heads=8, drop=0.44, lr=0.00011, batch=256, epochs=16, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 66.6% | WorstFold: -70.8% | Sharpe: 1.22 | MaxDD: -7.9% | Trades: 108 | W/L: 50/58
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #65] seq=128, hidden=64, layers=1, heads=4, drop=0.41, lr=0.00031, batch=64, epochs=13, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 103.5% | WorstFold: -72.6% | Sharpe: 1.18 | MaxDD: -10.8% | Trades: 95 | W/L: 46/49
+  REJECTED: Max Drawdown of -10.8% exceeded -7.0% limit
+
+[Trial #66] seq=64, hidden=256, layers=1, heads=8, drop=0.48, lr=0.00071, batch=128, epochs=29, class_w=2.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 72.0% | WorstFold: -91.6% | Sharpe: -1.92 | MaxDD: -11.1% | Trades: 82 | W/L: 34/48
+  REJECTED: Max Drawdown of -11.1% exceeded -7.0% limit
+
+[Trial #67] seq=128, hidden=128, layers=1, heads=4, drop=0.38, lr=0.00048, batch=256, epochs=27, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 396.3% | WorstFold: -96.5% | Sharpe: 1.90 | MaxDD: -12.1% | Trades: 73 | W/L: 35/38
+  REJECTED: Max Drawdown of -12.1% exceeded -7.0% limit
+
+[Trial #68] seq=32, hidden=256, layers=2, heads=8, drop=0.45, lr=0.00050, batch=64, epochs=10, class_w=4.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35826 sequences of length 32, 41 features.
+  Val -> AvgROI: 132.1% | WorstFold: -44.0% | Sharpe: 2.46 | MaxDD: -7.9% | Trades: 96 | W/L: 49/47
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #69] seq=96, hidden=128, layers=1, heads=4, drop=0.26, lr=0.00015, batch=256, epochs=25, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: -46.9% | WorstFold: -63.7% | Sharpe: -2.48 | MaxDD: -10.0% | Trades: 132 | W/L: 53/79
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #70] seq=64, hidden=64, layers=3, heads=2, drop=0.37, lr=0.00063, batch=128, epochs=15, class_w=4.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 344.0% | WorstFold: -98.6% | Sharpe: 1.50 | MaxDD: -18.9% | Trades: 105 | W/L: 44/61
+  REJECTED: Max Drawdown of -18.9% exceeded -7.0% limit
+
+[Trial #71] seq=48, hidden=256, layers=1, heads=8, drop=0.40, lr=0.00041, batch=64, epochs=21, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 74.8% | WorstFold: -69.1% | Sharpe: 1.20 | MaxDD: -6.1% | Trades: 92 | W/L: 45/47
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -40.1% | Sharpe: -1.72 | Trades: 146 | W/L: 59/87
+
+[Trial #72] seq=48, hidden=256, layers=1, heads=8, drop=0.40, lr=0.00012, batch=64, epochs=19, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 217.3% | WorstFold: -91.5% | Sharpe: 0.69 | MaxDD: -9.0% | Trades: 71 | W/L: 34/37
+  REJECTED: Max Drawdown of -9.0% exceeded -7.0% limit
+
+[Trial #73] seq=48, hidden=256, layers=1, heads=8, drop=0.42, lr=0.00039, batch=64, epochs=22, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: -52.9% | WorstFold: -85.4% | Sharpe: -3.49 | MaxDD: -10.5% | Trades: 85 | W/L: 37/48
+  REJECTED: Max Drawdown of -10.5% exceeded -7.0% limit
+
+[Trial #74] seq=48, hidden=256, layers=1, heads=8, drop=0.43, lr=0.00018, batch=64, epochs=21, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 56.7% | WorstFold: -78.3% | Sharpe: 0.78 | MaxDD: -7.6% | Trades: 77 | W/L: 36/41
+  REJECTED: Max Drawdown of -7.6% exceeded -7.0% limit
+
+[Trial #75] seq=48, hidden=256, layers=1, heads=8, drop=0.41, lr=0.00131, batch=64, epochs=16, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 110.5% | WorstFold: -70.5% | Sharpe: 2.10 | MaxDD: -12.5% | Trades: 110 | W/L: 54/56
+  REJECTED: Max Drawdown of -12.5% exceeded -7.0% limit
+
+[Trial #76] seq=128, hidden=256, layers=1, heads=4, drop=0.47, lr=0.00056, batch=64, epochs=27, class_w=4.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: 250.6% | WorstFold: -80.0% | Sharpe: 2.58 | MaxDD: -12.1% | Trades: 82 | W/L: 38/44
+  REJECTED: Max Drawdown of -12.1% exceeded -7.0% limit
+
+[Trial #77] seq=64, hidden=128, layers=1, heads=8, drop=0.36, lr=0.00300, batch=256, epochs=24, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.
+  Val -> AvgROI: 61.6% | WorstFold: -89.9% | Sharpe: -0.58 | MaxDD: -14.4% | Trades: 98 | W/L: 43/55
+  REJECTED: Max Drawdown of -14.4% exceeded -7.0% limit
+
+[Trial #78] seq=96, hidden=256, layers=1, heads=2, drop=0.38, lr=0.00011, batch=64, epochs=28, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35762 sequences of length 96, 41 features.
+  Val -> AvgROI: -15.4% | WorstFold: -89.3% | Sharpe: -2.06 | MaxDD: -11.7% | Trades: 78 | W/L: 33/45
+  REJECTED: Max Drawdown of -11.7% exceeded -7.0% limit
+
+[Trial #79] seq=48, hidden=128, layers=2, heads=4, drop=0.48, lr=0.00094, batch=256, epochs=18, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35810 sequences of length 48, 41 features.
+  Val -> AvgROI: 22.8% | WorstFold: -86.6% | Sharpe: -0.48 | MaxDD: -10.4% | Trades: 94 | W/L: 40/54
+  REJECTED: Max Drawdown of -10.4% exceeded -7.0% limit
+
+[Trial #80] seq=128, hidden=64, layers=1, heads=8, drop=0.24, lr=0.00080, batch=128, epochs=26, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35730 sequences of length 128, 41 features.
+  Val -> AvgROI: -46.7% | WorstFold: -75.0% | Sharpe: -2.52 | MaxDD: -7.3% | Trades: 103 | W/L: 42/61
+  REJECTED: Max Drawdown of -7.3% exceeded -7.0% limit
+
+[Trial #81] seq=64, hidden=256, layers=1, heads=2, drop=0.29, lr=0.00042, batch=64, epochs=25, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35794 sequences of length 64, 41 features.

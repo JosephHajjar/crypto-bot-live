@@ -22,5 +22,185 @@
     "bars_held": 0,
     "reason": "Bot opened new LONG position (ALT mode, 99.9% bullish edge)",
     "size_btc": 0.00079
+  },
+  {
+    "timestamp": "2026-04-07T22:32:33.103581Z",
+    "trade_type": "LONG",
+    "entry_price": 69896.0,
+    "exit_price": 70848.94,
+    "return_pct": 1.363,
+    "pnl_usd": 0.75,
+    "bars_held": 4,
+    "reason": "ALT LONG Take Profit (+1.25%)"
+  },
+  {
+    "timestamp": "2026-04-07T23:28:33.174872Z",
+    "trade_type": "LONG",
+    "entry_price": 71509.96,
+    "exit_price": 72450.0,
+    "return_pct": 1.315,
+    "pnl_usd": 0.09,
+    "bars_held": 0,
+    "reason": "ALT LONG Take Profit (+1.25%)"
+  },
+  {
+    "timestamp": "2026-04-08T00:45:04.634655Z",
+    "trade_type": "LONG",
+    "entry_price": 71927.99,
+    "exit_price": 71840.52,
+    "return_pct": -0.122,
+    "pnl_usd": -0.01,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T02:00:06.028513Z",
+    "trade_type": "LONG",
+    "entry_price": 71477.69,
+    "exit_price": 71479.56,
+    "return_pct": 0.003,
+    "pnl_usd": 0.0,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T02:15:05.528268Z",
+    "trade_type": "LONG",
+    "entry_price": 71479.56,
+    "exit_price": 71718.78,
+    "return_pct": 0.335,
+    "pnl_usd": 0.02,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T02:30:04.170909Z",
+    "trade_type": "LONG",
+    "entry_price": 71718.78,
+    "exit_price": 71465.13,
+    "return_pct": -0.354,
+    "pnl_usd": -0.03,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T02:45:03.831690Z",
+    "trade_type": "LONG",
+    "entry_price": 71465.13,
+    "exit_price": 71316.04,
+    "return_pct": -0.209,
+    "pnl_usd": -0.01,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T03:00:05.353194Z",
+    "trade_type": "LONG",
+    "entry_price": 71316.04,
+    "exit_price": 71364.95,
+    "return_pct": 0.069,
+    "pnl_usd": 0.0,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T03:15:06.238381Z",
+    "trade_type": "LONG",
+    "entry_price": 71364.95,
+    "exit_price": 71306.54,
+    "return_pct": -0.082,
+    "pnl_usd": -0.01,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T03:30:06.005286Z",
+    "trade_type": "LONG",
+    "entry_price": 71306.54,
+    "exit_price": 71465.21,
+    "return_pct": 0.223,
+    "pnl_usd": 0.02,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T03:45:03.355574Z",
+    "trade_type": "LONG",
+    "entry_price": 71465.21,
+    "exit_price": 71362.56,
+    "return_pct": -0.144,
+    "pnl_usd": -0.01,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T04:00:04.369101Z",
+    "trade_type": "LONG",
+    "entry_price": 71362.56,
+    "exit_price": 71287.38,
+    "return_pct": -0.105,
+    "pnl_usd": -0.01,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T04:15:04.385627Z",
+    "trade_type": "LONG",
+    "entry_price": 71287.38,
+    "exit_price": 71523.19,
+    "return_pct": 0.331,
+    "pnl_usd": 0.02,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T04:30:05.032517Z",
+    "trade_type": "LONG",
+    "entry_price": 71523.19,
+    "exit_price": 71564.31,
+    "return_pct": 0.057,
+    "pnl_usd": 0.0,
+    "bars_held": 0,
+    "reason": "Closed Externally"
+  },
+  {
+    "timestamp": "2026-04-08T08:15:04.565363Z",
+    "trade_type": "LONG",
+    "entry_price": 71596.98,
+    "exit_price": 71712.49,
+    "return_pct": 0.161,
+    "pnl_usd": 0.06,
+    "bars_held": 12,
+    "reason": "ALT Time Barrier"
+  },
+  {
+    "timestamp": "2026-04-08T11:30:05.732378Z",
+    "trade_type": "LONG",
+    "entry_price": 71712.49,
+    "exit_price": 71659.8,
+    "return_pct": -0.073,
+    "pnl_usd": -0.05,
+    "bars_held": 12,
+    "reason": "ALT Time Barrier"
+  },
+  {
+    "timestamp": "2026-04-08T13:17:47.045807Z",
+    "trade_type": "LONG",
+    "entry_price": 71659.8,
+    "exit_price": 72663.99,
+    "return_pct": 1.401,
+    "pnl_usd": 0.94,
+    "bars_held": 7,
+    "reason": "ALT LONG Take Profit (+1.25%)"
+  },
+  {
+    "timestamp": "2026-04-08T17:31:22.699888Z",
+    "trade_type": "LONG",
+    "entry_price": 71817.0,
+    "exit_price": 71654.0,
+    "return_pct": -0.227,
+    "pnl_usd": -0.19,
+    "bars_held": 12,
+    "reason": "ALT Time Barrier (Exhausted Edge)"
   }
 ]

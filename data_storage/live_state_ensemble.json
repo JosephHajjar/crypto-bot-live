@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-04-08T04:45:02.879105Z",
-  "paper_balance": 0.0,
-  "current_price": 71611.07,
-  "bull_prob": 99.892187,
-  "bear_prob": 0.087293,
-  "master_control": "ALT",
+  "timestamp": "2026-04-08T20:15:05.248207Z",
+  "paper_balance": 7.56,
+  "current_price": 71432.08,
+  "bull_prob": 0.313908,
+  "bear_prob": 0.084149,
+  "master_control": "PROP",
   "in_trade": false,
   "trade_type": null,
   "entry_price": 0.0,
@@ -15,7 +15,7 @@
   "stop_loss_target": 0.0,
   "trade_amount_btc": 0.0,
   "trade_amount_usd": 0.0,
-  "last_error": null,
+  "last_error": "Sync exchange exception: HTTPSConnectionPool(host='api.hyperliquid.xyz', port=443): Max retries exceeded with url: /info (Caused by NameResolutionError(\"HTTPSConnection(host='api.hyperliquid.xyz', port=443): Failed to resolve 'api.hyperliquid.xyz' ([Errno 11001] getaddrinfo failed)\"))",
   "peak_price": 0.0,
   "trailing_armed": false
 }

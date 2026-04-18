@@ -54,7 +54,7 @@ MODEL_LONG_PATH = 'models/holy_grail.pth'
 CONFIG_LONG_PATH = 'models/holy_grail_config.json'
 MODEL_SHORT_PATH = 'models_short/holy_grail_short.pth'
 CONFIG_SHORT_PATH = 'models_short/holy_grail_short_config.json'
-SCALER_PATH = 'data_storage/BTC_USDT_15m_scaler.json'
+SCALER_PATH = 'models/BTC_USDT_15m_scaler.json'
 
 NTFY_TOPIC = 'https://ntfy.sh/TradeBot5234'
 STATE_FILE = 'data_storage/live_state_alt.json'
