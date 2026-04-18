@@ -789,7 +789,7 @@
                 var statusBadge = document.getElementById('ai-status-badge');
 
                 if (bullEl && bearEl && state.bull_prob !== undefined && state.bear_prob !== undefined) {
-                    if (state.bull_prob > 0 || state.bear_prob > 0) {
+                    if (state.bull_prob !== null && state.bear_prob !== null) {
                         bullEl.innerText = state.bull_prob.toFixed(4) + '%';
                         bullEl.className = 'value ' + (state.bull_prob >= 60 ? 'positive' : 'neutral');
                         bearEl.innerText = state.bear_prob.toFixed(4) + '%';
@@ -823,7 +823,7 @@
                                 statusBadge.style.color = "#f87171";
                                 statusBadge.style.background = "rgba(248, 113, 113, 0.15)";
                             } else {
-                                statusBadge.innerText = "NO EDGE";
+                                statusBadge.innerText = "ANALYZING";
                                 statusBadge.style.color = "#a78bfa";
                                 statusBadge.style.background = "rgba(167, 139, 250, 0.12)";
                             }

@@ -167,6 +167,7 @@ class AltOnlyTrader:
             "current_price": current_close,
             "bull_prob": round(bull_prob * 100, 6),
             "bear_prob": round(bear_prob * 100, 6),
+            "master_control": "ALT",
             "in_trade": self.position is not None,
             "trade_type": self.position.upper() if self.position else None,
             "entry_price": self.entry_price,
@@ -381,7 +382,7 @@ class AltOnlyTrader:
 
         try:
             import requests
-            res = requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT", timeout=5)
+            res = requests.get(f"https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT", timeout=5)
             live_price = float(res.json()['price'])
         except Exception:
             return
