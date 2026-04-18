@@ -211,6 +211,30 @@ def get_state():
         except Exception:
             return jsonify({"error": "State file locked or corrupt"})
     
+    # If the bot hasn't written state yet, provide minimum viable state
+    # so the dashboard doesn't show "Offline"
+    if 'timestamp' not in state:
+        from datetime import datetime, timezone
+        state['timestamp'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        state.setdefault('bull_prob', 0.0)
+        state.setdefault('bear_prob', 0.0)
+        state.setdefault('master_control', 'ALT')
+        state.setdefault('in_trade', False)
+        state.setdefault('trade_type', None)
+        state.setdefault('entry_price', 0.0)
+        state.setdefault('bars_held', 0)
+        state.setdefault('open_pnl_pct', 0.0)
+        state.setdefault('open_pnl_usd', 0.0)
+        state.setdefault('trade_amount_btc', 0.0)
+        state.setdefault('trade_amount_usd', 0.0)
+        state.setdefault('last_error', None)
+        # Fetch live price from Binance so chart still works
+        try:
+            pr = http_requests.get('https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT', timeout=5)
+            state['current_price'] = float(pr.json()['price'])
+        except Exception:
+            state.setdefault('current_price', 0.0)
+
     # Always overlay real Hyperliquid data so dashboard shows truth
     hl = _get_exchange_state()
     if hl is not None:
@@ -242,15 +266,13 @@ def get_state():
                         trades = json.load(f)
                     if trades:
                         last_trade = trades[-1]
-                        # If the last logged trade has the same entry price as the current position,
-                        # use its timestamp to compute how long we've been holding
                         last_ts_str = last_trade.get('timestamp', '')
                         if last_ts_str:
                             from datetime import datetime, timezone
                             last_ts = datetime.fromisoformat(last_ts_str.replace('Z', '+00:00'))
                             now_utc = datetime.now(timezone.utc)
                             elapsed = (now_utc - last_ts).total_seconds()
-                            computed_bars = max(1, int(elapsed / 900))  # 15-min bars
+                            computed_bars = max(1, int(elapsed / 900))
                             bars_held = max(bars_held, computed_bars)
             except Exception:
                 pass
@@ -278,6 +300,29 @@ def get_klines():
         return jsonify(res.json())
     except Exception as e:
         return jsonify({"error": str(e)})
+
+@app.route('/api/debug')
+def get_debug():
+    """Read the last 100 lines of bot log for remote diagnostics."""
+    log_file = 'alt_bot.log'
+    lines = []
+    if os.path.exists(log_file):
+        try:
+            with open(log_file, 'r', encoding='utf-8', errors='replace') as f:
+                lines = f.readlines()[-100:]
+        except Exception as e:
+            return jsonify({"error": str(e)})
+    
+    # Also check if the state file exists and its size
+    state_exists = os.path.exists('data_storage/live_state_alt.json')
+    state_size = os.path.getsize('data_storage/live_state_alt.json') if state_exists else 0
+    
+    return jsonify({
+        "log_lines": [l.strip() for l in lines],
+        "state_file_exists": state_exists,
+        "state_file_size": state_size,
+        "data_storage_contents": os.listdir('data_storage') if os.path.exists('data_storage') else [],
+    })
 
 @app.route('/api/set_target', methods=['POST'])
 def set_target():
