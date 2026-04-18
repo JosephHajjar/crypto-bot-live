@@ -651,8 +651,8 @@
                     document.getElementById('live-market-title').innerHTML = 'Live BTC Market <span style="font-size:0.7rem; color:#8b95a5; margin-left:8px; border:1px solid rgba(255,255,255,0.2); border-radius:8px; padding:2px 8px;">Commander: ' + state.master_control + '</span>';
                 }
 
-                // Fetch latest 200 candles directly from Binance explicitly for Live Context
-                var histRes = await fetch(`https://api.binance.com/api/v3/klines?symbol=${_activeSymbol}&interval=15m&limit=200`);
+                // Fetch latest 200 candles directly from our backend proxy to avoid Binance CORS blocks
+                var histRes = await fetch(`/api/klines?symbol=${_activeSymbol}&limit=200`);
                 var histData = await histRes.json();
                 var cData = [];
                 var live_price = state.current_price;

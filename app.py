@@ -269,6 +269,16 @@ def get_state():
         return jsonify({"error": "No state active"})
     return jsonify(state)
 
+@app.route('/api/klines')
+def get_klines():
+    symbol = request.args.get('symbol', 'BTCUSDT')
+    limit = request.args.get('limit', '200')
+    try:
+        res = http_requests.get(f"https://data-api.binance.vision/api/v3/klines?symbol={symbol}&interval=15m&limit={limit}", timeout=5)
+        return jsonify(res.json())
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
 @app.route('/api/set_target', methods=['POST'])
 def set_target():
     try:
