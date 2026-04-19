@@ -621,10 +621,57 @@ def _run_bot_in_background():
     t.start()
     print("[BOT THREAD] Background trading bot thread started.")
 
+# ---- Health Check Endpoint (for keep-alive pings) ----
+@app.route('/health')
+def health():
+    return jsonify({"status": "alive", "uptime": time.time()})
+
+# ---- Self-Ping Keep-Alive (prevents Render free tier spin-down) ----
+_keepalive_started = False
+
+def _start_keepalive():
+    """Ping our own /health endpoint every 10 minutes to prevent idle shutdown."""
+    import threading
+    global _keepalive_started
+    if _keepalive_started:
+        return
+    _keepalive_started = True
+
+    def keepalive_worker():
+        # Wait 60s for gunicorn to fully boot before first ping
+        time.sleep(60)
+        
+        # Try to detect our own URL from Render's env
+        render_url = os.environ.get("RENDER_EXTERNAL_URL", "")
+        if not render_url:
+            # Fallback: construct from service name
+            render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "")
+            if render_hostname:
+                render_url = f"https://{render_hostname}"
+        
+        if not render_url:
+            print("[KEEPALIVE] No RENDER_EXTERNAL_URL found, self-ping disabled")
+            return
+        
+        health_url = f"{render_url}/health"
+        print(f"[KEEPALIVE] Started — pinging {health_url} every 10 minutes")
+        
+        while True:
+            try:
+                resp = http_requests.get(health_url, timeout=30)
+                print(f"[KEEPALIVE] Ping OK ({resp.status_code})")
+            except Exception as e:
+                print(f"[KEEPALIVE] Ping failed: {e}")
+            time.sleep(600)  # 10 minutes
+
+    t = threading.Thread(target=keepalive_worker, daemon=True)
+    t.start()
+
 # Auto-start bot when running under gunicorn (cloud) 
 # Check if we're NOT in local dev mode
 if os.environ.get("RENDER") or os.environ.get("GUNICORN_CMD_ARGS"):
     _run_bot_in_background()
+    _start_keepalive()
 
 if __name__ == '__main__':
     # When running locally, also start the bot thread
