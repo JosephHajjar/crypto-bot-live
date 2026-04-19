@@ -407,14 +407,15 @@ def create_objective(df_train, df_val, df_test, processed_path, train_end, devic
                 except Exception:
                     pass
                 
-                # Check Holy Grail
+                # Check Holy Grail — save as CANDIDATE, not over the deployed model!
                 if test_roi > TARGET_ANNUAL_ROI and test_sharpe > 1.0 and test_trades >= MIN_TRADES:
                     print("\n" + "=" * 60)
-                    print("🏆 HOLY GRAIL FOUND!")
+                    print("[HOLY GRAIL] HOLY GRAIL CANDIDATE FOUND!")
                     print(f"   Test ROI: {test_roi:.1f}% | Sharpe: {test_sharpe:.2f} | W/L: {tw}/{tl}")
+                    print(f"   Saved to {MODEL_DIR}/holy_grail_candidate.pth (review before deploying!)")
                     print("=" * 60)
-                    torch.save(model.state_dict(), f"{MODEL_DIR}/holy_grail.pth")
-                    with open(f"{MODEL_DIR}/holy_grail_config.json", 'w') as f:
+                    torch.save(model.state_dict(), f"{MODEL_DIR}/holy_grail_candidate.pth")
+                    with open(f"{MODEL_DIR}/holy_grail_candidate_config.json", 'w') as f:
                         json.dump(config, f, indent=2)
         
         # Optuna maximizes the return value

@@ -1,5 +1,6 @@
 ccxt
 pandas
+numpy
 ta
 scikit-learn
 --extra-index-url https://download.pytorch.org/whl/cpu
@@ -12,4 +13,5 @@ gunicorn
 hyperliquid-python-sdk
 python-dotenv
 eth-account
+optuna
 yfinance

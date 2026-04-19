@@ -468,6 +468,7 @@ class AltOnlyTrader:
             if len(live_df) >= max_seq:
                 feature_cols = get_feature_cols()
                 feat_np = live_df[feature_cols].values.astype(np.float32)
+                feat_np = np.nan_to_num(feat_np, nan=0.0, posinf=0.0, neginf=0.0)
 
                 tensor_long = torch.tensor(feat_np[-self.seq_len_long:]).unsqueeze(0).to(self.device)
                 tensor_short = torch.tensor(feat_np[-self.seq_len_short:]).unsqueeze(0).to(self.device)
@@ -475,6 +476,9 @@ class AltOnlyTrader:
                 with torch.no_grad():
                     bull_prob = torch.softmax(self.model_long(tensor_long), dim=1)[0][1].item()
                     bear_prob = torch.softmax(self.model_short(tensor_short), dim=1)[0][1].item()
+                    # Safety: clamp NaN outputs to 0 (refuse to trade on garbage)
+                    if np.isnan(bull_prob): bull_prob = 0.0
+                    if np.isnan(bear_prob): bear_prob = 0.0
 
                 if execute_trades:
                     logger.info(f"AI -> Bull: {bull_prob*100:.2f}% | Bear: {bear_prob*100:.2f}%")
