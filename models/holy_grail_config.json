@@ -1,15 +1,15 @@
 {
-  "trial": 109,
+  "trial": 107,
   "seq_len": 128,
   "hidden_dim": 256,
   "num_layers": 1,
   "num_heads": 8,
-  "dropout": 0.21435178766366908,
+  "dropout": 0.23917815931531577,
   "input_dim": 41,
-  "val_roi": 667.1302464899373,
-  "val_sharpe": 8.806456397455243,
-  "test_roi": 160.22368280636135,
-  "test_sharpe": 4.547648181371489,
-  "test_trades": 85,
-  "test_wl": "47/38"
+  "val_roi": 100.96162138820755,
+  "val_sharpe": 3.597182284653654,
+  "test_roi": 345.24223358070844,
+  "test_sharpe": 6.435347784746761,
+  "test_trades": 110,
+  "test_wl": "63/47"
 }
