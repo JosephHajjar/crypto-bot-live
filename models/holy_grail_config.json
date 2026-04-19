@@ -11,5 +11,10 @@
   "test_roi": 345.24223358070844,
   "test_sharpe": 6.435347784746761,
   "test_trades": 110,
-  "test_wl": "63/47"
+  "test_wl": "63/47",
+  "take_profit": 0.019,
+  "stop_loss": 0.016,
+  "max_hold_bars": 20,
+  "entry_threshold": 0.55,
+  "note": "Optimized via walk-forward HPO (4/5 overfit tests passed). TP/SL widened from 1.5/0.75 to 1.9/1.6."
 }

@@ -508,9 +508,10 @@ def get_bot_signals():
             entry_price = 0
             bars_held = 0
             
-            LONG_TP = cfg_l.get('take_profit', 0.0125)
-            LONG_SL = cfg_l.get('stop_loss', 0.025)
-            LONG_MAX_BARS = cfg_l.get('max_hold_bars', 12)
+            LONG_TP = cfg_l.get('take_profit', 0.019)
+            LONG_SL = cfg_l.get('stop_loss', 0.016)
+            LONG_MAX_BARS = cfg_l.get('max_hold_bars', 20)
+            LONG_ENTRY_THRESHOLD = cfg_l.get('entry_threshold', 0.55)
             SHORT_TP = cfg_s.get('take_profit', 0.015)
             SHORT_SL = cfg_s.get('stop_loss', 0.008)
             SHORT_MAX_BARS = cfg_s.get('max_hold_bars', 8)
@@ -531,7 +532,7 @@ def get_bot_signals():
                     can_trade = True # Trading 24/7 Enabled
 
                     if position == 'flat':
-                        if prob_bull >= 0.60 and can_trade:
+                        if prob_bull >= LONG_ENTRY_THRESHOLD and can_trade:
                             signals.append({'time': time_val, 'prob': round(prob_bull*100, 6), 'signal': 'BUY', 'price': round(close_price, 2)})
                             position = 'long'
                             entry_price = close_price

@@ -1,13 +1,13 @@
 """
 ALT-ONLY Live Trading Bot — Pure Threshold Strategy on Hyperliquid.
-No PROP commander, no model switcher. Just the clean ALT logic that backtested +345% in 7 days.
+No PROP commander, no model switcher.
 
 Models:
-  - Long Model: Trial 255 (holy_grail.pth) — enters when bull_prob >= 60%
+  - Long Model: Trial 107 (holy_grail.pth) — enters when bull_prob >= 55%
   - Short Model: Trial 270 (holy_grail_short.pth) — enters when bear_prob >= 50%
 
 Exits:
-  - Long: 1.25% TP, 2.5% SL, 12 bar max hold
+  - Long: 1.9% TP, 1.6% SL, 20 bar max hold (walk-forward optimized, 4/5 overfit tests passed)
   - Short: 1.75% TP, 3.75% SL, 12 bar max hold
   - Catastrophe: 7.5% hard stop on all trades
   - Dynamic hold extension: if edge is still heavy at time barrier, keep holding
@@ -77,13 +77,14 @@ class AltOnlyTrader:
         self.info = Info(constants.MAINNET_API_URL, skip_ws=True)
         self.exchange = Exchange(self.account, constants.MAINNET_API_URL, account_address=self.wallet_address)
 
-        # Load Long Model (Trial 255)
+        # Load Long Model (Trial 107 — walk-forward optimized)
         with open(CONFIG_LONG_PATH, 'r') as f:
             cfg_long = json.load(f)
         self.seq_len_long = cfg_long.get('seq_len', 128)
-        self.long_tp = 0.0125
-        self.long_sl = 0.0250
-        self.long_max_hold = 12
+        self.long_tp = cfg_long.get('take_profit', 0.019)
+        self.long_sl = cfg_long.get('stop_loss', 0.016)
+        self.long_max_hold = cfg_long.get('max_hold_bars', 20)
+        self.long_threshold = cfg_long.get('entry_threshold', 0.55)
 
         self.model_long = AttentionLSTMModel(
             input_dim=cfg_long['input_dim'], hidden_dim=cfg_long['hidden_dim'],
@@ -489,7 +490,7 @@ class AltOnlyTrader:
                 max_hold = self.long_max_hold if self.position == 'long' else self.short_max_hold
                 if self.bars_held >= max_hold:
                     # Dynamic hold extension if edge is still heavy
-                    is_heavy = (self.position == 'long' and bull_prob >= 0.60) or \
+                    is_heavy = (self.position == 'long' and bull_prob >= self.long_threshold) or \
                                (self.position == 'short' and bear_prob >= 0.50)
 
                     if is_heavy:
@@ -505,7 +506,7 @@ class AltOnlyTrader:
                         return
 
             # ─── ENTRY / FLIP LOGIC ───
-            wants_long = bull_prob >= 0.60
+            wants_long = bull_prob >= self.long_threshold
             wants_short = bear_prob >= 0.50
 
             if wants_long:
