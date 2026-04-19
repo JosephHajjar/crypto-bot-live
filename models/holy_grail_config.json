@@ -1,15 +1,19 @@
 {
-  "trial": 383,
+  "trial": 107,
   "seq_len": 128,
   "hidden_dim": 256,
   "num_layers": 1,
   "num_heads": 8,
-  "dropout": 0.20173617480411798,
+  "dropout": 0.23900809706498088,
   "input_dim": 41,
-  "val_roi": 112.11776937364823,
-  "val_sharpe": 2.2294931386591474,
-  "test_roi": 272.47214637894353,
-  "test_sharpe": 6.793654550524165,
-  "test_trades": 76,
-  "test_wl": "46/30"
+  "val_roi": 254.89,
+  "val_sharpe": 4.12,
+  "test_roi": 180.33,
+  "test_sharpe": 3.89,
+  "test_trades": 87,
+  "test_wl": "58/29",
+  "take_profit": 0.019,
+  "stop_loss": 0.016,
+  "max_hold_bars": 20,
+  "entry_threshold": 0.55
 }
