@@ -261,12 +261,29 @@ class AltOnlyTrader:
             if exchange_abs_size >= 0.00001:
                 # Bot is flat but exchange has position -> adopt
                 if self.position is None:
-                    # Preserve bars_held from state file if it was loaded
+                    # Calculate bars_held from real exchange history, in case state file was lost
+                    calculated_bars = 1
+                    try:
+                        fills = self.info.user_fills(self.wallet_address)
+                        for fill in fills:
+                            if fill.get('coin') == COIN:
+                                fill_time_ms = int(fill.get('time', 0))
+                                if fill_time_ms > 0:
+                                    elapsed_sec = (time.time() * 1000 - fill_time_ms) / 1000.0
+                                    calculated_bars = max(1, int(elapsed_sec / 900))
+                                    logger.info(f"SYNC: Found recent {COIN} fill from {(elapsed_sec/3600):.1f} hours ago -> Calculated bars_held={calculated_bars}")
+                                    break
+                    except Exception as e:
+                        logger.error(f"Failed to fetch fills for bars_held calculation: {e}")
+
+                    # Use whichever is greater: loaded_bars (if state file existed) or calculated_bars
                     loaded_bars = self.bars_held
-                    logger.info(f"SYNC: Adopting exchange {exchange_direction.upper()} | Entry ${exchange_entry:.2f} | Size {exchange_abs_size} BTC | Preserving bars_held={loaded_bars}")
+                    final_bars = max(loaded_bars, calculated_bars)
+                    
+                    logger.info(f"SYNC: Adopting exchange {exchange_direction.upper()} | Entry ${exchange_entry:.2f} | Size {exchange_abs_size} {COIN} | Assigned bars_held={final_bars}")
                     self.position = exchange_direction
                     self.entry_price = exchange_entry
-                    self.bars_held = max(loaded_bars, 1)  # Keep loaded value, minimum 1
+                    self.bars_held = final_bars
                     self.trade_size_in_btc = exchange_abs_size
                     if exchange_direction == 'long':
                         self.active_tp = exchange_entry * (1 + self.long_tp)
