@@ -347,6 +347,7 @@
             <div class="card">
                 <h3>Total Bankroll</h3>
                 <div class="value" id="live-total-bankroll" style="font-size:1.4rem; margin-top:2px;">$--</div>
+                <div id="live-bankroll-growth" style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">0.00%</div>
             </div>
             <div class="card">
                 <h3>Realized P&L</h3>
@@ -704,6 +705,8 @@
                 var bankEl = document.getElementById('live-total-bankroll');
                 if (bankEl) bankEl.innerText = '$' + totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+                // Portfolio growth % will be calculated after we have realized PnL (below)
+
                 var priceEl = document.getElementById('live-price');
                 if (priceEl) priceEl.innerText = '$' + live_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -767,6 +770,18 @@
                 var totPnlEl = document.getElementById('live-total-pnl');
                 totPnlEl.innerText = (realizedPnl >= 0 ? '+$' : '-$') + Math.abs(realizedPnl).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 totPnlEl.className = 'value ' + (realizedPnl > 0 ? 'positive' : (realizedPnl < 0 ? 'negative' : 'neutral'));
+
+                // Portfolio growth % on bankroll card
+                // Starting deposit = current balance - realized PnL - unrealized PnL
+                var growthEl = document.getElementById('live-bankroll-growth');
+                if (growthEl && totalEquity > 0) {
+                    var startingDeposit = totalEquity - realizedPnl - live_pnl;
+                    if (startingDeposit > 0.01) {
+                        var growthPct = ((totalEquity - startingDeposit) / startingDeposit) * 100;
+                        growthEl.innerText = (growthPct >= 0 ? '+' : '') + growthPct.toFixed(2) + '%';
+                        growthEl.style.color = growthPct > 0 ? 'var(--accent-green)' : (growthPct < 0 ? 'var(--accent-red)' : 'var(--text-secondary)');
+                    }
+                }
 
                 var winH = document.getElementById('live-winrate-header');
                 if (winH) winH.innerText = 'Win Rate (' + completedTrades.length + ' Trades)';
