@@ -613,6 +613,43 @@ def _run_bot_in_background():
 def health():
     return jsonify({"status": "alive", "uptime": time.time()})
 
+@app.route('/api/debug')
+def debug_info():
+    """Remote debug endpoint — shows bot thread status and recent logs."""
+    result = {"bot_thread_started": _bot_thread_started}
+
+    # Check if bot thread is still alive
+    import threading
+    bot_alive = False
+    for t in threading.enumerate():
+        if t.name and 'Thread' in t.name and t.is_alive():
+            bot_alive = True
+            break
+    result["bot_thread_alive"] = bot_alive
+
+    # Read crash log if it exists
+    crash_log = ""
+    if os.path.exists('alt_bot_crash.log'):
+        try:
+            with open('alt_bot_crash.log', 'r') as f:
+                crash_log = f.read()
+        except Exception:
+            crash_log = "Could not read crash log"
+    result["crash_log"] = crash_log or "No crashes"
+
+    # Read last 50 lines of bot log
+    log_tail = ""
+    if os.path.exists('alt_bot.log'):
+        try:
+            with open('alt_bot.log', 'r') as f:
+                lines = f.readlines()
+                log_tail = "".join(lines[-50:])
+        except Exception:
+            log_tail = "Could not read log"
+    result["log_tail"] = log_tail or "No log file"
+
+    return jsonify(result)
+
 # ---- Self-Ping Keep-Alive (prevents Render free tier spin-down) ----
 _keepalive_started = False
 
