@@ -35,22 +35,9 @@ def _get_exchange_state():
         info = Info(constants.MAINNET_API_URL, skip_ws=True)
         user_state = info.user_state(wallet)
         margin = user_state.get("marginSummary", {})
-        # Perps balance
-        perps_value = float(margin.get("accountValue", 0.0))
-        
-        # Spot USDC balance
-        spot_usdc = 0.0
-        try:
-            spot_state = info.spot_user_state(wallet)
-            for bal in spot_state.get("balances", []):
-                if bal.get("coin") == "USDC":
-                    spot_usdc = float(bal.get("total", 0.0))
-                    break
-        except Exception:
-            pass
-        
-        # Total = perps + spot
-        account_value = perps_value + spot_usdc
+        # In Hyperliquid's unified account, accountValue IS the full portfolio
+        # (margin + unrealized PnL). Do NOT add spot USDC — it's the same pool.
+        account_value = float(margin.get("accountValue", 0.0))
         
         exchange_pos = None
         for pos in user_state.get("assetPositions", []):

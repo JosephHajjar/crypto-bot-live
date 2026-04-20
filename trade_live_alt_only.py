@@ -187,26 +187,14 @@ class AltOnlyTrader:
     # ─── EXCHANGE INTERACTION ───
 
     def _sync_balance(self):
-        """Fetch total balance = perps accountValue + spot USDC."""
+        """Fetch total balance from Hyperliquid."""
         try:
-            # Perps balance
             user_state = self.info.user_state(self.wallet_address)
             margin_summary = user_state.get("marginSummary", {})
-            perps_balance = float(margin_summary.get("accountValue", 0.0))
-
-            # Spot USDC balance
-            spot_usdc = 0.0
-            try:
-                spot_state = self.info.spot_user_state(self.wallet_address)
-                for bal in spot_state.get("balances", []):
-                    if bal.get("coin") == "USDC":
-                        spot_usdc = float(bal.get("total", 0.0))
-                        break
-            except Exception:
-                pass
-
-            self.live_balance = perps_balance + spot_usdc
-            logger.info(f"Balance: Perps=${perps_balance:.2f} + Spot=${spot_usdc:.2f} = Total=${self.live_balance:.2f}")
+            # In Hyperliquid's unified account, accountValue IS the full portfolio
+            # (margin + unrealized PnL). Do NOT add spot USDC — it's the same pool.
+            self.live_balance = float(margin_summary.get("accountValue", 0.0))
+            logger.info(f"Balance: ${self.live_balance:.2f}")
         except Exception as e:
             logger.error(f"Failed to sync balance: {e}")
 
