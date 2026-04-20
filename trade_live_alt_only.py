@@ -137,25 +137,33 @@ class AltOnlyTrader:
     # ─── STATE PERSISTENCE ───
 
     def _load_persisted_state(self):
-        if os.path.exists(STATE_FILE):
-            try:
-                with open(STATE_FILE, "r") as f:
-                    s = json.load(f)
-                trade_type = s.get("trade_type")
-                if trade_type == "LONG":
-                    self.position = "long"
-                elif trade_type == "SHORT":
-                    self.position = "short"
-                self.entry_price = s.get("entry_price", 0.0)
-                self.bars_held = s.get("bars_held", 0)
-                self.active_tp = s.get("take_profit_target", 0.0)
-                self.active_sl = s.get("stop_loss_target", 0.0)
-                self.trade_size_in_btc = s.get("trade_amount_btc", 0.0)
-                logger.info(f"STATE LOADED: pos={self.position}, entry={self.entry_price}, bars={self.bars_held}, tp={self.active_tp}, sl={self.active_sl}")
-            except Exception as e:
-                logger.error(f"Failed to load persisted state: {e}")
-        else:
-            logger.info("No persisted state file found.")
+        logger.info(f"STATE_FILE path: {STATE_FILE}")
+        logger.info(f"CWD: {os.getcwd()}")
+        logger.info(f"__file__: {__file__}")
+        
+        # Try the configured path first, then fallback to relative
+        paths_to_try = [STATE_FILE, 'data_storage/live_state_alt.json']
+        for path in paths_to_try:
+            if os.path.exists(path):
+                try:
+                    with open(path, "r") as f:
+                        s = json.load(f)
+                    trade_type = s.get("trade_type")
+                    if trade_type == "LONG":
+                        self.position = "long"
+                    elif trade_type == "SHORT":
+                        self.position = "short"
+                    self.entry_price = s.get("entry_price", 0.0)
+                    self.bars_held = s.get("bars_held", 0)
+                    self.active_tp = s.get("take_profit_target", 0.0)
+                    self.active_sl = s.get("stop_loss_target", 0.0)
+                    self.trade_size_in_btc = s.get("trade_amount_btc", 0.0)
+                    logger.info(f"STATE LOADED from {path}: pos={self.position}, entry={self.entry_price}, bars={self.bars_held}, tp={self.active_tp}, sl={self.active_sl}")
+                    return
+                except Exception as e:
+                    logger.error(f"Failed to load state from {path}: {e}")
+        
+        logger.warning(f"No persisted state file found at any path!")
 
     def save_state(self, current_close, bull_prob=0.0, bear_prob=0.0):
         open_pnl_pct = 0.0
