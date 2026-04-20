@@ -349,14 +349,12 @@
                 <div class="value" id="live-total-bankroll" style="font-size:1.4rem; margin-top:2px;">$--</div>
             </div>
             <div class="card">
-                <h3>Net P&L</h3>
+                <h3>Realized P&L</h3>
                 <div class="value" id="live-total-pnl">$0.00</div>
-                <div id="live-total-pnl-pct" style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">0.00%</div>
             </div>
             <div class="card">
                 <h3>Open P&L</h3>
                 <div class="value neutral" id="live-pnl">$0.00</div>
-                <div id="live-pnl-pct" style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">0.00%</div>
             </div>
             <div class="card">
                 <h3 id="live-winrate-header">Win Rate (0)</h3>
@@ -682,21 +680,14 @@
                     live_pnl = state.trade_amount_usd * ret;
                 }
 
-                // Sync original DOM stat badges — Open PnL as $ + %
+                // Sync Open PnL badge — just $ amount, no confusing %
                 var pnlEl = document.getElementById('live-pnl');
-                var pnlPctEl = document.getElementById('live-pnl-pct');
                 if (state.in_trade && state.entry_price > 0) {
-                    var openPct = ((live_price - state.entry_price) / state.entry_price) * 100;
-                    if (!isLong) openPct = -openPct;
                     pnlEl.innerText = (live_pnl >= 0 ? '+$' : '-$') + Math.abs(live_pnl).toFixed(2);
                     pnlEl.className = 'value ' + (live_pnl > 0 ? 'positive' : (live_pnl < 0 ? 'negative' : 'neutral'));
-                    pnlPctEl.innerText = (openPct >= 0 ? '+' : '') + openPct.toFixed(2) + '%';
-                    pnlPctEl.style.color = openPct > 0 ? 'var(--accent-green)' : (openPct < 0 ? 'var(--accent-red)' : 'var(--text-secondary)');
                 } else {
                     pnlEl.innerText = '$0.00';
                     pnlEl.className = 'value neutral';
-                    pnlPctEl.innerText = '0.00%';
-                    pnlPctEl.style.color = 'var(--text-secondary)';
                 }
 
                 // Sync Multi-Timeframe UI & Total Equity
@@ -764,18 +755,10 @@
                 var realizedPnl = completedTrades.reduce((acc, t) => acc + (t.pnl_usd || 0), 0);
                 var totalPnl = realizedPnl + live_pnl;
 
-                // Apply Total Metrics to UI Grid
+                // Apply Realized PnL (completed trades only, no open position)
                 var totPnlEl = document.getElementById('live-total-pnl');
-                totPnlEl.innerText = (totalPnl >= 0 ? '+$' : '-$') + Math.abs(totalPnl).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                totPnlEl.className = 'value ' + (totalPnl > 0 ? 'positive' : (totalPnl < 0 ? 'negative' : 'neutral'));
-
-                // Net PnL as % of starting bankroll
-                var totPnlPctEl = document.getElementById('live-total-pnl-pct');
-                if (totPnlPctEl && state.paper_balance > 0) {
-                    var netPct = (totalPnl / state.paper_balance) * 100;
-                    totPnlPctEl.innerText = (netPct >= 0 ? '+' : '') + netPct.toFixed(2) + '%';
-                    totPnlPctEl.style.color = netPct > 0 ? 'var(--accent-green)' : (netPct < 0 ? 'var(--accent-red)' : 'var(--text-secondary)');
-                }
+                totPnlEl.innerText = (realizedPnl >= 0 ? '+$' : '-$') + Math.abs(realizedPnl).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                totPnlEl.className = 'value ' + (realizedPnl > 0 ? 'positive' : (realizedPnl < 0 ? 'negative' : 'neutral'));
 
                 var winH = document.getElementById('live-winrate-header');
                 if (winH) winH.innerText = 'Win Rate (' + completedTrades.length + ' Trades)';
