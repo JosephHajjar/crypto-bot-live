@@ -150,8 +150,11 @@ class AltOnlyTrader:
                 self.active_tp = s.get("take_profit_target", 0.0)
                 self.active_sl = s.get("stop_loss_target", 0.0)
                 self.trade_size_in_btc = s.get("trade_amount_btc", 0.0)
-            except Exception:
-                pass
+                logger.info(f"STATE LOADED: pos={self.position}, entry={self.entry_price}, bars={self.bars_held}, tp={self.active_tp}, sl={self.active_sl}")
+            except Exception as e:
+                logger.error(f"Failed to load persisted state: {e}")
+        else:
+            logger.info("No persisted state file found.")
 
     def save_state(self, current_close, bull_prob=0.0, bear_prob=0.0):
         open_pnl_pct = 0.0
@@ -249,10 +252,12 @@ class AltOnlyTrader:
             if exchange_abs_size >= 0.00001:
                 # Bot is flat but exchange has position -> adopt
                 if self.position is None:
-                    logger.info(f"SYNC: Adopting exchange {exchange_direction.upper()} | Entry ${exchange_entry:.2f} | Size {exchange_abs_size} BTC")
+                    # Preserve bars_held from state file if it was loaded
+                    loaded_bars = self.bars_held
+                    logger.info(f"SYNC: Adopting exchange {exchange_direction.upper()} | Entry ${exchange_entry:.2f} | Size {exchange_abs_size} BTC | Preserving bars_held={loaded_bars}")
                     self.position = exchange_direction
                     self.entry_price = exchange_entry
-                    self.bars_held = 0
+                    self.bars_held = max(loaded_bars, 1)  # Keep loaded value, minimum 1
                     self.trade_size_in_btc = exchange_abs_size
                     if exchange_direction == 'long':
                         self.active_tp = exchange_entry * (1 + self.long_tp)
