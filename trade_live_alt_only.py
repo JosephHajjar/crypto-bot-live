@@ -377,70 +377,77 @@ class AltOnlyTrader:
         except Exception:
             return
 
-        exit_price = None
-        reason = None
+        try:
+            exit_price = None
+            reason = None
 
-        # TP/SL check (only if targets are set)
-        if self.active_tp > 0 and self.active_sl > 0:
-            if self.position == 'long':
-                if live_price <= self.active_sl:
-                    exit_price = live_price
-                    reason = f"LONG Stop Loss (-{self.long_sl*100}%)"
-                elif live_price >= self.active_tp:
-                    exit_price = live_price
-                    reason = f"LONG Take Profit (+{self.long_tp*100}%)"
-            elif self.position == 'short':
-                if live_price >= self.active_sl:
-                    exit_price = live_price
-                    reason = f"SHORT Stop Loss (+{self.short_sl*100}%)"
-                elif live_price <= self.active_tp:
-                    exit_price = live_price
-                    reason = f"SHORT Take Profit (-{self.short_tp*100}%)"
+            # TP/SL check (only if targets are set)
+            if self.active_tp > 0 and self.active_sl > 0:
+                if self.position == 'long':
+                    if live_price <= self.active_sl:
+                        exit_price = live_price
+                        reason = f"LONG Stop Loss (-{self.long_sl*100}%)"
+                    elif live_price >= self.active_tp:
+                        exit_price = live_price
+                        reason = f"LONG Take Profit (+{self.long_tp*100}%)"
+                elif self.position == 'short':
+                    if live_price >= self.active_sl:
+                        exit_price = live_price
+                        reason = f"SHORT Stop Loss (+{self.short_sl*100}%)"
+                    elif live_price <= self.active_tp:
+                        exit_price = live_price
+                        reason = f"SHORT Take Profit (-{self.short_tp*100}%)"
 
-        # CATASTROPHE STOP-LOSS (always active)
-        if exit_price is None:
-            if self.position == 'long':
-                cat_sl = self.entry_price * (1 - CATASTROPHE_CAP)
-                if live_price <= cat_sl:
-                    exit_price = live_price
-                    reason = f"CATASTROPHE STOP (-{CATASTROPHE_CAP*100}%)"
-            elif self.position == 'short':
-                cat_sl = self.entry_price * (1 + CATASTROPHE_CAP)
-                if live_price >= cat_sl:
-                    exit_price = live_price
-                    reason = f"CATASTROPHE STOP (-{CATASTROPHE_CAP*100}%)"
+            # CATASTROPHE STOP-LOSS (always active)
+            if exit_price is None:
+                if self.position == 'long':
+                    cat_sl = self.entry_price * (1 - CATASTROPHE_CAP)
+                    if live_price <= cat_sl:
+                        exit_price = live_price
+                        reason = f"CATASTROPHE STOP (-{CATASTROPHE_CAP*100}%)"
+                elif self.position == 'short':
+                    cat_sl = self.entry_price * (1 + CATASTROPHE_CAP)
+                    if live_price >= cat_sl:
+                        exit_price = live_price
+                        reason = f"CATASTROPHE STOP (-{CATASTROPHE_CAP*100}%)"
 
-        if exit_price is not None:
-            logger.info(f"CLOSING {self.position.upper()}: {reason} | ${self.entry_price:.2f} -> ${exit_price:.2f}")
-            trade = self._record_trade(self.position.upper(), self.entry_price, exit_price, self.bars_held, reason)
-            self._notify(f"CLOSED {self.position.upper()}: {reason} | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
-
-            # Close on exchange
-            self._sync_exchange_position(live_price, 'flat', 0.0)
-            self._reset_position()
-            return
-
-        # TIME BARRIER CHECK (failsafe — also runs here every 5s so it can't be missed)
-        max_hold = self.long_max_hold if self.position == 'long' else self.short_max_hold
-        if self.bars_held >= max_hold:
-            is_heavy = (self.position == 'long' and self.last_bull_prob >= self.long_threshold) or \
-                       (self.position == 'short' and self.last_bear_prob >= 0.50)
-
-            if not is_heavy:
-                logger.info(f"TIME BARRIER (from TP/SL poller): {self.position.upper()} held {self.bars_held} bars, signal weak. Closing.")
-                trade = self._record_trade(self.position.upper(), self.entry_price, live_price, self.bars_held, "Time Barrier")
-                self._notify(f"CLOSED {self.position.upper()}: Time Barrier ({self.bars_held} bars) | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+            if exit_price is not None:
+                logger.info(f"CLOSING {self.position.upper()}: {reason} | ${self.entry_price:.2f} -> ${exit_price:.2f}")
+                trade = self._record_trade(self.position.upper(), self.entry_price, exit_price, self.bars_held, reason)
+                self._notify(f"CLOSED {self.position.upper()}: {reason} | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
                 self._sync_exchange_position(live_price, 'flat', 0.0)
                 self._reset_position()
                 return
 
-            # HARD FAILSAFE: if held 5x max_hold bars, force close no matter what
-            if self.bars_held >= max_hold * 5:
-                logger.warning(f"HARD FAILSAFE: {self.position.upper()} held {self.bars_held} bars (5x max). Force closing.")
-                trade = self._record_trade(self.position.upper(), self.entry_price, live_price, self.bars_held, "Hard Failsafe")
-                self._notify(f"FORCE CLOSED {self.position.upper()}: {self.bars_held} bars | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
-                self._sync_exchange_position(live_price, 'flat', 0.0)
-                self._reset_position()
+            # TIME BARRIER CHECK (runs every 5s so it can't be missed)
+            max_hold = self.long_max_hold if self.position == 'long' else self.short_max_hold
+            if self.bars_held >= max_hold:
+                is_heavy = (self.position == 'long' and self.last_bull_prob >= self.long_threshold) or \
+                           (self.position == 'short' and self.last_bear_prob >= 0.50)
+
+                logger.info(f"TIME BARRIER CHECK: bars={self.bars_held}/{max_hold}, "
+                            f"bull={self.last_bull_prob:.4f}, bear={self.last_bear_prob:.4f}, heavy={is_heavy}")
+
+                if not is_heavy:
+                    logger.info(f"TIME BARRIER CLOSING {self.position.upper()} @ ${live_price:.2f} after {self.bars_held} bars")
+                    trade = self._record_trade(self.position.upper(), self.entry_price, live_price, self.bars_held, "Time Barrier")
+                    self._notify(f"CLOSED {self.position.upper()}: Time Barrier ({self.bars_held} bars) | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                    self._sync_exchange_position(live_price, 'flat', 0.0)
+                    self._reset_position()
+                    return
+
+                # HARD FAILSAFE: if held 5x max_hold bars, force close no matter what
+                if self.bars_held >= max_hold * 5:
+                    logger.warning(f"HARD FAILSAFE: Force closing {self.position.upper()} after {self.bars_held} bars")
+                    trade = self._record_trade(self.position.upper(), self.entry_price, live_price, self.bars_held, "Hard Failsafe")
+                    self._notify(f"FORCE CLOSED {self.position.upper()}: {self.bars_held} bars | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                    self._sync_exchange_position(live_price, 'flat', 0.0)
+                    self._reset_position()
+
+        except Exception as e:
+            logger.error(f"check_tp_sl CRASH: {e}")
+            import traceback
+            traceback.print_exc()
     def step(self, execute_trades=True):
         try:
             df = self.fetch_recent_data()
