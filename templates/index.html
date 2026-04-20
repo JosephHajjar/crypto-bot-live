@@ -194,7 +194,7 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 3fr 1.2fr;
+            grid-template-columns: 3fr 1.2fr;
             gap: 12px;
             max-width: 1080px;
             width: 100%;
@@ -411,46 +411,6 @@
 
         <!-- MAIN CHART & LOG ZONE -->
         <div class="main-content">
-            <!-- BTC MARKET PERFORMANCE SIDEPANEL -->
-            <div class="card" style="height:480px; display:flex; flex-direction:column; padding:0; overflow:hidden;">
-                <h3 id="live-market-title"
-                    style="padding:14px 16px 10px 16px; margin:0; border-bottom:1px solid var(--border-subtle); font-weight:700; color:var(--text-primary); font-size:0.72rem;">
-                    Live BTC Market</h3>
-                <div
-                    style="padding:14px 16px; display:flex; flex-direction:column; justify-content:space-between; flex:1;">
-                    <div>
-                        <h4
-                            style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;">
-                            Price</h4>
-                        <div id="live-price" style="font-size:1.5rem;font-weight:700;font-family:'Outfit';">$--</div>
-                    </div>
-                    <div>
-                        <h4
-                            style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;">
-                            15m</h4>
-                        <div class="value neutral" id="live-btc-15m" style="font-size:1.2rem;">--%</div>
-                    </div>
-                    <div>
-                        <h4
-                            style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;">
-                            1H</h4>
-                        <div class="value neutral" id="live-btc-1h" style="font-size:1.2rem;">--%</div>
-                    </div>
-                    <div>
-                        <h4
-                            style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;">
-                            4H</h4>
-                        <div class="value neutral" id="live-btc-4h" style="font-size:1.2rem;">--%</div>
-                    </div>
-                    <div>
-                        <h4
-                            style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;">
-                            24H</h4>
-                        <div class="value neutral" id="live-btc-24h" style="font-size:1.2rem;">--%</div>
-                    </div>
-                </div>
-            </div>
-
             <div
                 style="border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 30px rgba(0,0,0,0.5);position:relative;">
                 <div id="live_chart" style="height:480px;width:100%;"></div>
