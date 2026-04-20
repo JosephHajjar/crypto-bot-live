@@ -1,1 +1,15 @@
-{"trial": 255, "seq_len": 128, "hidden_dim": 64, "num_layers": 1, "num_heads": 4, "dropout": 0.22838102089976742, "input_dim": 41, "val_roi": 182.26185952344107, "val_sharpe": 5.51565378912149, "test_roi": 487.48181278362483, "test_sharpe": 7.3080644800524475, "test_trades": 105, "test_wl": "61/44", "take_profit": 0.075, "stop_loss": 0.015, "max_hold_bars": 8}
+{
+  "trial": 255,
+  "seq_len": 64,
+  "hidden_dim": 256,
+  "num_layers": 1,
+  "num_heads": 8,
+  "dropout": 0.21706972314487663,
+  "input_dim": 41,
+  "val_roi": 59.891813112299154,
+  "val_sharpe": 1.0840453733160713,
+  "test_roi": 218.55337574980717,
+  "test_sharpe": 4.811963784201384,
+  "test_trades": 108,
+  "test_wl": "57/51"
+}

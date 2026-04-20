@@ -52,7 +52,7 @@ def main():
     scaler_path = 'models/BTC_USDT_15m_scaler.json'
     
     # ─── LOAD MODELS ───
-    with open('models/holy_grail_config.json', 'r') as f:
+    with open('models/trial_86_config.json', 'r') as f:
         cfg_long = json.load(f)
     seq_len_long = cfg_long.get('seq_len', 128)
     long_tp = cfg_long.get('take_profit', 0.0125)
@@ -63,7 +63,7 @@ def main():
         input_dim=cfg_long['input_dim'], hidden_dim=cfg_long['hidden_dim'],
         num_layers=cfg_long['num_layers'], output_dim=2, dropout=cfg_long['dropout'], num_heads=cfg_long['num_heads']
     ).to(device)
-    model_long.load_state_dict(torch.load('models/holy_grail.pth', map_location=device, weights_only=True))
+    model_long.load_state_dict(torch.load('models/trial_86.pth', map_location=device, weights_only=True))
     model_long.eval()
     
     with open('models_short/holy_grail_short_config.json', 'r') as f:
@@ -83,8 +83,8 @@ def main():
     MAX_SEQ = max(seq_len_long, seq_len_short)
     
     # ─── FETCH AND ENGINEER FEATURES ───
-    print("Fetching 10 days of 15m BTC data (extra days for feature warmup)...")
-    df_raw = fetch_recent_15m(days=10)
+    print("Fetching 18 days of 15m BTC data (extra days for feature warmup)...")
+    df_raw = fetch_recent_15m(days=18)
     print(f"  Fetched {len(df_raw)} raw candles.")
     
     print("Computing features...")
@@ -93,8 +93,8 @@ def main():
     feature_cols = get_feature_cols()
     available = [c for c in feature_cols if c in df_feat.columns]
     
-    # Slice to last 7.5 days for actual trading (720 candles)
-    trade_candles = int(7.5 * 96)
+    # Slice to last 9 days for actual trading
+    trade_candles = 9 * 96
     if len(df_feat) > trade_candles + MAX_SEQ:
         df_trade = df_feat.iloc[-(trade_candles + MAX_SEQ):].copy()
     else:

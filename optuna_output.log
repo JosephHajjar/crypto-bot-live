@@ -6743,3 +6743,2717 @@ Dataset: 35730 sequences of length 128, 41 features.
 [Trial #81] seq=64, hidden=256, layers=1, heads=2, drop=0.29, lr=0.00042, batch=64, epochs=25, class_w=4.1
 Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
 Dataset: 35794 sequences of length 64, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-18 12:15:00
+Successfully saved 36713 candles to data_storage\BTC_USDT_15m.csv
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\BTC_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.5%, SL=0.75%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 35928 samples to data_storage\BTC_USDT_15m_processed.csv
+Target distribution: {0: 33134, 1: 2794} (7.8% positive)
+
+Data splits -> Train: 25149 | Val: 5389 | Test: 5390
+Target distribution (train): {0: 23598, 1: 1551}
+Target distribution (val): {0: 4874, 1: 515}
+Target distribution (test): {0: 4662, 1: 728}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+Study loaded from data_storage\optuna_study.db — 82 previous trials found
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.5% / SL=0.75% / MaxHold=16 bars
+============================================================
+
+
+[Trial #82] seq=64, hidden=256, layers=1, heads=2, drop=0.34, lr=0.00232, batch=64, epochs=25, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: -19.3% | WorstFold: -99.0% | Sharpe: -5.53 | MaxDD: -17.0% | Trades: 87 | W/L: 30/57
+  REJECTED: Max Drawdown of -17.0% exceeded -7.0% limit
+
+[Trial #83] seq=64, hidden=128, layers=3, heads=4, drop=0.20, lr=0.00113, batch=64, epochs=34, class_w=4.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: -22.0% | WorstFold: -97.0% | Sharpe: -5.89 | MaxDD: -14.3% | Trades: 110 | W/L: 38/72
+  REJECTED: Max Drawdown of -14.3% exceeded -7.0% limit
+
+[Trial #84] seq=64, hidden=128, layers=2, heads=4, drop=0.25, lr=0.00064, batch=64, epochs=32, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 356.7% | WorstFold: 95.0% | Sharpe: 5.76 | MaxDD: -5.2% | Trades: 97 | W/L: 54/43
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 12.0% | Sharpe: 0.54 | Trades: 172 | W/L: 84/88
+  ** MODEL SAVED: models/trial_84.pth **
+
+[Trial #85] seq=64, hidden=128, layers=2, heads=4, drop=0.25, lr=0.00010, batch=64, epochs=32, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: -22.0% | WorstFold: -79.9% | Sharpe: -1.15 | MaxDD: -8.2% | Trades: 121 | W/L: 54/67
+  REJECTED: Max Drawdown of -8.2% exceeded -7.0% limit
+
+[Trial #86] seq=64, hidden=128, layers=2, heads=4, drop=0.26, lr=0.00067, batch=64, epochs=23, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 277.3% | WorstFold: -9.0% | Sharpe: 5.80 | MaxDD: -5.1% | Trades: 76 | W/L: 41/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 38.8% | Sharpe: 1.37 | Trades: 131 | W/L: 64/67
+  ** MODEL SAVED: models/trial_86.pth **
+
+============================================================
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-19 05:45:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\BTC_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.5%, SL=0.75%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 35928 samples to data_storage\BTC_USDT_15m_processed.csv
+Target distribution: {0: 33134, 1: 2794} (7.8% positive)
+
+Data splits -> Train: 25149 | Val: 5389 | Test: 5390
+Target distribution (train): {0: 23598, 1: 1551}
+Target distribution (val): {0: 4874, 1: 515}
+Target distribution (test): {0: 4662, 1: 728}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+Study loaded from data_storage\optuna_study.db — 87 previous trials found
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.5% / SL=0.75% / MaxHold=16 bars
+============================================================
+
+
+[Trial #87] seq=64, hidden=128, layers=2, heads=4, drop=0.22, lr=0.00042, batch=64, epochs=23, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 97.9% | WorstFold: -74.4% | Sharpe: 1.41 | MaxDD: -13.3% | Trades: 86 | W/L: 40/46
+  REJECTED: Max Drawdown of -13.3% exceeded -7.0% limit
+
+[Trial #88] seq=64, hidden=128, layers=1, heads=4, drop=0.26, lr=0.00066, batch=64, epochs=31, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 140.5% | WorstFold: -96.4% | Sharpe: -0.71 | MaxDD: -12.6% | Trades: 79 | W/L: 33/46
+  REJECTED: Max Drawdown of -12.6% exceeded -7.0% limit
+
+[Trial #89] seq=96, hidden=128, layers=3, heads=4, drop=0.15, lr=0.00036, batch=256, epochs=29, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35832 sequences of length 96, 41 features.
+  Val -> AvgROI: 102.9% | WorstFold: -81.1% | Sharpe: 1.17 | MaxDD: -10.2% | Trades: 112 | W/L: 54/58
+  REJECTED: Max Drawdown of -10.2% exceeded -7.0% limit
+
+[Trial #90] seq=32, hidden=128, layers=1, heads=2, drop=0.29, lr=0.00052, batch=64, epochs=14, class_w=4.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 59.1% | WorstFold: -90.5% | Sharpe: -0.65 | MaxDD: -10.3% | Trades: 95 | W/L: 41/54
+  REJECTED: Max Drawdown of -10.3% exceeded -7.0% limit
+
+[Trial #91] seq=48, hidden=64, layers=1, heads=8, drop=0.31, lr=0.00028, batch=256, epochs=20, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35880 sequences of length 48, 41 features.
+  Val -> AvgROI: -28.2% | WorstFold: -99.2% | Sharpe: -4.31 | MaxDD: -21.0% | Trades: 139 | W/L: 58/81
+  REJECTED: Max Drawdown of -21.0% exceeded -7.0% limit
+
+[Trial #92] seq=128, hidden=256, layers=2, heads=4, drop=0.43, lr=0.00059, batch=128, epochs=11, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 142.8% | WorstFold: -96.0% | Sharpe: 0.07 | MaxDD: -13.7% | Trades: 96 | W/L: 45/51
+  REJECTED: Max Drawdown of -13.7% exceeded -7.0% limit
+
+[Trial #93] seq=64, hidden=128, layers=1, heads=8, drop=0.27, lr=0.00077, batch=64, epochs=22, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 85.5% | WorstFold: -82.7% | Sharpe: 0.93 | MaxDD: -8.6% | Trades: 85 | W/L: 37/48
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #94] seq=64, hidden=128, layers=2, heads=4, drop=0.29, lr=0.00099, batch=64, epochs=34, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 65.3% | WorstFold: -65.3% | Sharpe: 1.08 | MaxDD: -6.5% | Trades: 92 | W/L: 44/48
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 153.1% | Sharpe: 4.11 | Trades: 94 | W/L: 52/42
+  ** MODEL SAVED: models/trial_94.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 153.1% | Sharpe: 4.11 | W/L: 52/42
+============================================================
+
+[Trial #95] seq=64, hidden=128, layers=2, heads=4, drop=0.29, lr=0.00089, batch=64, epochs=35, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: -57.4% | WorstFold: -94.6% | Sharpe: -5.76 | MaxDD: -12.7% | Trades: 85 | W/L: 31/54
+  REJECTED: Max Drawdown of -12.7% exceeded -7.0% limit
+
+[Trial #96] seq=64, hidden=128, layers=2, heads=4, drop=0.39, lr=0.00014, batch=64, epochs=33, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 200.4% | WorstFold: -52.8% | Sharpe: 1.20 | MaxDD: -8.6% | Trades: 90 | W/L: 42/48
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #97] seq=64, hidden=128, layers=2, heads=4, drop=0.32, lr=0.00013, batch=64, epochs=34, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: -64.8% | WorstFold: -79.8% | Sharpe: -4.54 | MaxDD: -7.5% | Trades: 88 | W/L: 36/52
+  REJECTED: Max Drawdown of -7.5% exceeded -7.0% limit
+
+[Trial #98] seq=48, hidden=128, layers=2, heads=4, drop=0.40, lr=0.00097, batch=256, epochs=34, class_w=4.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35880 sequences of length 48, 41 features.
+  Val -> AvgROI: 50.8% | WorstFold: -92.8% | Sharpe: -2.60 | MaxDD: -13.4% | Trades: 89 | W/L: 38/51
+  REJECTED: Max Drawdown of -13.4% exceeded -7.0% limit
+
+[Trial #99] seq=64, hidden=128, layers=2, heads=2, drop=0.37, lr=0.00084, batch=64, epochs=31, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 60.8% | WorstFold: -90.0% | Sharpe: -0.54 | MaxDD: -11.5% | Trades: 99 | W/L: 46/53
+  REJECTED: Max Drawdown of -11.5% exceeded -7.0% limit
+
+[Trial #100] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00073, batch=256, epochs=32, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 525.7% | WorstFold: 338.7% | Sharpe: 8.40 | MaxDD: -3.4% | Trades: 64 | W/L: 39/25
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 216.7% | Sharpe: 5.61 | Trades: 82 | W/L: 47/35
+  ** MODEL SAVED: models/trial_100.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 216.7% | Sharpe: 5.61 | W/L: 47/35
+============================================================
+
+[Trial #101] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00074, batch=256, epochs=33, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 326.8% | WorstFold: -70.5% | Sharpe: 3.06 | MaxDD: -5.4% | Trades: 65 | W/L: 34/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 109.2% | Sharpe: 3.31 | Trades: 100 | W/L: 54/46
+  ** MODEL SAVED: models/trial_101.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 109.2% | Sharpe: 3.31 | W/L: 54/46
+============================================================
+
+[Trial #102] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00072, batch=256, epochs=30, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 109.5% | WorstFold: -76.5% | Sharpe: 1.90 | MaxDD: -7.2% | Trades: 75 | W/L: 36/39
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #103] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00104, batch=64, epochs=33, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 134.1% | WorstFold: -97.0% | Sharpe: -0.41 | MaxDD: -14.5% | Trades: 93 | W/L: 44/49
+  REJECTED: Max Drawdown of -14.5% exceeded -7.0% limit
+
+[Trial #104] seq=128, hidden=256, layers=1, heads=8, drop=0.30, lr=0.00067, batch=256, epochs=32, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 59.9% | WorstFold: -45.1% | Sharpe: 1.77 | MaxDD: -7.4% | Trades: 81 | W/L: 39/42
+  REJECTED: Max Drawdown of -7.4% exceeded -7.0% limit
+
+[Trial #105] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00074, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 283.2% | WorstFold: -41.8% | Sharpe: 5.74 | MaxDD: -4.2% | Trades: 68 | W/L: 37/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 64.3% | Sharpe: 2.57 | Trades: 80 | W/L: 42/38
+  ** MODEL SAVED: models/trial_105.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 64.3% | Sharpe: 2.57 | W/L: 42/38
+============================================================
+
+[Trial #106] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00078, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 259.4% | WorstFold: -40.1% | Sharpe: 5.08 | MaxDD: -5.1% | Trades: 70 | W/L: 37/33
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 112.9% | Sharpe: 3.51 | Trades: 87 | W/L: 47/40
+  ** MODEL SAVED: models/trial_106.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 112.9% | Sharpe: 3.51 | W/L: 47/40
+============================================================
+
+[Trial #107] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00074, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 101.0% | WorstFold: 18.3% | Sharpe: 3.60 | MaxDD: -5.1% | Trades: 73 | W/L: 38/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 345.2% | Sharpe: 6.44 | Trades: 110 | W/L: 63/47
+  ** MODEL SAVED: models/trial_107.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 345.2% | Sharpe: 6.44 | W/L: 63/47
+============================================================
+
+[Trial #108] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00083, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 36.9% | WorstFold: -96.0% | Sharpe: -1.86 | MaxDD: -13.6% | Trades: 93 | W/L: 40/53
+  REJECTED: Max Drawdown of -13.6% exceeded -7.0% limit
+
+[Trial #109] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00076, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 667.1% | WorstFold: -29.3% | Sharpe: 8.81 | MaxDD: -5.8% | Trades: 64 | W/L: 37/27
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 160.2% | Sharpe: 4.55 | Trades: 85 | W/L: 47/38
+  ** MODEL SAVED: models/trial_109.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 160.2% | Sharpe: 4.55 | W/L: 47/38
+============================================================
+
+[Trial #110] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00075, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 135.8% | WorstFold: -50.0% | Sharpe: 3.52 | MaxDD: -8.0% | Trades: 62 | W/L: 30/32
+  REJECTED: Max Drawdown of -8.0% exceeded -7.0% limit
+
+[Trial #111] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00091, batch=256, epochs=31, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 46.1% | WorstFold: -43.4% | Sharpe: 1.01 | MaxDD: -6.2% | Trades: 68 | W/L: 31/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 50.5% | Sharpe: 1.80 | Trades: 107 | W/L: 52/55
+  ** MODEL SAVED: models/trial_111.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 50.5% | Sharpe: 1.80 | W/L: 52/55
+============================================================
+
+[Trial #112] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00090, batch=256, epochs=34, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 7.2% | WorstFold: -86.1% | Sharpe: -1.10 | MaxDD: -8.5% | Trades: 74 | W/L: 33/41
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #113] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00099, batch=256, epochs=33, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 98.3% | WorstFold: -70.8% | Sharpe: 1.45 | MaxDD: -7.7% | Trades: 70 | W/L: 34/36
+  REJECTED: Max Drawdown of -7.7% exceeded -7.0% limit
+
+[Trial #114] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00114, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 224.6% | WorstFold: 89.5% | Sharpe: 5.22 | MaxDD: -6.4% | Trades: 82 | W/L: 43/39
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 354.3% | Sharpe: 6.68 | Trades: 98 | W/L: 55/43
+  ** MODEL SAVED: models/trial_114.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 354.3% | Sharpe: 6.68 | W/L: 55/43
+============================================================
+
+[Trial #115] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00112, batch=256, epochs=35, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 9.2% | WorstFold: -97.9% | Sharpe: -4.44 | MaxDD: -14.8% | Trades: 94 | W/L: 37/57
+  REJECTED: Max Drawdown of -14.8% exceeded -7.0% limit
+
+[Trial #116] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00126, batch=256, epochs=31, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 230.7% | WorstFold: 57.6% | Sharpe: 5.38 | MaxDD: -4.8% | Trades: 83 | W/L: 44/39
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 5.7% | Sharpe: 0.34 | Trades: 138 | W/L: 65/73
+  ** MODEL SAVED: models/trial_116.pth **
+
+[Trial #117] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00132, batch=256, epochs=32, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 120.0% | WorstFold: -62.0% | Sharpe: 2.98 | MaxDD: -7.2% | Trades: 79 | W/L: 40/39
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #118] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00120, batch=256, epochs=33, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 253.7% | WorstFold: -48.6% | Sharpe: 5.23 | MaxDD: -10.5% | Trades: 69 | W/L: 38/31
+  REJECTED: Max Drawdown of -10.5% exceeded -7.0% limit
+
+[Trial #119] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00064, batch=256, epochs=34, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 219.9% | WorstFold: -75.8% | Sharpe: 2.93 | MaxDD: -6.1% | Trades: 74 | W/L: 37/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 123.3% | Sharpe: 3.43 | Trades: 105 | W/L: 53/52
+  ** MODEL SAVED: models/trial_119.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 123.3% | Sharpe: 3.43 | W/L: 53/52
+============================================================
+
+[Trial #120] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00065, batch=256, epochs=31, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 20.7% | WorstFold: -79.8% | Sharpe: -0.11 | MaxDD: -7.9% | Trades: 73 | W/L: 32/41
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #121] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00060, batch=256, epochs=32, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 84.5% | WorstFold: -68.9% | Sharpe: 0.36 | MaxDD: -7.4% | Trades: 80 | W/L: 38/42
+  REJECTED: Max Drawdown of -7.4% exceeded -7.0% limit
+
+[Trial #122] seq=128, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00075, batch=256, epochs=35, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 79.0% | WorstFold: -63.3% | Sharpe: 0.38 | MaxDD: -6.4% | Trades: 61 | W/L: 27/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 158.8% | Sharpe: 5.11 | Trades: 59 | W/L: 34/25
+  ** MODEL SAVED: models/trial_122.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 158.8% | Sharpe: 5.11 | W/L: 34/25
+============================================================
+
+[Trial #123] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00151, batch=256, epochs=31, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 252.3% | WorstFold: -88.8% | Sharpe: 3.33 | MaxDD: -12.7% | Trades: 84 | W/L: 38/46
+  REJECTED: Max Drawdown of -12.7% exceeded -7.0% limit
+
+[Trial #124] seq=128, hidden=256, layers=1, heads=8, drop=0.17, lr=0.00076, batch=256, epochs=35, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 205.9% | WorstFold: -69.3% | Sharpe: 3.24 | MaxDD: -7.3% | Trades: 74 | W/L: 39/35
+  REJECTED: Max Drawdown of -7.3% exceeded -7.0% limit
+
+[Trial #125] seq=128, hidden=256, layers=1, heads=8, drop=0.18, lr=0.00070, batch=256, epochs=33, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 116.4% | WorstFold: -87.4% | Sharpe: 1.63 | MaxDD: -11.1% | Trades: 57 | W/L: 26/31
+  REJECTED: Max Drawdown of -11.1% exceeded -7.0% limit
+
+[Trial #126] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00055, batch=256, epochs=34, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 217.4% | WorstFold: -86.5% | Sharpe: 2.32 | MaxDD: -9.8% | Trades: 79 | W/L: 38/41
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #127] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00063, batch=256, epochs=32, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 270.9% | WorstFold: -44.2% | Sharpe: 6.02 | MaxDD: -8.9% | Trades: 68 | W/L: 36/32
+  REJECTED: Max Drawdown of -8.9% exceeded -7.0% limit
+
+[Trial #128] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00082, batch=256, epochs=30, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 293.7% | WorstFold: -12.4% | Sharpe: 6.05 | MaxDD: -6.0% | Trades: 72 | W/L: 40/32
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 86.4% | Sharpe: 2.76 | Trades: 98 | W/L: 49/49
+  ** MODEL SAVED: models/trial_128.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 86.4% | Sharpe: 2.76 | W/L: 49/49
+============================================================
+
+[Trial #129] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00082, batch=256, epochs=30, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 348.8% | WorstFold: -5.5% | Sharpe: 6.60 | MaxDD: -7.8% | Trades: 72 | W/L: 40/32
+  REJECTED: Max Drawdown of -7.8% exceeded -7.0% limit
+
+[Trial #130] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00086, batch=256, epochs=31, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 78.9% | WorstFold: -64.5% | Sharpe: 1.36 | MaxDD: -7.4% | Trades: 77 | W/L: 36/41
+  REJECTED: Max Drawdown of -7.4% exceeded -7.0% limit
+
+[Trial #131] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00049, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 295.9% | WorstFold: 179.7% | Sharpe: 5.93 | MaxDD: -2.8% | Trades: 76 | W/L: 41/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 92.2% | Sharpe: 3.12 | Trades: 82 | W/L: 44/38
+  ** MODEL SAVED: models/trial_131.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 92.2% | Sharpe: 3.12 | W/L: 44/38
+============================================================
+
+[Trial #132] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00048, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 236.2% | WorstFold: -88.4% | Sharpe: 3.33 | MaxDD: -11.8% | Trades: 71 | W/L: 34/37
+  REJECTED: Max Drawdown of -11.8% exceeded -7.0% limit
+
+[Trial #133] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00069, batch=256, epochs=32, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 387.1% | WorstFold: -70.9% | Sharpe: 4.66 | MaxDD: -8.7% | Trades: 71 | W/L: 39/32
+  REJECTED: Max Drawdown of -8.7% exceeded -7.0% limit
+
+[Trial #134] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00043, batch=256, epochs=32, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 137.0% | WorstFold: -92.8% | Sharpe: 1.49 | MaxDD: -11.0% | Trades: 69 | W/L: 32/37
+  REJECTED: Max Drawdown of -11.0% exceeded -7.0% limit
+
+[Trial #135] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00056, batch=256, epochs=30, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 165.8% | WorstFold: -66.1% | Sharpe: 3.55 | MaxDD: -8.5% | Trades: 65 | W/L: 33/32
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #136] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00063, batch=256, epochs=33, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 306.8% | WorstFold: -88.6% | Sharpe: 3.60 | MaxDD: -9.2% | Trades: 69 | W/L: 34/35
+  REJECTED: Max Drawdown of -9.2% exceeded -7.0% limit
+
+[Trial #137] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00079, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 173.7% | WorstFold: -87.9% | Sharpe: 2.32 | MaxDD: -9.4% | Trades: 75 | W/L: 37/38
+  REJECTED: Max Drawdown of -9.4% exceeded -7.0% limit
+
+[Trial #138] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00072, batch=256, epochs=34, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 309.1% | WorstFold: 3.5% | Sharpe: 5.65 | MaxDD: -7.2% | Trades: 72 | W/L: 38/34
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #139] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00111, batch=256, epochs=32, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: -20.2% | WorstFold: -83.3% | Sharpe: -1.69 | MaxDD: -9.8% | Trades: 85 | W/L: 35/50
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #140] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00051, batch=256, epochs=30, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 455.8% | WorstFold: -96.5% | Sharpe: 2.74 | MaxDD: -14.1% | Trades: 76 | W/L: 36/40
+  REJECTED: Max Drawdown of -14.1% exceeded -7.0% limit
+
+[Trial #141] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00094, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 261.0% | WorstFold: 3.9% | Sharpe: 5.87 | MaxDD: -6.5% | Trades: 71 | W/L: 39/32
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 5.8% | Sharpe: 0.38 | Trades: 74 | W/L: 35/39
+  ** MODEL SAVED: models/trial_141.pth **
+
+[Trial #142] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00094, batch=256, epochs=33, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 436.7% | WorstFold: -60.9% | Sharpe: 6.00 | MaxDD: -6.0% | Trades: 73 | W/L: 41/32
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 109.4% | Sharpe: 2.80 | Trades: 142 | W/L: 69/73
+  ** MODEL SAVED: models/trial_142.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 109.4% | Sharpe: 2.80 | W/L: 69/73
+============================================================
+
+[Trial #143] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00142, batch=256, epochs=33, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 148.3% | WorstFold: -26.4% | Sharpe: 3.26 | MaxDD: -4.4% | Trades: 75 | W/L: 38/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 204.9% | Sharpe: 4.63 | Trades: 111 | W/L: 61/50
+  ** MODEL SAVED: models/trial_143.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 204.9% | Sharpe: 4.63 | W/L: 61/50
+============================================================
+
+[Trial #144] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00146, batch=256, epochs=33, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 190.7% | WorstFold: -21.2% | Sharpe: 4.10 | MaxDD: -8.4% | Trades: 86 | W/L: 45/41
+  REJECTED: Max Drawdown of -8.4% exceeded -7.0% limit
+
+[Trial #145] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00140, batch=256, epochs=34, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 118.9% | WorstFold: -65.2% | Sharpe: 2.95 | MaxDD: -8.9% | Trades: 79 | W/L: 40/39
+  REJECTED: Max Drawdown of -8.9% exceeded -7.0% limit
+
+[Trial #146] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00161, batch=256, epochs=32, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 142.1% | WorstFold: -86.2% | Sharpe: 2.88 | MaxDD: -11.5% | Trades: 74 | W/L: 32/42
+  REJECTED: Max Drawdown of -11.5% exceeded -7.0% limit
+
+[Trial #147] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00131, batch=256, epochs=33, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 98.5% | WorstFold: -61.8% | Sharpe: 2.01 | MaxDD: -7.1% | Trades: 85 | W/L: 39/46
+  REJECTED: Max Drawdown of -7.1% exceeded -7.0% limit
+
+[Trial #148] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00196, batch=256, epochs=31, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 497.3% | WorstFold: -93.5% | Sharpe: 1.04 | MaxDD: -12.4% | Trades: 97 | W/L: 45/52
+  REJECTED: Max Drawdown of -12.4% exceeded -7.0% limit
+
+[Trial #149] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00104, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 289.6% | WorstFold: 21.3% | Sharpe: 8.41 | MaxDD: -3.8% | Trades: 71 | W/L: 40/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 237.0% | Sharpe: 4.80 | Trades: 122 | W/L: 66/56
+  ** MODEL SAVED: models/trial_149.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 237.0% | Sharpe: 4.80 | W/L: 66/56
+============================================================
+
+[Trial #150] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00123, batch=256, epochs=32, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 161.1% | WorstFold: -85.6% | Sharpe: 2.19 | MaxDD: -9.3% | Trades: 78 | W/L: 38/40
+  REJECTED: Max Drawdown of -9.3% exceeded -7.0% limit
+
+[Trial #151] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00105, batch=256, epochs=31, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 12.1% | WorstFold: -3.3% | Sharpe: 0.50 | MaxDD: -4.7% | Trades: 81 | W/L: 39/42
+
+[Trial #152] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00093, batch=256, epochs=30, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 200.4% | WorstFold: -76.6% | Sharpe: 3.43 | MaxDD: -8.0% | Trades: 71 | W/L: 35/36
+  REJECTED: Max Drawdown of -8.0% exceeded -7.0% limit
+
+[Trial #153] seq=32, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00115, batch=256, epochs=34, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 141.1% | WorstFold: -92.5% | Sharpe: 0.66 | MaxDD: -10.8% | Trades: 84 | W/L: 39/45
+  REJECTED: Max Drawdown of -10.8% exceeded -7.0% limit
+
+[Trial #154] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00079, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 144.0% | WorstFold: -69.6% | Sharpe: 2.99 | MaxDD: -8.1% | Trades: 71 | W/L: 38/33
+  REJECTED: Max Drawdown of -8.1% exceeded -7.0% limit
+
+[Trial #155] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00100, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 117.8% | WorstFold: -69.9% | Sharpe: 2.34 | MaxDD: -9.4% | Trades: 70 | W/L: 33/37
+  REJECTED: Max Drawdown of -9.4% exceeded -7.0% limit
+
+[Trial #156] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00084, batch=256, epochs=29, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 267.9% | WorstFold: -51.1% | Sharpe: 4.50 | MaxDD: -6.3% | Trades: 82 | W/L: 40/42
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 53.1% | Sharpe: 1.92 | Trades: 110 | W/L: 57/53
+  ** MODEL SAVED: models/trial_156.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 53.1% | Sharpe: 1.92 | W/L: 57/53
+============================================================
+
+[Trial #157] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00087, batch=256, epochs=31, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 62.1% | WorstFold: -47.7% | Sharpe: 1.56 | MaxDD: -8.3% | Trades: 82 | W/L: 40/42
+  REJECTED: Max Drawdown of -8.3% exceeded -7.0% limit
+
+[Trial #158] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00091, batch=256, epochs=31, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 67.1% | WorstFold: -80.6% | Sharpe: 0.95 | MaxDD: -9.1% | Trades: 76 | W/L: 37/39
+  REJECTED: Max Drawdown of -9.1% exceeded -7.0% limit
+
+[Trial #159] seq=128, hidden=256, layers=1, heads=8, drop=0.29, lr=0.00069, batch=256, epochs=32, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 236.6% | WorstFold: -70.2% | Sharpe: 3.54 | MaxDD: -8.4% | Trades: 66 | W/L: 34/32
+  REJECTED: Max Drawdown of -8.4% exceeded -7.0% limit
+
+[Trial #160] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00122, batch=256, epochs=29, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 219.2% | WorstFold: 116.1% | Sharpe: 4.47 | MaxDD: -5.4% | Trades: 92 | W/L: 49/43
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -61.9% | Sharpe: -3.48 | Trades: 155 | W/L: 60/95
+
+[Trial #161] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00103, batch=256, epochs=30, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 234.1% | WorstFold: 29.5% | Sharpe: 5.15 | MaxDD: -3.7% | Trades: 81 | W/L: 46/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -18.5% | Sharpe: -0.60 | Trades: 145 | W/L: 64/81
+
+[Trial #162] seq=128, hidden=256, layers=1, heads=8, drop=0.30, lr=0.00125, batch=256, epochs=29, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 10.4% | WorstFold: -84.4% | Sharpe: -1.46 | MaxDD: -9.0% | Trades: 91 | W/L: 38/53
+  REJECTED: Max Drawdown of -9.0% exceeded -7.0% limit
+
+[Trial #163] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00107, batch=256, epochs=29, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 192.0% | WorstFold: -90.8% | Sharpe: 2.17 | MaxDD: -9.7% | Trades: 71 | W/L: 34/37
+  REJECTED: Max Drawdown of -9.7% exceeded -7.0% limit
+
+[Trial #164] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00095, batch=256, epochs=30, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 225.9% | WorstFold: 101.1% | Sharpe: 5.45 | MaxDD: -4.3% | Trades: 74 | W/L: 40/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 141.6% | Sharpe: 3.95 | Trades: 101 | W/L: 54/47
+  ** MODEL SAVED: models/trial_164.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 141.6% | Sharpe: 3.95 | W/L: 54/47
+============================================================
+
+[Trial #165] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00096, batch=256, epochs=29, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 89.3% | WorstFold: -85.9% | Sharpe: 0.87 | MaxDD: -7.9% | Trades: 85 | W/L: 37/48
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #166] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00083, batch=256, epochs=30, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 344.3% | WorstFold: -64.6% | Sharpe: 5.86 | MaxDD: -8.3% | Trades: 72 | W/L: 38/34
+  REJECTED: Max Drawdown of -8.3% exceeded -7.0% limit
+
+[Trial #167] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00101, batch=256, epochs=28, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 81.4% | WorstFold: -71.9% | Sharpe: 1.23 | MaxDD: -11.6% | Trades: 85 | W/L: 40/45
+  REJECTED: Max Drawdown of -11.6% exceeded -7.0% limit
+
+[Trial #168] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00106, batch=256, epochs=30, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 158.5% | WorstFold: -90.8% | Sharpe: 0.49 | MaxDD: -10.8% | Trades: 75 | W/L: 33/42
+  REJECTED: Max Drawdown of -10.8% exceeded -7.0% limit
+
+[Trial #169] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00095, batch=256, epochs=30, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 236.3% | WorstFold: 46.8% | Sharpe: 5.09 | MaxDD: -5.6% | Trades: 74 | W/L: 42/32
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 106.7% | Sharpe: 3.24 | Trades: 115 | W/L: 58/57
+  ** MODEL SAVED: models/trial_169.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 106.7% | Sharpe: 3.24 | W/L: 58/57
+============================================================
+
+[Trial #170] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00093, batch=256, epochs=30, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 299.5% | WorstFold: -90.2% | Sharpe: 4.41 | MaxDD: -10.3% | Trades: 85 | W/L: 41/44
+  REJECTED: Max Drawdown of -10.3% exceeded -7.0% limit
+
+[Trial #171] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00087, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 117.8% | WorstFold: -28.1% | Sharpe: 2.61 | MaxDD: -5.1% | Trades: 84 | W/L: 42/42
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 132.2% | Sharpe: 3.47 | Trades: 128 | W/L: 63/65
+  ** MODEL SAVED: models/trial_171.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 132.2% | Sharpe: 3.47 | W/L: 63/65
+============================================================
+
+[Trial #172] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00077, batch=256, epochs=31, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 248.5% | WorstFold: -78.7% | Sharpe: 4.11 | MaxDD: -7.0% | Trades: 59 | W/L: 31/28
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 250.4% | Sharpe: 6.25 | Trades: 80 | W/L: 44/36
+  ** MODEL SAVED: models/trial_172.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 250.4% | Sharpe: 6.25 | W/L: 44/36
+============================================================
+
+[Trial #173] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00079, batch=256, epochs=30, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 108.5% | WorstFold: -68.3% | Sharpe: 1.93 | MaxDD: -7.7% | Trades: 69 | W/L: 34/35
+  REJECTED: Max Drawdown of -7.7% exceeded -7.0% limit
+
+[Trial #174] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00084, batch=256, epochs=31, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 303.6% | WorstFold: 4.0% | Sharpe: 5.99 | MaxDD: -7.4% | Trades: 72 | W/L: 40/32
+  REJECTED: Max Drawdown of -7.4% exceeded -7.0% limit
+
+[Trial #175] seq=128, hidden=256, layers=1, heads=8, drop=0.29, lr=0.00076, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 140.4% | WorstFold: 8.9% | Sharpe: 3.50 | MaxDD: -5.2% | Trades: 83 | W/L: 43/40
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -6.3% | Sharpe: -0.11 | Trades: 136 | W/L: 62/74
+
+[Trial #176] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00095, batch=256, epochs=31, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 116.0% | WorstFold: 7.6% | Sharpe: 3.38 | MaxDD: -6.7% | Trades: 81 | W/L: 39/42
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 38.8% | Sharpe: 1.40 | Trades: 123 | W/L: 57/66
+  ** MODEL SAVED: models/trial_176.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 38.8% | Sharpe: 1.40 | W/L: 57/66
+============================================================
+
+[Trial #177] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00073, batch=256, epochs=30, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 52.1% | WorstFold: -68.8% | Sharpe: 0.37 | MaxDD: -7.6% | Trades: 78 | W/L: 36/42
+  REJECTED: Max Drawdown of -7.6% exceeded -7.0% limit
+
+[Trial #178] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00101, batch=256, epochs=32, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 281.9% | WorstFold: -30.8% | Sharpe: 5.79 | MaxDD: -7.2% | Trades: 71 | W/L: 36/35
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #179] seq=32, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00090, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 147.6% | WorstFold: -68.5% | Sharpe: 2.93 | MaxDD: -8.7% | Trades: 87 | W/L: 43/44
+  REJECTED: Max Drawdown of -8.7% exceeded -7.0% limit
+
+[Trial #180] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00112, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 194.2% | WorstFold: -28.5% | Sharpe: 4.69 | MaxDD: -7.0% | Trades: 95 | W/L: 52/43
+  REJECTED: Max Drawdown of -7.0% exceeded -7.0% limit
+
+[Trial #181] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00080, batch=256, epochs=29, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 131.2% | WorstFold: -83.3% | Sharpe: 0.82 | MaxDD: -8.9% | Trades: 70 | W/L: 32/38
+  REJECTED: Max Drawdown of -8.9% exceeded -7.0% limit
+
+[Trial #182] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00068, batch=256, epochs=30, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 112.2% | WorstFold: -89.4% | Sharpe: 0.34 | MaxDD: -12.8% | Trades: 67 | W/L: 30/37
+  REJECTED: Max Drawdown of -12.8% exceeded -7.0% limit
+
+[Trial #183] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00086, batch=256, epochs=31, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 142.6% | WorstFold: -65.2% | Sharpe: 3.23 | MaxDD: -8.5% | Trades: 71 | W/L: 36/35
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #184] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00126, batch=256, epochs=28, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 47.4% | WorstFold: -81.2% | Sharpe: -0.19 | MaxDD: -8.9% | Trades: 99 | W/L: 46/53
+  REJECTED: Max Drawdown of -8.9% exceeded -7.0% limit
+
+[Trial #185] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00117, batch=256, epochs=29, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 188.7% | WorstFold: -80.3% | Sharpe: 2.54 | MaxDD: -10.2% | Trades: 77 | W/L: 35/42
+  REJECTED: Max Drawdown of -10.2% exceeded -7.0% limit
+
+[Trial #186] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00098, batch=256, epochs=32, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 197.7% | WorstFold: -50.6% | Sharpe: 4.11 | MaxDD: -7.3% | Trades: 64 | W/L: 33/31
+  REJECTED: Max Drawdown of -7.3% exceeded -7.0% limit
+
+[Trial #187] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00119, batch=256, epochs=31, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 164.5% | WorstFold: -86.7% | Sharpe: 1.69 | MaxDD: -11.7% | Trades: 65 | W/L: 30/35
+  REJECTED: Max Drawdown of -11.7% exceeded -7.0% limit
+
+[Trial #188] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00078, batch=256, epochs=30, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 159.5% | WorstFold: 10.8% | Sharpe: 4.29 | MaxDD: -6.9% | Trades: 72 | W/L: 37/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 181.4% | Sharpe: 4.45 | Trades: 99 | W/L: 54/45
+  ** MODEL SAVED: models/trial_188.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 181.4% | Sharpe: 4.45 | W/L: 54/45
+============================================================
+
+[Trial #189] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00060, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 222.9% | WorstFold: -61.0% | Sharpe: 4.49 | MaxDD: -10.7% | Trades: 74 | W/L: 37/37
+  REJECTED: Max Drawdown of -10.7% exceeded -7.0% limit
+
+[Trial #190] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00073, batch=256, epochs=29, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 207.4% | WorstFold: -44.8% | Sharpe: 4.49 | MaxDD: -4.3% | Trades: 66 | W/L: 36/30
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 11.2% | Sharpe: 0.57 | Trades: 105 | W/L: 52/53
+  ** MODEL SAVED: models/trial_190.pth **
+
+[Trial #191] seq=128, hidden=256, layers=1, heads=8, drop=0.31, lr=0.00108, batch=256, epochs=32, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 243.0% | WorstFold: -53.3% | Sharpe: 3.78 | MaxDD: -5.8% | Trades: 80 | W/L: 41/39
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 141.2% | Sharpe: 3.92 | Trades: 93 | W/L: 53/40
+  ** MODEL SAVED: models/trial_191.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 141.2% | Sharpe: 3.92 | W/L: 53/40
+============================================================
+
+[Trial #192] seq=128, hidden=256, layers=1, heads=8, drop=0.30, lr=0.00105, batch=256, epochs=32, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 125.4% | WorstFold: -86.7% | Sharpe: 0.69 | MaxDD: -10.5% | Trades: 70 | W/L: 31/39
+  REJECTED: Max Drawdown of -10.5% exceeded -7.0% limit
+
+[Trial #193] seq=128, hidden=256, layers=1, heads=8, drop=0.32, lr=0.00092, batch=256, epochs=32, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 352.9% | WorstFold: -68.7% | Sharpe: 7.44 | MaxDD: -9.8% | Trades: 66 | W/L: 34/32
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #194] seq=128, hidden=256, layers=1, heads=8, drop=0.31, lr=0.00108, batch=256, epochs=33, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 73.8% | WorstFold: -69.1% | Sharpe: 1.73 | MaxDD: -9.8% | Trades: 90 | W/L: 45/45
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #195] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00114, batch=256, epochs=31, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 98.5% | WorstFold: -13.6% | Sharpe: 3.08 | MaxDD: -4.8% | Trades: 80 | W/L: 40/40
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 114.9% | Sharpe: 3.18 | Trades: 127 | W/L: 64/63
+  ** MODEL SAVED: models/trial_195.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 114.9% | Sharpe: 3.18 | W/L: 64/63
+============================================================
+
+[Trial #196] seq=128, hidden=256, layers=1, heads=8, drop=0.29, lr=0.00082, batch=256, epochs=30, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 168.8% | WorstFold: -83.7% | Sharpe: 3.24 | MaxDD: -8.6% | Trades: 71 | W/L: 34/37
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #197] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00099, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 302.0% | WorstFold: -89.2% | Sharpe: 2.92 | MaxDD: -10.0% | Trades: 90 | W/L: 44/46
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #198] seq=128, hidden=256, layers=1, heads=8, drop=0.28, lr=0.00133, batch=256, epochs=33, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 110.8% | WorstFold: 3.5% | Sharpe: 3.80 | MaxDD: -6.4% | Trades: 89 | W/L: 45/44
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -90.0% | Sharpe: -7.76 | Trades: 196 | W/L: 70/126
+
+[Trial #199] seq=96, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00067, batch=256, epochs=32, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35832 sequences of length 96, 41 features.
+  Val -> AvgROI: 257.7% | WorstFold: -87.2% | Sharpe: 2.58 | MaxDD: -10.0% | Trades: 83 | W/L: 41/42
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #200] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00089, batch=256, epochs=31, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 163.6% | WorstFold: 38.5% | Sharpe: 3.92 | MaxDD: -5.6% | Trades: 89 | W/L: 47/42
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 18.2% | Sharpe: 0.73 | Trades: 163 | W/L: 74/89
+  ** MODEL SAVED: models/trial_200.pth **
+
+[Trial #201] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00120, batch=256, epochs=29, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 157.4% | WorstFold: -32.5% | Sharpe: 3.05 | MaxDD: -7.8% | Trades: 92 | W/L: 46/46
+  REJECTED: Max Drawdown of -7.8% exceeded -7.0% limit
+
+[Trial #202] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00077, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 325.7% | WorstFold: -93.8% | Sharpe: 4.74 | MaxDD: -12.5% | Trades: 77 | W/L: 38/39
+  REJECTED: Max Drawdown of -12.5% exceeded -7.0% limit
+
+[Trial #203] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00104, batch=128, epochs=32, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 425.7% | WorstFold: -86.9% | Sharpe: 7.55 | MaxDD: -12.4% | Trades: 74 | W/L: 38/36
+  REJECTED: Max Drawdown of -12.4% exceeded -7.0% limit
+
+[Trial #204] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00071, batch=256, epochs=29, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 566.2% | WorstFold: 146.7% | Sharpe: 9.70 | MaxDD: -3.4% | Trades: 67 | W/L: 40/27
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 89.0% | Sharpe: 3.08 | Trades: 81 | W/L: 42/39
+  ** MODEL SAVED: models/trial_204.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 89.0% | Sharpe: 3.08 | W/L: 42/39
+============================================================
+
+[Trial #205] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00071, batch=256, epochs=29, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 393.2% | WorstFold: -20.1% | Sharpe: 8.54 | MaxDD: -5.1% | Trades: 72 | W/L: 40/32
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 201.7% | Sharpe: 4.64 | Trades: 104 | W/L: 57/47
+  ** MODEL SAVED: models/trial_205.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 201.7% | Sharpe: 4.64 | W/L: 57/47
+============================================================
+
+[Trial #206] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00072, batch=256, epochs=28, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 186.5% | WorstFold: -55.0% | Sharpe: 3.27 | MaxDD: -5.9% | Trades: 76 | W/L: 41/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 281.9% | Sharpe: 5.65 | Trades: 103 | W/L: 57/46
+  ** MODEL SAVED: models/trial_206.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 281.9% | Sharpe: 5.65 | W/L: 57/46
+============================================================
+
+[Trial #207] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00066, batch=256, epochs=30, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 150.1% | WorstFold: -2.8% | Sharpe: 4.02 | MaxDD: -6.2% | Trades: 72 | W/L: 38/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 143.4% | Sharpe: 4.42 | Trades: 73 | W/L: 43/30
+  ** MODEL SAVED: models/trial_207.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 143.4% | Sharpe: 4.42 | W/L: 43/30
+============================================================
+
+[Trial #208] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00077, batch=256, epochs=30, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 93.5% | WorstFold: -97.2% | Sharpe: -1.30 | MaxDD: -13.1% | Trades: 71 | W/L: 29/42
+  REJECTED: Max Drawdown of -13.1% exceeded -7.0% limit
+
+[Trial #209] seq=128, hidden=64, layers=1, heads=8, drop=0.24, lr=0.00063, batch=256, epochs=31, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 105.2% | WorstFold: -79.2% | Sharpe: -0.10 | MaxDD: -8.4% | Trades: 82 | W/L: 37/45
+  REJECTED: Max Drawdown of -8.4% exceeded -7.0% limit
+
+[Trial #210] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00085, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 291.4% | WorstFold: 84.0% | Sharpe: 7.43 | MaxDD: -4.3% | Trades: 67 | W/L: 38/29
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 168.9% | Sharpe: 4.78 | Trades: 85 | W/L: 46/39
+  ** MODEL SAVED: models/trial_210.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 168.9% | Sharpe: 4.78 | W/L: 46/39
+============================================================
+
+[Trial #211] seq=32, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00081, batch=256, epochs=28, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 21.3% | WorstFold: -61.7% | Sharpe: 0.16 | MaxDD: -10.2% | Trades: 92 | W/L: 42/50
+  REJECTED: Max Drawdown of -10.2% exceeded -7.0% limit
+
+[Trial #212] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00070, batch=256, epochs=30, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 209.4% | WorstFold: 31.5% | Sharpe: 5.46 | MaxDD: -3.7% | Trades: 73 | W/L: 39/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 42.5% | Sharpe: 1.78 | Trades: 88 | W/L: 45/43
+  ** MODEL SAVED: models/trial_212.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 42.5% | Sharpe: 1.78 | W/L: 45/43
+============================================================
+
+[Trial #213] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00086, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 145.1% | WorstFold: -22.9% | Sharpe: 3.13 | MaxDD: -5.6% | Trades: 78 | W/L: 38/40
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 90.9% | Sharpe: 2.80 | Trades: 113 | W/L: 54/59
+  ** MODEL SAVED: models/trial_213.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 90.9% | Sharpe: 2.80 | W/L: 54/59
+============================================================
+
+[Trial #214] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00075, batch=256, epochs=32, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 233.6% | WorstFold: -65.3% | Sharpe: 3.40 | MaxDD: -6.5% | Trades: 68 | W/L: 35/33
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 177.5% | Sharpe: 4.50 | Trades: 95 | W/L: 50/45
+  ** MODEL SAVED: models/trial_214.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 177.5% | Sharpe: 4.50 | W/L: 50/45
+============================================================
+
+[Trial #215] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00087, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 291.6% | WorstFold: -62.4% | Sharpe: 6.41 | MaxDD: -6.8% | Trades: 76 | W/L: 38/38
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 260.1% | Sharpe: 5.49 | Trades: 111 | W/L: 59/52
+  ** MODEL SAVED: models/trial_215.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 260.1% | Sharpe: 5.49 | W/L: 59/52
+============================================================
+
+[Trial #216] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00086, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 181.0% | WorstFold: -45.7% | Sharpe: 3.08 | MaxDD: -5.8% | Trades: 79 | W/L: 42/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 50.1% | Sharpe: 1.85 | Trades: 103 | W/L: 53/50
+  ** MODEL SAVED: models/trial_216.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 50.1% | Sharpe: 1.85 | W/L: 53/50
+============================================================
+
+[Trial #217] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00093, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 264.7% | WorstFold: -17.2% | Sharpe: 5.56 | MaxDD: -4.8% | Trades: 66 | W/L: 37/29
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 161.8% | Sharpe: 3.81 | Trades: 128 | W/L: 69/59
+  ** MODEL SAVED: models/trial_217.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 161.8% | Sharpe: 3.81 | W/L: 69/59
+============================================================
+
+[Trial #218] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00092, batch=256, epochs=33, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 506.1% | WorstFold: -44.3% | Sharpe: 9.12 | MaxDD: -6.1% | Trades: 84 | W/L: 46/38
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 24.4% | Sharpe: 0.92 | Trades: 151 | W/L: 73/78
+  ** MODEL SAVED: models/trial_218.pth **
+
+[Trial #219] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00082, batch=256, epochs=34, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 199.4% | WorstFold: -38.6% | Sharpe: 5.12 | MaxDD: -8.4% | Trades: 78 | W/L: 41/37
+  REJECTED: Max Drawdown of -8.4% exceeded -7.0% limit
+
+[Trial #220] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00091, batch=256, epochs=33, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 125.6% | WorstFold: -89.8% | Sharpe: 1.04 | MaxDD: -9.5% | Trades: 84 | W/L: 41/43
+  REJECTED: Max Drawdown of -9.5% exceeded -7.0% limit
+
+[Trial #221] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00078, batch=256, epochs=33, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 195.1% | WorstFold: -88.0% | Sharpe: 2.24 | MaxDD: -9.8% | Trades: 82 | W/L: 38/44
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #222] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00070, batch=256, epochs=32, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 195.0% | WorstFold: 77.8% | Sharpe: 5.13 | MaxDD: -4.7% | Trades: 64 | W/L: 36/28
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 173.5% | Sharpe: 4.82 | Trades: 77 | W/L: 45/32
+  ** MODEL SAVED: models/trial_222.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 173.5% | Sharpe: 4.82 | W/L: 45/32
+============================================================
+
+[Trial #223] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00087, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 232.0% | WorstFold: -94.2% | Sharpe: 1.68 | MaxDD: -13.8% | Trades: 70 | W/L: 33/37
+  REJECTED: Max Drawdown of -13.8% exceeded -7.0% limit
+
+[Trial #224] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00094, batch=256, epochs=32, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 263.7% | WorstFold: 47.3% | Sharpe: 6.01 | MaxDD: -6.8% | Trades: 68 | W/L: 39/29
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 131.0% | Sharpe: 3.49 | Trades: 108 | W/L: 52/56
+  ** MODEL SAVED: models/trial_224.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 131.0% | Sharpe: 3.49 | W/L: 52/56
+============================================================
+
+[Trial #225] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00095, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 30.2% | WorstFold: -72.1% | Sharpe: 0.43 | MaxDD: -8.1% | Trades: 75 | W/L: 33/42
+  REJECTED: Max Drawdown of -8.1% exceeded -7.0% limit
+
+[Trial #226] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00083, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 242.1% | WorstFold: -8.9% | Sharpe: 5.48 | MaxDD: -6.3% | Trades: 78 | W/L: 43/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 70.6% | Sharpe: 2.25 | Trades: 117 | W/L: 60/57
+  ** MODEL SAVED: models/trial_226.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 70.6% | Sharpe: 2.25 | W/L: 60/57
+============================================================
+
+[Trial #227] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00083, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 284.9% | WorstFold: 47.3% | Sharpe: 6.13 | MaxDD: -5.4% | Trades: 64 | W/L: 35/29
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 70.2% | Sharpe: 2.73 | Trades: 81 | W/L: 42/39
+  ** MODEL SAVED: models/trial_227.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 70.2% | Sharpe: 2.73 | W/L: 42/39
+============================================================
+
+[Trial #228] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00083, batch=256, epochs=32, class_w=5.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 54.9% | WorstFold: -62.4% | Sharpe: 0.99 | MaxDD: -5.7% | Trades: 83 | W/L: 38/45
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -7.8% | Sharpe: -0.18 | Trades: 141 | W/L: 63/78
+
+[Trial #229] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00087, batch=256, epochs=34, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 162.2% | WorstFold: -41.7% | Sharpe: 3.41 | MaxDD: -5.5% | Trades: 69 | W/L: 34/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 76.7% | Sharpe: 2.55 | Trades: 103 | W/L: 56/47
+  ** MODEL SAVED: models/trial_229.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 76.7% | Sharpe: 2.55 | W/L: 56/47
+============================================================
+
+[Trial #230] seq=128, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00094, batch=256, epochs=33, class_w=5.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 329.7% | WorstFold: -94.8% | Sharpe: 3.37 | MaxDD: -14.1% | Trades: 81 | W/L: 40/41
+  REJECTED: Max Drawdown of -14.1% exceeded -7.0% limit
+
+[Trial #231] seq=128, hidden=256, layers=3, heads=8, drop=0.22, lr=0.00073, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 30.8% | WorstFold: -89.4% | Sharpe: -0.65 | MaxDD: -10.2% | Trades: 95 | W/L: 42/53
+  REJECTED: Max Drawdown of -10.2% exceeded -7.0% limit
+
+[Trial #232] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00081, batch=256, epochs=33, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 262.5% | WorstFold: -81.2% | Sharpe: 4.15 | MaxDD: -8.4% | Trades: 76 | W/L: 38/38
+  REJECTED: Max Drawdown of -8.4% exceeded -7.0% limit
+
+[Trial #233] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00090, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 417.9% | WorstFold: -44.5% | Sharpe: 4.12 | MaxDD: -5.8% | Trades: 65 | W/L: 35/30
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 71.6% | Sharpe: 2.51 | Trades: 100 | W/L: 51/49
+  ** MODEL SAVED: models/trial_233.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 71.6% | Sharpe: 2.51 | W/L: 51/49
+============================================================
+
+[Trial #234] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00090, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 232.2% | WorstFold: 3.0% | Sharpe: 4.80 | MaxDD: -5.6% | Trades: 78 | W/L: 43/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -18.6% | Sharpe: -0.75 | Trades: 117 | W/L: 54/63
+
+[Trial #235] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00084, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 151.0% | WorstFold: -90.1% | Sharpe: 2.22 | MaxDD: -11.2% | Trades: 78 | W/L: 38/40
+  REJECTED: Max Drawdown of -11.2% exceeded -7.0% limit
+
+[Trial #236] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00096, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 173.6% | WorstFold: -93.5% | Sharpe: 1.53 | MaxDD: -14.3% | Trades: 76 | W/L: 33/43
+  REJECTED: Max Drawdown of -14.3% exceeded -7.0% limit
+
+[Trial #237] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00077, batch=256, epochs=32, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 262.2% | WorstFold: -84.4% | Sharpe: 3.62 | MaxDD: -8.1% | Trades: 66 | W/L: 34/32
+  REJECTED: Max Drawdown of -8.1% exceeded -7.0% limit
+
+[Trial #238] seq=96, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00067, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35832 sequences of length 96, 41 features.
+  Val -> AvgROI: 85.0% | WorstFold: -61.3% | Sharpe: 1.56 | MaxDD: -7.1% | Trades: 85 | W/L: 43/42
+  REJECTED: Max Drawdown of -7.1% exceeded -7.0% limit
+
+[Trial #239] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00088, batch=256, epochs=32, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 101.4% | WorstFold: -72.4% | Sharpe: 1.69 | MaxDD: -6.3% | Trades: 81 | W/L: 36/45
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 78.5% | Sharpe: 2.49 | Trades: 116 | W/L: 56/60
+  ** MODEL SAVED: models/trial_239.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 78.5% | Sharpe: 2.49 | W/L: 56/60
+============================================================
+
+[Trial #240] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00098, batch=256, epochs=34, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 51.2% | WorstFold: -75.0% | Sharpe: 0.62 | MaxDD: -6.4% | Trades: 66 | W/L: 30/36
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 127.0% | Sharpe: 3.48 | Trades: 104 | W/L: 53/51
+  ** MODEL SAVED: models/trial_240.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 127.0% | Sharpe: 3.48 | W/L: 53/51
+============================================================
+
+[Trial #241] seq=128, hidden=64, layers=1, heads=8, drop=0.22, lr=0.00045, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 154.1% | WorstFold: -89.1% | Sharpe: 1.33 | MaxDD: -12.0% | Trades: 77 | W/L: 39/38
+  REJECTED: Max Drawdown of -12.0% exceeded -7.0% limit
+
+[Trial #242] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00080, batch=128, epochs=33, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 181.7% | WorstFold: -62.9% | Sharpe: 3.93 | MaxDD: -6.3% | Trades: 70 | W/L: 36/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 239.3% | Sharpe: 5.58 | Trades: 89 | W/L: 52/37
+  ** MODEL SAVED: models/trial_242.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 239.3% | Sharpe: 5.58 | W/L: 52/37
+============================================================
+
+[Trial #243] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00071, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 207.2% | WorstFold: -28.8% | Sharpe: 4.45 | MaxDD: -3.8% | Trades: 62 | W/L: 31/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 137.3% | Sharpe: 4.10 | Trades: 81 | W/L: 44/37
+  ** MODEL SAVED: models/trial_243.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 137.3% | Sharpe: 4.10 | W/L: 44/37
+============================================================
+
+[Trial #244] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00092, batch=256, epochs=32, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 34.3% | WorstFold: -81.6% | Sharpe: -0.11 | MaxDD: -8.1% | Trades: 82 | W/L: 36/46
+  REJECTED: Max Drawdown of -8.1% exceeded -7.0% limit
+
+[Trial #245] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00101, batch=256, epochs=31, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 193.9% | WorstFold: -82.7% | Sharpe: 3.05 | MaxDD: -7.7% | Trades: 78 | W/L: 37/41
+  REJECTED: Max Drawdown of -7.7% exceeded -7.0% limit
+
+[Trial #246] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00087, batch=256, epochs=32, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 245.4% | WorstFold: -70.3% | Sharpe: 4.22 | MaxDD: -6.8% | Trades: 68 | W/L: 37/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 72.7% | Sharpe: 2.56 | Trades: 97 | W/L: 48/49
+  ** MODEL SAVED: models/trial_246.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 72.7% | Sharpe: 2.56 | W/L: 48/49
+============================================================
+
+[Trial #247] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00075, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 160.8% | WorstFold: -43.7% | Sharpe: 3.77 | MaxDD: -3.1% | Trades: 66 | W/L: 33/33
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 167.6% | Sharpe: 4.79 | Trades: 75 | W/L: 45/30
+  ** MODEL SAVED: models/trial_247.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 167.6% | Sharpe: 4.79 | W/L: 45/30
+============================================================
+
+[Trial #248] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00101, batch=256, epochs=32, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 191.1% | WorstFold: 22.8% | Sharpe: 4.49 | MaxDD: -4.2% | Trades: 86 | W/L: 46/40
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 64.4% | Sharpe: 1.95 | Trades: 152 | W/L: 77/75
+  ** MODEL SAVED: models/trial_248.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 64.4% | Sharpe: 1.95 | W/L: 77/75
+============================================================
+
+[Trial #249] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00083, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 60.7% | WorstFold: -20.9% | Sharpe: 1.87 | MaxDD: -7.0% | Trades: 71 | W/L: 36/35
+  REJECTED: Max Drawdown of -7.0% exceeded -7.0% limit
+
+[Trial #250] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00092, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 237.4% | WorstFold: -49.9% | Sharpe: 4.40 | MaxDD: -8.6% | Trades: 84 | W/L: 43/41
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #251] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00081, batch=256, epochs=34, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 102.8% | WorstFold: -83.0% | Sharpe: 2.03 | MaxDD: -9.8% | Trades: 67 | W/L: 32/35
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #252] seq=128, hidden=256, layers=1, heads=4, drop=0.25, lr=0.00072, batch=256, epochs=29, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 221.8% | WorstFold: -67.8% | Sharpe: 4.71 | MaxDD: -5.6% | Trades: 76 | W/L: 39/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 250.2% | Sharpe: 5.85 | Trades: 92 | W/L: 54/38
+  ** MODEL SAVED: models/trial_252.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 250.2% | Sharpe: 5.85 | W/L: 54/38
+============================================================
+
+[Trial #253] seq=32, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00090, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 37.2% | WorstFold: -72.7% | Sharpe: 0.41 | MaxDD: -7.5% | Trades: 81 | W/L: 37/44
+  REJECTED: Max Drawdown of -7.5% exceeded -7.0% limit
+
+[Trial #254] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00061, batch=256, epochs=32, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 526.1% | WorstFold: -56.2% | Sharpe: 5.02 | MaxDD: -6.1% | Trades: 80 | W/L: 45/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 132.6% | Sharpe: 3.62 | Trades: 115 | W/L: 60/55
+  ** MODEL SAVED: models/trial_254.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 132.6% | Sharpe: 3.62 | W/L: 60/55
+============================================================
+
+[Trial #255] seq=64, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00066, batch=256, epochs=32, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 59.9% | WorstFold: -66.7% | Sharpe: 1.08 | MaxDD: -5.6% | Trades: 72 | W/L: 35/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 218.6% | Sharpe: 4.81 | Trades: 108 | W/L: 57/51
+  ** MODEL SAVED: models/trial_255.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 218.6% | Sharpe: 4.81 | W/L: 57/51
+============================================================
+
+[Trial #256] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00057, batch=256, epochs=32, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 169.1% | WorstFold: -55.3% | Sharpe: 2.54 | MaxDD: -6.8% | Trades: 79 | W/L: 41/38
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -6.6% | Sharpe: -0.13 | Trades: 138 | W/L: 58/80
+
+[Trial #257] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00052, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 160.2% | WorstFold: -58.4% | Sharpe: 3.10 | MaxDD: -9.1% | Trades: 83 | W/L: 42/41
+  REJECTED: Max Drawdown of -9.1% exceeded -7.0% limit
+
+[Trial #258] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00059, batch=256, epochs=32, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 350.3% | WorstFold: -82.6% | Sharpe: 4.66 | MaxDD: -10.6% | Trades: 68 | W/L: 35/33
+  REJECTED: Max Drawdown of -10.6% exceeded -7.0% limit
+
+[Trial #259] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00070, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 230.2% | WorstFold: 52.6% | Sharpe: 5.77 | MaxDD: -3.7% | Trades: 74 | W/L: 40/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 49.3% | Sharpe: 1.81 | Trades: 98 | W/L: 46/52
+  ** MODEL SAVED: models/trial_259.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 49.3% | Sharpe: 1.81 | W/L: 46/52
+============================================================
+
+[Trial #260] seq=128, hidden=256, layers=1, heads=2, drop=0.21, lr=0.00061, batch=256, epochs=34, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 145.7% | WorstFold: 11.4% | Sharpe: 3.79 | MaxDD: -5.5% | Trades: 76 | W/L: 40/36
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 309.0% | Sharpe: 5.97 | Trades: 114 | W/L: 61/53
+  ** MODEL SAVED: models/trial_260.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 309.0% | Sharpe: 5.97 | W/L: 61/53
+============================================================
+
+[Trial #261] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00065, batch=256, epochs=33, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 110.0% | WorstFold: -91.2% | Sharpe: 0.69 | MaxDD: -10.8% | Trades: 67 | W/L: 30/37
+  REJECTED: Max Drawdown of -10.8% exceeded -7.0% limit
+
+[Trial #262] seq=128, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00069, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 163.7% | WorstFold: -21.0% | Sharpe: 3.90 | MaxDD: -6.7% | Trades: 75 | W/L: 41/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 175.3% | Sharpe: 4.42 | Trades: 109 | W/L: 56/53
+  ** MODEL SAVED: models/trial_262.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 175.3% | Sharpe: 4.42 | W/L: 56/53
+============================================================
+
+[Trial #263] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00076, batch=256, epochs=33, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 311.9% | WorstFold: -80.7% | Sharpe: 4.50 | MaxDD: -8.1% | Trades: 74 | W/L: 38/36
+  REJECTED: Max Drawdown of -8.1% exceeded -7.0% limit
+
+[Trial #264] seq=128, hidden=256, layers=1, heads=4, drop=0.18, lr=0.00063, batch=256, epochs=32, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: -12.0% | WorstFold: -75.0% | Sharpe: -1.12 | MaxDD: -6.4% | Trades: 77 | W/L: 33/44
+
+[Trial #265] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00055, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 412.7% | WorstFold: -71.8% | Sharpe: 7.25 | MaxDD: -8.1% | Trades: 54 | W/L: 28/26
+  REJECTED: Max Drawdown of -8.1% exceeded -7.0% limit
+
+[Trial #266] seq=128, hidden=64, layers=1, heads=8, drop=0.22, lr=0.00071, batch=128, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: -5.3% | WorstFold: -65.0% | Sharpe: -0.37 | MaxDD: -8.4% | Trades: 78 | W/L: 36/42
+  REJECTED: Max Drawdown of -8.4% exceeded -7.0% limit
+
+[Trial #267] seq=64, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00077, batch=256, epochs=32, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 70.8% | WorstFold: -53.0% | Sharpe: 2.41 | MaxDD: -8.3% | Trades: 66 | W/L: 33/33
+  REJECTED: Max Drawdown of -8.3% exceeded -7.0% limit
+
+[Trial #268] seq=96, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00084, batch=256, epochs=33, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35832 sequences of length 96, 41 features.
+  Val -> AvgROI: 88.9% | WorstFold: -65.2% | Sharpe: 1.80 | MaxDD: -7.6% | Trades: 85 | W/L: 40/45
+  REJECTED: Max Drawdown of -7.6% exceeded -7.0% limit
+
+[Trial #269] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00067, batch=256, epochs=34, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 283.2% | WorstFold: 87.5% | Sharpe: 6.08 | MaxDD: -5.8% | Trades: 87 | W/L: 49/38
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 234.6% | Sharpe: 4.54 | Trades: 150 | W/L: 78/72
+  ** MODEL SAVED: models/trial_269.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 234.6% | Sharpe: 4.54 | W/L: 78/72
+============================================================
+
+[Trial #270] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00064, batch=256, epochs=35, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 374.6% | WorstFold: -34.8% | Sharpe: 4.91 | MaxDD: -6.6% | Trades: 79 | W/L: 42/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 353.9% | Sharpe: 6.59 | Trades: 101 | W/L: 58/43
+  ** MODEL SAVED: models/trial_270.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 353.9% | Sharpe: 6.59 | W/L: 58/43
+============================================================
+
+[Trial #271] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00063, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 320.2% | WorstFold: -73.7% | Sharpe: 5.40 | MaxDD: -8.8% | Trades: 68 | W/L: 36/32
+  REJECTED: Max Drawdown of -8.8% exceeded -7.0% limit
+
+[Trial #272] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00066, batch=256, epochs=35, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 210.0% | WorstFold: -20.8% | Sharpe: 4.69 | MaxDD: -6.5% | Trades: 67 | W/L: 36/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 897.9% | Sharpe: 9.77 | Trades: 112 | W/L: 72/40
+  ** MODEL SAVED: models/trial_272.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 897.9% | Sharpe: 9.77 | W/L: 72/40
+============================================================
+
+[Trial #273] seq=128, hidden=256, layers=3, heads=8, drop=0.24, lr=0.00074, batch=256, epochs=34, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 78.4% | WorstFold: -83.5% | Sharpe: 0.73 | MaxDD: -8.6% | Trades: 75 | W/L: 36/39
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #274] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00059, batch=256, epochs=35, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 199.4% | WorstFold: -87.9% | Sharpe: 3.25 | MaxDD: -12.2% | Trades: 68 | W/L: 33/35
+  REJECTED: Max Drawdown of -12.2% exceeded -7.0% limit
+
+[Trial #275] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00080, batch=256, epochs=35, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 178.7% | WorstFold: -37.5% | Sharpe: 4.07 | MaxDD: -6.9% | Trades: 73 | W/L: 37/36
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 78.7% | Sharpe: 2.49 | Trades: 110 | W/L: 55/55
+  ** MODEL SAVED: models/trial_275.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 78.7% | Sharpe: 2.49 | W/L: 55/55
+============================================================
+
+[Trial #276] seq=128, hidden=256, layers=1, heads=4, drop=0.24, lr=0.00066, batch=256, epochs=34, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 319.4% | WorstFold: -97.4% | Sharpe: 1.32 | MaxDD: -14.0% | Trades: 68 | W/L: 31/37
+  REJECTED: Max Drawdown of -14.0% exceeded -7.0% limit
+
+[Trial #277] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00049, batch=256, epochs=35, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 242.0% | WorstFold: 30.6% | Sharpe: 5.45 | MaxDD: -3.9% | Trades: 70 | W/L: 39/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 224.8% | Sharpe: 5.65 | Trades: 92 | W/L: 52/40
+  ** MODEL SAVED: models/trial_277.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 224.8% | Sharpe: 5.65 | W/L: 52/40
+============================================================
+
+[Trial #278] seq=32, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00073, batch=256, epochs=34, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 354.2% | WorstFold: -57.3% | Sharpe: 4.91 | MaxDD: -5.6% | Trades: 75 | W/L: 40/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 94.1% | Sharpe: 2.81 | Trades: 121 | W/L: 60/61
+  ** MODEL SAVED: models/trial_278.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 94.1% | Sharpe: 2.81 | W/L: 60/61
+============================================================
+
+[Trial #279] seq=32, hidden=256, layers=2, heads=8, drop=0.24, lr=0.00072, batch=64, epochs=34, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 9.1% | WorstFold: -94.7% | Sharpe: -1.48 | MaxDD: -12.7% | Trades: 128 | W/L: 57/71
+  REJECTED: Max Drawdown of -12.7% exceeded -7.0% limit
+
+[Trial #280] seq=32, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00069, batch=256, epochs=34, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 26.6% | WorstFold: -72.7% | Sharpe: -0.81 | MaxDD: -7.0% | Trades: 85 | W/L: 36/49
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -12.0% | Sharpe: -0.35 | Trades: 134 | W/L: 59/75
+
+[Trial #281] seq=32, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00060, batch=256, epochs=35, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 45.7% | WorstFold: -96.8% | Sharpe: -1.97 | MaxDD: -13.7% | Trades: 89 | W/L: 36/53
+  REJECTED: Max Drawdown of -13.7% exceeded -7.0% limit
+
+[Trial #282] seq=32, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00055, batch=256, epochs=34, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 294.1% | WorstFold: -95.1% | Sharpe: 1.72 | MaxDD: -12.2% | Trades: 76 | W/L: 36/40
+  REJECTED: Max Drawdown of -12.2% exceeded -7.0% limit
+
+[Trial #283] seq=64, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00079, batch=256, epochs=34, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 201.2% | WorstFold: -73.9% | Sharpe: 1.82 | MaxDD: -9.7% | Trades: 88 | W/L: 44/44
+  REJECTED: Max Drawdown of -9.7% exceeded -7.0% limit
+
+[Trial #284] seq=32, hidden=256, layers=1, heads=2, drop=0.25, lr=0.00066, batch=256, epochs=33, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 204.7% | WorstFold: -64.0% | Sharpe: 3.64 | MaxDD: -7.8% | Trades: 82 | W/L: 39/43
+  REJECTED: Max Drawdown of -7.8% exceeded -7.0% limit
+
+[Trial #285] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00074, batch=256, epochs=33, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 167.1% | WorstFold: -87.6% | Sharpe: 2.75 | MaxDD: -11.2% | Trades: 74 | W/L: 37/37
+  REJECTED: Max Drawdown of -11.2% exceeded -7.0% limit
+
+[Trial #286] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00088, batch=256, epochs=31, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 143.8% | WorstFold: -87.6% | Sharpe: 2.19 | MaxDD: -9.2% | Trades: 60 | W/L: 29/31
+  REJECTED: Max Drawdown of -9.2% exceeded -7.0% limit
+
+[Trial #287] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00077, batch=128, epochs=35, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 127.4% | WorstFold: -31.8% | Sharpe: 2.53 | MaxDD: -6.1% | Trades: 86 | W/L: 40/46
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 28.7% | Sharpe: 1.06 | Trades: 144 | W/L: 68/76
+  ** MODEL SAVED: models/trial_287.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 28.7% | Sharpe: 1.06 | W/L: 68/76
+============================================================
+
+[Trial #288] seq=32, hidden=64, layers=1, heads=8, drop=0.27, lr=0.00062, batch=256, epochs=34, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: -0.4% | WorstFold: -95.7% | Sharpe: -2.49 | MaxDD: -13.0% | Trades: 91 | W/L: 38/53
+  REJECTED: Max Drawdown of -13.0% exceeded -7.0% limit
+
+[Trial #289] seq=128, hidden=256, layers=1, heads=4, drop=0.23, lr=0.00095, batch=256, epochs=33, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 286.6% | WorstFold: -13.5% | Sharpe: 5.92 | MaxDD: -5.6% | Trades: 75 | W/L: 41/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 146.1% | Sharpe: 3.66 | Trades: 119 | W/L: 61/58
+  ** MODEL SAVED: models/trial_289.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 146.1% | Sharpe: 3.66 | W/L: 61/58
+============================================================
+
+[Trial #290] seq=128, hidden=128, layers=1, heads=4, drop=0.23, lr=0.00095, batch=256, epochs=34, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 106.6% | WorstFold: -91.3% | Sharpe: 0.34 | MaxDD: -10.0% | Trades: 66 | W/L: 28/38
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #291] seq=128, hidden=256, layers=1, heads=4, drop=0.22, lr=0.00101, batch=256, epochs=33, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 308.4% | WorstFold: -56.1% | Sharpe: 5.08 | MaxDD: -7.2% | Trades: 82 | W/L: 44/38
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #292] seq=128, hidden=256, layers=1, heads=4, drop=0.22, lr=0.00068, batch=64, epochs=33, class_w=2.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 167.1% | WorstFold: -86.5% | Sharpe: 2.32 | MaxDD: -10.4% | Trades: 76 | W/L: 36/40
+  REJECTED: Max Drawdown of -10.4% exceeded -7.0% limit
+
+[Trial #293] seq=96, hidden=256, layers=1, heads=4, drop=0.24, lr=0.00092, batch=256, epochs=32, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35832 sequences of length 96, 41 features.
+  Val -> AvgROI: -7.0% | WorstFold: -93.0% | Sharpe: -2.21 | MaxDD: -13.5% | Trades: 84 | W/L: 35/49
+  REJECTED: Max Drawdown of -13.5% exceeded -7.0% limit
+
+[Trial #294] seq=128, hidden=256, layers=1, heads=4, drop=0.22, lr=0.00056, batch=256, epochs=32, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 182.5% | WorstFold: -83.9% | Sharpe: 2.00 | MaxDD: -8.7% | Trades: 63 | W/L: 29/34
+  REJECTED: Max Drawdown of -8.7% exceeded -7.0% limit
+
+[Trial #295] seq=128, hidden=256, layers=1, heads=4, drop=0.20, lr=0.00073, batch=256, epochs=33, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 21.0% | WorstFold: -82.3% | Sharpe: -0.97 | MaxDD: -7.4% | Trades: 83 | W/L: 34/49
+  REJECTED: Max Drawdown of -7.4% exceeded -7.0% limit
+
+[Trial #296] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00086, batch=256, epochs=31, class_w=6.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 176.2% | WorstFold: 3.9% | Sharpe: 4.32 | MaxDD: -5.7% | Trades: 66 | W/L: 35/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 232.3% | Sharpe: 5.22 | Trades: 104 | W/L: 56/48
+  ** MODEL SAVED: models/trial_296.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 232.3% | Sharpe: 5.22 | W/L: 56/48
+============================================================
+
+[Trial #297] seq=64, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00105, batch=256, epochs=32, class_w=2.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 3.0% | WorstFold: -91.0% | Sharpe: -3.06 | MaxDD: -12.3% | Trades: 75 | W/L: 28/47
+  REJECTED: Max Drawdown of -12.3% exceeded -7.0% limit
+
+[Trial #298] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00096, batch=256, epochs=34, class_w=5.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 129.3% | WorstFold: -20.6% | Sharpe: 3.57 | MaxDD: -5.6% | Trades: 78 | W/L: 40/38
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 15.0% | Sharpe: 0.70 | Trades: 126 | W/L: 60/66
+  ** MODEL SAVED: models/trial_298.pth **
+
+[Trial #299] seq=128, hidden=256, layers=1, heads=4, drop=0.10, lr=0.00080, batch=256, epochs=33, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 20.7% | WorstFold: -97.3% | Sharpe: -2.55 | MaxDD: -16.6% | Trades: 86 | W/L: 36/50
+  REJECTED: Max Drawdown of -16.6% exceeded -7.0% limit
+
+[Trial #300] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00089, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 119.5% | WorstFold: -88.4% | Sharpe: 1.25 | MaxDD: -9.8% | Trades: 81 | W/L: 38/43
+  REJECTED: Max Drawdown of -9.8% exceeded -7.0% limit
+
+[Trial #301] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00064, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 171.5% | WorstFold: -79.0% | Sharpe: 2.02 | MaxDD: -11.7% | Trades: 88 | W/L: 41/47
+  REJECTED: Max Drawdown of -11.7% exceeded -7.0% limit
+
+[Trial #302] seq=48, hidden=128, layers=1, heads=8, drop=0.26, lr=0.00069, batch=256, epochs=31, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35880 sequences of length 48, 41 features.
+  Val -> AvgROI: 129.2% | WorstFold: -75.4% | Sharpe: 0.40 | MaxDD: -7.9% | Trades: 79 | W/L: 37/42
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #303] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00074, batch=256, epochs=32, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 216.7% | WorstFold: 23.2% | Sharpe: 5.54 | MaxDD: -4.9% | Trades: 56 | W/L: 31/25
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 166.9% | Sharpe: 4.63 | Trades: 83 | W/L: 47/36
+  ** MODEL SAVED: models/trial_303.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 166.9% | Sharpe: 4.63 | W/L: 47/36
+============================================================
+
+[Trial #304] seq=128, hidden=256, layers=2, heads=8, drop=0.22, lr=0.00084, batch=64, epochs=34, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 159.7% | WorstFold: -98.4% | Sharpe: -0.56 | MaxDD: -16.3% | Trades: 88 | W/L: 38/50
+  REJECTED: Max Drawdown of -16.3% exceeded -7.0% limit
+
+[Trial #305] seq=128, hidden=256, layers=1, heads=2, drop=0.23, lr=0.00097, batch=256, epochs=33, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 113.0% | WorstFold: -53.4% | Sharpe: 2.91 | MaxDD: -8.2% | Trades: 77 | W/L: 36/41
+  REJECTED: Max Drawdown of -8.2% exceeded -7.0% limit
+
+[Trial #306] seq=32, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00077, batch=256, epochs=31, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 84.9% | WorstFold: -70.7% | Sharpe: 1.71 | MaxDD: -5.7% | Trades: 72 | W/L: 36/36
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -21.3% | Sharpe: -0.90 | Trades: 110 | W/L: 47/63
+
+[Trial #307] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00068, batch=256, epochs=32, class_w=5.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 208.4% | WorstFold: -29.3% | Sharpe: 4.57 | MaxDD: -5.6% | Trades: 76 | W/L: 41/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 311.4% | Sharpe: 6.12 | Trades: 102 | W/L: 58/44
+  ** MODEL SAVED: models/trial_307.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 311.4% | Sharpe: 6.12 | W/L: 58/44
+============================================================
+
+[Trial #308] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00089, batch=256, epochs=35, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 174.0% | WorstFold: -77.8% | Sharpe: 4.03 | MaxDD: -7.6% | Trades: 63 | W/L: 31/32
+  REJECTED: Max Drawdown of -7.6% exceeded -7.0% limit
+
+[Trial #309] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00081, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 164.7% | WorstFold: -60.3% | Sharpe: 3.07 | MaxDD: -7.2% | Trades: 73 | W/L: 36/37
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #310] seq=64, hidden=64, layers=1, heads=4, drop=0.24, lr=0.00061, batch=256, epochs=34, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 9.9% | WorstFold: -32.6% | Sharpe: 0.48 | MaxDD: -8.6% | Trades: 92 | W/L: 46/46
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #311] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00053, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 230.5% | WorstFold: -79.6% | Sharpe: 3.63 | MaxDD: -6.8% | Trades: 72 | W/L: 34/38
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 78.3% | Sharpe: 3.00 | Trades: 79 | W/L: 43/36
+  ** MODEL SAVED: models/trial_311.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 78.3% | Sharpe: 3.00 | W/L: 43/36
+============================================================
+
+[Trial #312] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00102, batch=128, epochs=31, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 85.9% | WorstFold: 45.4% | Sharpe: 2.88 | MaxDD: -4.3% | Trades: 75 | W/L: 39/36
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 17.1% | Sharpe: 0.74 | Trades: 120 | W/L: 56/64
+  ** MODEL SAVED: models/trial_312.pth **
+
+[Trial #313] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00092, batch=256, epochs=33, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 337.0% | WorstFold: 40.9% | Sharpe: 6.03 | MaxDD: -3.1% | Trades: 84 | W/L: 47/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -59.6% | Sharpe: -3.26 | Trades: 133 | W/L: 53/80
+
+[Trial #314] seq=128, hidden=128, layers=1, heads=8, drop=0.21, lr=0.00094, batch=256, epochs=34, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 87.2% | WorstFold: -69.4% | Sharpe: 1.52 | MaxDD: -7.2% | Trades: 82 | W/L: 39/43
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #315] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00090, batch=256, epochs=33, class_w=4.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 73.4% | WorstFold: -44.9% | Sharpe: 2.60 | MaxDD: -6.4% | Trades: 72 | W/L: 35/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 194.9% | Sharpe: 4.86 | Trades: 95 | W/L: 56/39
+  ** MODEL SAVED: models/trial_315.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 194.9% | Sharpe: 4.86 | W/L: 56/39
+============================================================
+
+[Trial #316] seq=128, hidden=256, layers=3, heads=8, drop=0.20, lr=0.00105, batch=256, epochs=33, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 0.0% | WorstFold: 0.0% | Sharpe: 0.00 | MaxDD: 0.0% | Trades: 0 | W/L: 0/0
+  REJECTED: Only 0 trades (need 30+)
+
+[Trial #317] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00111, batch=64, epochs=34, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 77.7% | WorstFold: -74.9% | Sharpe: 1.11 | MaxDD: -5.8% | Trades: 67 | W/L: 31/36
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -2.6% | Sharpe: 0.05 | Trades: 149 | W/L: 68/81
+
+[Trial #318] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00098, batch=256, epochs=33, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 276.0% | WorstFold: -61.3% | Sharpe: 5.43 | MaxDD: -5.9% | Trades: 77 | W/L: 40/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 108.1% | Sharpe: 3.35 | Trades: 89 | W/L: 47/42
+  ** MODEL SAVED: models/trial_318.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 108.1% | Sharpe: 3.35 | W/L: 47/42
+============================================================
+
+[Trial #319] seq=128, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00058, batch=256, epochs=33, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 138.3% | WorstFold: -89.4% | Sharpe: 1.61 | MaxDD: -11.2% | Trades: 72 | W/L: 35/37
+  REJECTED: Max Drawdown of -11.2% exceeded -7.0% limit
+
+[Trial #320] seq=96, hidden=256, layers=1, heads=4, drop=0.23, lr=0.00099, batch=256, epochs=35, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35832 sequences of length 96, 41 features.
+  Val -> AvgROI: 120.6% | WorstFold: -91.6% | Sharpe: -0.54 | MaxDD: -13.2% | Trades: 77 | W/L: 35/42
+  REJECTED: Max Drawdown of -13.2% exceeded -7.0% limit
+
+[Trial #321] seq=32, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00085, batch=256, epochs=34, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 367.6% | WorstFold: 94.0% | Sharpe: 6.92 | MaxDD: -3.7% | Trades: 71 | W/L: 39/32
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 742.5% | Sharpe: 9.87 | Trades: 92 | W/L: 57/35
+  ** MODEL SAVED: models/trial_321.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 742.5% | Sharpe: 9.87 | W/L: 57/35
+============================================================
+
+[Trial #322] seq=32, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00072, batch=256, epochs=34, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 164.3% | WorstFold: -78.7% | Sharpe: 2.57 | MaxDD: -10.0% | Trades: 76 | W/L: 36/40
+  REJECTED: Max Drawdown of -10.0% exceeded -7.0% limit
+
+[Trial #323] seq=32, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00083, batch=256, epochs=35, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 69.7% | WorstFold: -89.0% | Sharpe: 0.24 | MaxDD: -12.1% | Trades: 80 | W/L: 35/45
+  REJECTED: Max Drawdown of -12.1% exceeded -7.0% limit
+
+[Trial #324] seq=32, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00065, batch=256, epochs=34, class_w=5.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 98.4% | WorstFold: 47.4% | Sharpe: 3.23 | MaxDD: -4.7% | Trades: 79 | W/L: 40/39
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 13.9% | Sharpe: 0.65 | Trades: 113 | W/L: 51/62
+  ** MODEL SAVED: models/trial_324.pth **
+
+[Trial #325] seq=32, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00077, batch=256, epochs=34, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 89.1% | WorstFold: -76.2% | Sharpe: 1.27 | MaxDD: -8.7% | Trades: 77 | W/L: 37/40
+  REJECTED: Max Drawdown of -8.7% exceeded -7.0% limit
+
+[Trial #326] seq=32, hidden=128, layers=1, heads=8, drop=0.20, lr=0.00086, batch=256, epochs=33, class_w=4.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 29.9% | WorstFold: -67.8% | Sharpe: 0.55 | MaxDD: -9.6% | Trades: 80 | W/L: 39/41
+  REJECTED: Max Drawdown of -9.6% exceeded -7.0% limit
+
+[Trial #327] seq=32, hidden=256, layers=1, heads=8, drop=0.18, lr=0.00073, batch=256, epochs=27, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 116.1% | WorstFold: -34.5% | Sharpe: 2.71 | MaxDD: -8.3% | Trades: 79 | W/L: 39/40
+  REJECTED: Max Drawdown of -8.3% exceeded -7.0% limit
+
+[Trial #328] seq=64, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00069, batch=256, epochs=35, class_w=5.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 242.0% | WorstFold: -63.7% | Sharpe: 4.64 | MaxDD: -7.5% | Trades: 68 | W/L: 34/34
+  REJECTED: Max Drawdown of -7.5% exceeded -7.0% limit
+
+[Trial #329] seq=48, hidden=256, layers=1, heads=2, drop=0.21, lr=0.00046, batch=64, epochs=33, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35880 sequences of length 48, 41 features.
+  Val -> AvgROI: 3.4% | WorstFold: -73.1% | Sharpe: -0.32 | MaxDD: -9.0% | Trades: 88 | W/L: 40/48
+  REJECTED: Max Drawdown of -9.0% exceeded -7.0% limit
+
+[Trial #330] seq=128, hidden=256, layers=2, heads=4, drop=0.25, lr=0.00081, batch=256, epochs=34, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 99.6% | WorstFold: -70.0% | Sharpe: 1.56 | MaxDD: -8.5% | Trades: 85 | W/L: 38/47
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #331] seq=32, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00089, batch=256, epochs=33, class_w=5.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 6.2% | WorstFold: -52.2% | Sharpe: 0.01 | MaxDD: -7.2% | Trades: 93 | W/L: 44/49
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #332] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00063, batch=256, epochs=34, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 230.0% | WorstFold: -96.0% | Sharpe: 1.18 | MaxDD: -12.2% | Trades: 70 | W/L: 31/39
+  REJECTED: Max Drawdown of -12.2% exceeded -7.0% limit
+
+[Trial #333] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00081, batch=256, epochs=33, class_w=5.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 184.1% | WorstFold: -48.5% | Sharpe: 4.31 | MaxDD: -8.9% | Trades: 65 | W/L: 33/32
+  REJECTED: Max Drawdown of -8.9% exceeded -7.0% limit
+
+[Trial #334] seq=128, hidden=64, layers=1, heads=8, drop=0.22, lr=0.00076, batch=256, epochs=33, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 109.7% | WorstFold: 36.2% | Sharpe: 2.78 | MaxDD: -5.0% | Trades: 77 | W/L: 40/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: -8.6% | Sharpe: -0.24 | Trades: 134 | W/L: 62/72
+
+[Trial #335] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00098, batch=128, epochs=32, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 67.5% | WorstFold: 16.5% | Sharpe: 2.49 | MaxDD: -4.7% | Trades: 84 | W/L: 42/42
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 410.8% | Sharpe: 6.55 | Trades: 119 | W/L: 69/50
+  ** MODEL SAVED: models/trial_335.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 410.8% | Sharpe: 6.55 | W/L: 69/50
+============================================================
+
+[Trial #336] seq=128, hidden=256, layers=1, heads=8, drop=0.11, lr=0.00068, batch=256, epochs=35, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 281.2% | WorstFold: -95.3% | Sharpe: 2.51 | MaxDD: -11.7% | Trades: 76 | W/L: 32/44
+  REJECTED: Max Drawdown of -11.7% exceeded -7.0% limit
+
+[Trial #337] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00086, batch=256, epochs=34, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 106.7% | WorstFold: -35.1% | Sharpe: 3.00 | MaxDD: -7.2% | Trades: 75 | W/L: 38/37
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #338] seq=128, hidden=256, layers=1, heads=4, drop=0.22, lr=0.00071, batch=256, epochs=33, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 290.2% | WorstFold: -14.8% | Sharpe: 12.86 | MaxDD: -5.6% | Trades: 66 | W/L: 37/29
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 536.2% | Sharpe: 7.39 | Trades: 124 | W/L: 71/53
+  ** MODEL SAVED: models/trial_338.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 536.2% | Sharpe: 7.39 | W/L: 71/53
+============================================================
+
+[Trial #339] seq=64, hidden=128, layers=1, heads=4, drop=0.22, lr=0.00066, batch=256, epochs=33, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35864 sequences of length 64, 41 features.
+  Val -> AvgROI: 191.5% | WorstFold: -96.0% | Sharpe: -0.17 | MaxDD: -12.5% | Trades: 85 | W/L: 40/45
+  REJECTED: Max Drawdown of -12.5% exceeded -7.0% limit
+
+[Trial #340] seq=128, hidden=256, layers=1, heads=4, drop=0.21, lr=0.00074, batch=256, epochs=19, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 102.2% | WorstFold: -46.8% | Sharpe: 2.60 | MaxDD: -7.8% | Trades: 72 | W/L: 36/36
+  REJECTED: Max Drawdown of -7.8% exceeded -7.0% limit
+
+[Trial #341] seq=128, hidden=256, layers=1, heads=4, drop=0.22, lr=0.00057, batch=256, epochs=34, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 97.4% | WorstFold: -56.2% | Sharpe: 2.51 | MaxDD: -6.9% | Trades: 71 | W/L: 36/35
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 157.8% | Sharpe: 4.14 | Trades: 104 | W/L: 55/49
+  ** MODEL SAVED: models/trial_341.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 157.8% | Sharpe: 4.14 | W/L: 55/49
+============================================================
+
+[Trial #342] seq=128, hidden=256, layers=1, heads=4, drop=0.21, lr=0.00050, batch=64, epochs=33, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 42.5% | WorstFold: -22.1% | Sharpe: 1.51 | MaxDD: -6.2% | Trades: 77 | W/L: 38/39
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 255.4% | Sharpe: 4.75 | Trades: 139 | W/L: 73/66
+  ** MODEL SAVED: models/trial_342.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 255.4% | Sharpe: 4.75 | W/L: 73/66
+============================================================
+
+[Trial #343] seq=32, hidden=256, layers=1, heads=4, drop=0.23, lr=0.00069, batch=256, epochs=34, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35896 sequences of length 32, 41 features.
+  Val -> AvgROI: 51.1% | WorstFold: -89.7% | Sharpe: -0.43 | MaxDD: -12.5% | Trades: 80 | W/L: 36/44
+  REJECTED: Max Drawdown of -12.5% exceeded -7.0% limit
+
+[Trial #344] seq=128, hidden=256, layers=1, heads=4, drop=0.27, lr=0.00078, batch=256, epochs=33, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+  Val -> AvgROI: 162.9% | WorstFold: -80.1% | Sharpe: 2.86 | MaxDD: -8.5% | Trades: 82 | W/L: 38/44
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #345] seq=128, hidden=256, layers=1, heads=4, drop=0.20, lr=0.00063, batch=256, epochs=33, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35800 sequences of length 128, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-19 05:45:00
+Successfully saved 36762 candles to data_storage\BTC_USDT_15m.csv
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\BTC_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.5%, SL=0.75%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 35977 samples to data_storage\BTC_USDT_15m_processed.csv
+Target distribution: {0: 33177, 1: 2800} (7.8% positive)
+
+Data splits -> Train: 25183 | Val: 5397 | Test: 5397
+Target distribution (train): {0: 23632, 1: 1551}
+Target distribution (val): {0: 4882, 1: 515}
+Target distribution (test): {0: 4663, 1: 734}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+Study loaded from data_storage\optuna_study.db — 346 previous trials found
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.5% / SL=0.75% / MaxHold=16 bars
+============================================================
+
+
+[Trial #346] seq=128, hidden=256, layers=1, heads=4, drop=0.22, lr=0.00061, batch=256, epochs=28, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 76.0% | WorstFold: -63.6% | Sharpe: 1.63 | MaxDD: -8.8% | Trades: 76 | W/L: 35/41
+  REJECTED: Max Drawdown of -8.8% exceeded -7.0% limit
+
+[Trial #347] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00072, batch=256, epochs=33, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 252.5% | WorstFold: -80.2% | Sharpe: 4.05 | MaxDD: -8.6% | Trades: 76 | W/L: 38/38
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #348] seq=128, hidden=256, layers=1, heads=4, drop=0.23, lr=0.00067, batch=256, epochs=32, class_w=4.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 268.3% | WorstFold: -82.3% | Sharpe: 4.39 | MaxDD: -9.4% | Trades: 68 | W/L: 30/38
+  REJECTED: Max Drawdown of -9.4% exceeded -7.0% limit
+
+[Trial #349] seq=96, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00081, batch=256, epochs=35, class_w=3.2
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35881 sequences of length 96, 41 features.
+  Val -> AvgROI: -0.0% | WorstFold: -96.9% | Sharpe: -3.25 | MaxDD: -14.3% | Trades: 84 | W/L: 33/51
+  REJECTED: Max Drawdown of -14.3% exceeded -7.0% limit
+
+[Trial #350] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00073, batch=256, epochs=34, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 216.4% | WorstFold: -11.2% | Sharpe: 6.57 | MaxDD: -6.1% | Trades: 68 | W/L: 34/34
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 139.5% | Sharpe: 3.62 | Trades: 112 | W/L: 61/51
+  ** MODEL SAVED: models/trial_350.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 139.5% | Sharpe: 3.62 | W/L: 61/51
+============================================================
+
+[Trial #351] seq=128, hidden=256, layers=2, heads=8, drop=0.21, lr=0.00063, batch=256, epochs=33, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 127.0% | WorstFold: -91.7% | Sharpe: 0.77 | MaxDD: -11.0% | Trades: 94 | W/L: 46/48
+  REJECTED: Max Drawdown of -11.0% exceeded -7.0% limit
+
+[Trial #352] seq=128, hidden=256, layers=3, heads=2, drop=0.23, lr=0.00023, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 19.1% | WorstFold: -92.0% | Sharpe: -1.10 | MaxDD: -11.7% | Trades: 99 | W/L: 46/53
+  REJECTED: Max Drawdown of -11.7% exceeded -7.0% limit
+
+[Trial #353] seq=128, hidden=128, layers=1, heads=8, drop=0.28, lr=0.00086, batch=256, epochs=34, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 97.3% | WorstFold: -46.8% | Sharpe: 2.99 | MaxDD: -4.8% | Trades: 79 | W/L: 42/37
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 145.3% | Sharpe: 3.83 | Trades: 110 | W/L: 57/53
+  ** MODEL SAVED: models/trial_353.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 145.3% | Sharpe: 3.83 | W/L: 57/53
+============================================================
+
+[Trial #354] seq=64, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00054, batch=256, epochs=33, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35913 sequences of length 64, 41 features.
+  Val -> AvgROI: 212.0% | WorstFold: -79.2% | Sharpe: 3.01 | MaxDD: -7.3% | Trades: 72 | W/L: 39/33
+  REJECTED: Max Drawdown of -7.3% exceeded -7.0% limit
+
+[Trial #355] seq=32, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00080, batch=64, epochs=32, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35945 sequences of length 32, 41 features.
+  Val -> AvgROI: 220.1% | WorstFold: -89.6% | Sharpe: 1.33 | MaxDD: -10.6% | Trades: 95 | W/L: 43/52
+  REJECTED: Max Drawdown of -10.6% exceeded -7.0% limit
+
+[Trial #356] seq=128, hidden=256, layers=1, heads=4, drop=0.25, lr=0.00108, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 164.6% | WorstFold: -97.8% | Sharpe: 0.15 | MaxDD: -14.0% | Trades: 77 | W/L: 34/43
+  REJECTED: Max Drawdown of -14.0% exceeded -7.0% limit
+
+[Trial #357] seq=48, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00091, batch=256, epochs=32, class_w=2.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35929 sequences of length 48, 41 features.
+  Val -> AvgROI: 128.5% | WorstFold: -57.7% | Sharpe: 2.36 | MaxDD: -4.8% | Trades: 73 | W/L: 33/40
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 76.2% | Sharpe: 2.58 | Trades: 90 | W/L: 47/43
+  ** MODEL SAVED: models/trial_357.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 76.2% | Sharpe: 2.58 | W/L: 47/43
+============================================================
+
+[Trial #358] seq=128, hidden=64, layers=1, heads=8, drop=0.24, lr=0.00075, batch=128, epochs=35, class_w=2.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 168.5% | WorstFold: 2.8% | Sharpe: 4.21 | MaxDD: -7.2% | Trades: 64 | W/L: 31/33
+  REJECTED: Max Drawdown of -7.2% exceeded -7.0% limit
+
+[Trial #359] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00069, batch=256, epochs=34, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 130.8% | WorstFold: -79.5% | Sharpe: 1.86 | MaxDD: -8.5% | Trades: 74 | W/L: 36/38
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #360] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00101, batch=256, epochs=27, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 201.7% | WorstFold: -94.3% | Sharpe: 2.21 | MaxDD: -12.6% | Trades: 80 | W/L: 36/44
+  REJECTED: Max Drawdown of -12.6% exceeded -7.0% limit
+
+[Trial #361] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00085, batch=256, epochs=33, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 82.6% | WorstFold: -47.2% | Sharpe: 1.55 | MaxDD: -5.7% | Trades: 78 | W/L: 35/43
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 47.5% | Sharpe: 1.85 | Trades: 96 | W/L: 49/47
+  ** MODEL SAVED: models/trial_361.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 47.5% | Sharpe: 1.85 | W/L: 49/47
+============================================================
+
+[Trial #362] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00059, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 142.7% | WorstFold: -93.7% | Sharpe: 0.68 | MaxDD: -12.3% | Trades: 77 | W/L: 35/42
+  REJECTED: Max Drawdown of -12.3% exceeded -7.0% limit
+
+[Trial #363] seq=128, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00064, batch=256, epochs=33, class_w=4.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 177.6% | WorstFold: -46.2% | Sharpe: 3.98 | MaxDD: -6.1% | Trades: 68 | W/L: 36/32
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 88.0% | Sharpe: 2.88 | Trades: 90 | W/L: 45/45
+  ** MODEL SAVED: models/trial_363.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 88.0% | Sharpe: 2.88 | W/L: 45/45
+============================================================
+
+[Trial #364] seq=32, hidden=256, layers=1, heads=4, drop=0.21, lr=0.00077, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35945 sequences of length 32, 41 features.
+  Val -> AvgROI: 94.9% | WorstFold: -82.4% | Sharpe: 0.43 | MaxDD: -9.0% | Trades: 76 | W/L: 34/42
+  REJECTED: Max Drawdown of -9.0% exceeded -7.0% limit
+
+[Trial #365] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00071, batch=256, epochs=34, class_w=4.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 234.3% | WorstFold: -53.5% | Sharpe: 4.86 | MaxDD: -6.3% | Trades: 72 | W/L: 36/36
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 70.4% | Sharpe: 2.34 | Trades: 101 | W/L: 49/52
+  ** MODEL SAVED: models/trial_365.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 70.4% | Sharpe: 2.34 | W/L: 49/52
+============================================================
+
+[Trial #366] seq=128, hidden=128, layers=2, heads=8, drop=0.23, lr=0.00092, batch=256, epochs=33, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 111.6% | WorstFold: -70.3% | Sharpe: 2.16 | MaxDD: -8.6% | Trades: 81 | W/L: 41/40
+  REJECTED: Max Drawdown of -8.6% exceeded -7.0% limit
+
+[Trial #367] seq=128, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00043, batch=256, epochs=34, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 119.9% | WorstFold: 34.7% | Sharpe: 3.72 | MaxDD: -4.2% | Trades: 62 | W/L: 34/28
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 57.4% | Sharpe: 2.29 | Trades: 72 | W/L: 37/35
+  ** MODEL SAVED: models/trial_367.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 57.4% | Sharpe: 2.29 | W/L: 37/35
+============================================================
+
+[Trial #368] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00082, batch=256, epochs=32, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 195.5% | WorstFold: -90.6% | Sharpe: 2.83 | MaxDD: -10.6% | Trades: 79 | W/L: 36/43
+  REJECTED: Max Drawdown of -10.6% exceeded -7.0% limit
+
+[Trial #369] seq=64, hidden=256, layers=1, heads=8, drop=0.22, lr=0.00066, batch=64, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35913 sequences of length 64, 41 features.
+  Val -> AvgROI: 27.7% | WorstFold: -94.8% | Sharpe: -1.92 | MaxDD: -13.9% | Trades: 79 | W/L: 32/47
+  REJECTED: Max Drawdown of -13.9% exceeded -7.0% limit
+
+[Trial #370] seq=128, hidden=256, layers=1, heads=8, drop=0.17, lr=0.00102, batch=256, epochs=33, class_w=4.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 194.2% | WorstFold: -71.9% | Sharpe: 5.32 | MaxDD: -8.5% | Trades: 84 | W/L: 45/39
+  REJECTED: Max Drawdown of -8.5% exceeded -7.0% limit
+
+[Trial #371] seq=128, hidden=256, layers=1, heads=4, drop=0.24, lr=0.00073, batch=256, epochs=35, class_w=4.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 215.1% | WorstFold: -93.0% | Sharpe: 2.19 | MaxDD: -11.6% | Trades: 73 | W/L: 34/39
+  REJECTED: Max Drawdown of -11.6% exceeded -7.0% limit
+
+[Trial #372] seq=128, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00084, batch=256, epochs=32, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 134.8% | WorstFold: -93.7% | Sharpe: 0.68 | MaxDD: -13.4% | Trades: 67 | W/L: 30/37
+  REJECTED: Max Drawdown of -13.4% exceeded -7.0% limit
+
+[Trial #373] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00112, batch=256, epochs=34, class_w=3.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 87.7% | WorstFold: -55.2% | Sharpe: 2.16 | MaxDD: -6.8% | Trades: 76 | W/L: 36/40
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 140.7% | Sharpe: 3.44 | Trades: 136 | W/L: 70/66
+  ** MODEL SAVED: models/trial_373.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 140.7% | Sharpe: 3.44 | W/L: 70/66
+============================================================
+
+[Trial #374] seq=32, hidden=256, layers=1, heads=2, drop=0.29, lr=0.00091, batch=256, epochs=33, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35945 sequences of length 32, 41 features.
+  Val -> AvgROI: 81.9% | WorstFold: -92.7% | Sharpe: -0.88 | MaxDD: -10.2% | Trades: 80 | W/L: 34/46
+  REJECTED: Max Drawdown of -10.2% exceeded -7.0% limit
+
+[Trial #375] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00057, batch=256, epochs=32, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 282.7% | WorstFold: -89.2% | Sharpe: 5.32 | MaxDD: -12.0% | Trades: 60 | W/L: 32/28
+  REJECTED: Max Drawdown of -12.0% exceeded -7.0% limit
+
+[Trial #376] seq=96, hidden=256, layers=1, heads=8, drop=0.21, lr=0.00077, batch=256, epochs=31, class_w=3.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35881 sequences of length 96, 41 features.
+  Val -> AvgROI: 66.6% | WorstFold: -94.7% | Sharpe: -1.28 | MaxDD: -11.1% | Trades: 84 | W/L: 34/50
+  REJECTED: Max Drawdown of -11.1% exceeded -7.0% limit
+
+[Trial #377] seq=128, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00097, batch=256, epochs=34, class_w=2.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 333.3% | WorstFold: 75.9% | Sharpe: 6.20 | MaxDD: -5.3% | Trades: 70 | W/L: 38/32
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 231.7% | Sharpe: 5.56 | Trades: 92 | W/L: 53/39
+  ** MODEL SAVED: models/trial_377.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 231.7% | Sharpe: 5.56 | W/L: 53/39
+============================================================
+
+[Trial #378] seq=128, hidden=128, layers=1, heads=4, drop=0.18, lr=0.00070, batch=256, epochs=35, class_w=2.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 119.5% | WorstFold: -95.3% | Sharpe: 1.31 | MaxDD: -13.6% | Trades: 71 | W/L: 32/39
+  REJECTED: Max Drawdown of -13.6% exceeded -7.0% limit
+
+[Trial #379] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00062, batch=128, epochs=34, class_w=2.1
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 116.8% | WorstFold: -90.2% | Sharpe: 1.62 | MaxDD: -10.6% | Trades: 82 | W/L: 39/43
+  REJECTED: Max Drawdown of -10.6% exceeded -7.0% limit
+
+[Trial #380] seq=128, hidden=64, layers=1, heads=8, drop=0.17, lr=0.00084, batch=256, epochs=34, class_w=2.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: -58.5% | WorstFold: -97.0% | Sharpe: -5.51 | MaxDD: -14.4% | Trades: 100 | W/L: 36/64
+  REJECTED: Max Drawdown of -14.4% exceeded -7.0% limit
+
+[Trial #381] seq=128, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00078, batch=64, epochs=28, class_w=2.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 42.9% | WorstFold: -87.0% | Sharpe: -0.12 | MaxDD: -11.8% | Trades: 92 | W/L: 42/50
+  REJECTED: Max Drawdown of -11.8% exceeded -7.0% limit
+
+[Trial #382] seq=64, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00092, batch=256, epochs=35, class_w=2.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35913 sequences of length 64, 41 features.
+  Val -> AvgROI: 204.9% | WorstFold: -71.5% | Sharpe: 4.12 | MaxDD: -8.7% | Trades: 67 | W/L: 35/32
+  REJECTED: Max Drawdown of -8.7% exceeded -7.0% limit
+
+[Trial #383] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00073, batch=256, epochs=34, class_w=3.3
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 112.1% | WorstFold: -70.5% | Sharpe: 2.23 | MaxDD: -6.4% | Trades: 70 | W/L: 34/36
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 272.5% | Sharpe: 6.79 | Trades: 76 | W/L: 46/30
+  ** MODEL SAVED: models/trial_383.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL FOUND!
+   Test ROI: 272.5% | Sharpe: 6.79 | W/L: 46/30
+============================================================
+
+[Trial #384] seq=48, hidden=256, layers=1, heads=8, drop=0.18, lr=0.00067, batch=256, epochs=32, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35929 sequences of length 48, 41 features.
+  Val -> AvgROI: 380.8% | WorstFold: -80.1% | Sharpe: 4.37 | MaxDD: -8.1% | Trades: 76 | W/L: 37/39
+  REJECTED: Max Drawdown of -8.1% exceeded -7.0% limit
+
+[Trial #385] seq=32, hidden=256, layers=3, heads=4, drop=0.24, lr=0.00084, batch=256, epochs=26, class_w=2.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35945 sequences of length 32, 41 features.
+  Val -> AvgROI: 47.9% | WorstFold: -95.4% | Sharpe: -2.77 | MaxDD: -14.7% | Trades: 83 | W/L: 35/48
+  REJECTED: Max Drawdown of -14.7% exceeded -7.0% limit
+
+[Trial #386] seq=128, hidden=256, layers=1, heads=8, drop=0.20, lr=0.00088, batch=256, epochs=33, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 80.7% | WorstFold: -75.5% | Sharpe: 0.19 | MaxDD: -7.9% | Trades: 77 | W/L: 36/41
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #387] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00096, batch=256, epochs=34, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+============================================================
+OPTUNA BAYESIAN SEARCH WITH WALK-FORWARD VALIDATION
+============================================================
+
+Fetching 365 days of 15m BTC/USDT data...
+Fetching 15m data for BTC/USDT for the last 365 days...
+Loading existing data from data_storage\BTC_USDT_15m.csv to resume fetching...
+Resuming fetch from 2026-04-19 18:00:00
+No new data fetched.
+Engineering features (multi-timeframe + triple barrier)...
+Loading data from data_storage\BTC_USDT_15m.csv...
+Computing 15m indicators...
+Computing 1h indicators...
+Computing 4h indicators...
+Computing microstructure features...
+Labeling with Triple Barrier (TP=1.5%, SL=0.75%, MaxBars=16, mode=long)...
+Normalizing features (train-only statistics)...
+Saved 35977 samples to data_storage\BTC_USDT_15m_processed.csv
+Target distribution: {0: 33177, 1: 2800} (7.8% positive)
+
+Data splits -> Train: 25183 | Val: 5397 | Test: 5397
+Target distribution (train): {0: 23632, 1: 1551}
+Target distribution (val): {0: 4882, 1: 515}
+Target distribution (test): {0: 4663, 1: 734}
+Device: cuda
+GPU: NVIDIA GeForce RTX 4090
+Study loaded from data_storage\optuna_study.db — 388 previous trials found
+
+============================================================
+COMMENCING BAYESIAN SEARCH (Optuna TPE Sampler)
+Statistical gates: Min 30 trades, Sharpe > 0.5
+Triple Barrier: TP=1.5% / SL=0.75% / MaxHold=16 bars
+============================================================
+
+
+[Trial #388] seq=128, hidden=256, layers=1, heads=8, drop=0.27, lr=0.00038, batch=256, epochs=31, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 169.4% | WorstFold: -86.5% | Sharpe: 2.41 | MaxDD: -7.8% | Trades: 65 | W/L: 31/34
+  REJECTED: Max Drawdown of -7.8% exceeded -7.0% limit
+
+[Trial #389] seq=128, hidden=256, layers=2, heads=8, drop=0.21, lr=0.00097, batch=256, epochs=23, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 126.7% | WorstFold: -77.8% | Sharpe: 2.50 | MaxDD: -7.9% | Trades: 78 | W/L: 39/39
+  REJECTED: Max Drawdown of -7.9% exceeded -7.0% limit
+
+[Trial #390] seq=128, hidden=256, layers=1, heads=8, drop=0.19, lr=0.00077, batch=256, epochs=25, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 160.2% | WorstFold: -70.4% | Sharpe: 2.86 | MaxDD: -8.2% | Trades: 81 | W/L: 41/40
+  REJECTED: Max Drawdown of -8.2% exceeded -7.0% limit
+
+[Trial #391] seq=128, hidden=256, layers=1, heads=8, drop=0.23, lr=0.00105, batch=256, epochs=34, class_w=3.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 164.8% | WorstFold: -25.4% | Sharpe: 3.87 | MaxDD: -4.8% | Trades: 66 | W/L: 35/31
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 90.0% | Sharpe: 2.63 | Trades: 127 | W/L: 62/65
+  ** MODEL SAVED: models/trial_391.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL CANDIDATE FOUND!
+   Test ROI: 90.0% | Sharpe: 2.63 | W/L: 62/65
+   Saved to models/holy_grail_candidate.pth (review before deploying!)
+============================================================
+
+[Trial #392] seq=128, hidden=128, layers=1, heads=4, drop=0.22, lr=0.00052, batch=256, epochs=33, class_w=3.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: -15.0% | WorstFold: -79.3% | Sharpe: -1.06 | MaxDD: -9.6% | Trades: 90 | W/L: 41/49
+  REJECTED: Max Drawdown of -9.6% exceeded -7.0% limit
+
+[Trial #393] seq=128, hidden=256, layers=1, heads=8, drop=0.25, lr=0.00071, batch=256, epochs=35, class_w=3.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 132.3% | WorstFold: -73.4% | Sharpe: 1.91 | MaxDD: -6.9% | Trades: 86 | W/L: 42/44
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 95.1% | Sharpe: 2.87 | Trades: 112 | W/L: 54/58
+  ** MODEL SAVED: models/trial_393.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL CANDIDATE FOUND!
+   Test ROI: 95.1% | Sharpe: 2.87 | W/L: 54/58
+   Saved to models/holy_grail_candidate.pth (review before deploying!)
+============================================================
+
+[Trial #394] seq=128, hidden=256, layers=1, heads=8, drop=0.26, lr=0.00063, batch=64, epochs=32, class_w=3.9
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 161.2% | WorstFold: -88.5% | Sharpe: 2.58 | MaxDD: -9.4% | Trades: 83 | W/L: 40/43
+  REJECTED: Max Drawdown of -9.4% exceeded -7.0% limit
+
+[Trial #395] seq=32, hidden=256, layers=1, heads=8, drop=0.24, lr=0.00081, batch=256, epochs=33, class_w=5.5
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35945 sequences of length 32, 41 features.
+  Val -> AvgROI: 96.3% | WorstFold: -74.1% | Sharpe: 1.21 | MaxDD: -11.1% | Trades: 92 | W/L: 43/49
+  REJECTED: Max Drawdown of -11.1% exceeded -7.0% limit
+
+[Trial #396] seq=128, hidden=256, layers=1, heads=8, drop=0.16, lr=0.00089, batch=256, epochs=34, class_w=3.4
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 290.5% | WorstFold: -95.9% | Sharpe: 1.79 | MaxDD: -12.2% | Trades: 80 | W/L: 39/41
+  REJECTED: Max Drawdown of -12.2% exceeded -7.0% limit
+
+[Trial #397] seq=128, hidden=256, layers=1, heads=2, drop=0.23, lr=0.00074, batch=256, epochs=32, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 318.5% | WorstFold: -64.2% | Sharpe: 5.61 | MaxDD: -6.5% | Trades: 60 | W/L: 32/28
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 21.5% | Sharpe: 1.06 | Trades: 80 | W/L: 37/43
+  ** MODEL SAVED: models/trial_397.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL CANDIDATE FOUND!
+   Test ROI: 21.5% | Sharpe: 1.06 | W/L: 37/43
+   Saved to models/holy_grail_candidate.pth (review before deploying!)
+============================================================
+
+[Trial #398] seq=64, hidden=256, layers=1, heads=2, drop=0.23, lr=0.00047, batch=256, epochs=31, class_w=4.0
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35913 sequences of length 64, 41 features.
+  Val -> AvgROI: 72.4% | WorstFold: -85.6% | Sharpe: 0.74 | MaxDD: -9.9% | Trades: 76 | W/L: 36/40
+  REJECTED: Max Drawdown of -9.9% exceeded -7.0% limit
+
+[Trial #399] seq=128, hidden=256, layers=1, heads=4, drop=0.21, lr=0.00056, batch=256, epochs=32, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 416.4% | WorstFold: -22.7% | Sharpe: 6.54 | MaxDD: -3.8% | Trades: 74 | W/L: 44/30
+  --> Edge potentially found on Validation (>12.3%)! Verifying on Unseen Test Data...
+  Test -> ROI: 62.9% | Sharpe: 2.27 | Trades: 88 | W/L: 44/44
+  ** MODEL SAVED: models/trial_399.pth **
+
+============================================================
+[HOLY GRAIL] HOLY GRAIL CANDIDATE FOUND!
+   Test ROI: 62.9% | Sharpe: 2.27 | W/L: 44/44
+   Saved to models/holy_grail_candidate.pth (review before deploying!)
+============================================================
+
+[Trial #400] seq=128, hidden=256, layers=1, heads=2, drop=0.21, lr=0.00055, batch=256, epochs=31, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 280.5% | WorstFold: 27.3% | Sharpe: 5.32 | MaxDD: -7.1% | Trades: 83 | W/L: 44/39
+  REJECTED: Max Drawdown of -7.1% exceeded -7.0% limit
+
+[Trial #401] seq=128, hidden=256, layers=1, heads=2, drop=0.22, lr=0.00050, batch=256, epochs=32, class_w=3.8
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 44.6% | WorstFold: -69.0% | Sharpe: 0.95 | MaxDD: -8.3% | Trades: 80 | W/L: 34/46
+  REJECTED: Max Drawdown of -8.3% exceeded -7.0% limit
+
+[Trial #402] seq=128, hidden=256, layers=1, heads=2, drop=0.20, lr=0.00057, batch=256, epochs=31, class_w=2.6
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35849 sequences of length 128, 41 features.
+  Val -> AvgROI: 219.7% | WorstFold: -79.9% | Sharpe: 3.62 | MaxDD: -9.6% | Trades: 74 | W/L: 38/36
+  REJECTED: Max Drawdown of -9.6% exceeded -7.0% limit
+
+[Trial #403] seq=96, hidden=256, layers=2, heads=4, drop=0.21, lr=0.00061, batch=256, epochs=32, class_w=2.7
+Loading engineered dataset from data_storage\BTC_USDT_15m_processed.csv...
+Dataset: 35881 sequences of length 96, 41 features.
