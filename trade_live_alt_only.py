@@ -125,7 +125,6 @@ class AltOnlyTrader:
         # Restore state from disk
         self._load_persisted_state()
         self._sync_from_exchange()
-        self._ensure_perps_funded()
         self._sync_balance()
 
         logger.info(f"ALT-ONLY Bot initialized on {self.device}")
@@ -200,37 +199,23 @@ class AltOnlyTrader:
     # ─── EXCHANGE INTERACTION ───
 
     def _sync_balance(self):
-        """Fetch total balance from Hyperliquid."""
+        """Fetch total balance from Hyperliquid (Perps + Spot USDC)."""
         try:
             user_state = self.info.user_state(self.wallet_address)
             margin_summary = user_state.get("marginSummary", {})
-            # In Hyperliquid's unified account, accountValue IS the full portfolio
-            # (margin + unrealized PnL). Do NOT add spot USDC — it's the same pool.
-            self.live_balance = float(margin_summary.get("accountValue", 0.0))
-            logger.info(f"Balance: ${self.live_balance:.2f}")
-        except Exception as e:
-            logger.error(f"Failed to sync balance: {e}")
-
-    def _ensure_perps_funded(self):
-        """Auto-transfer any spot USDC to perps margin so we can trade."""
-        try:
+            perps_value = float(margin_summary.get("accountValue", 0.0))
+            
             spot_state = self.info.spot_user_state(self.wallet_address)
             spot_usdc = 0.0
             for bal in spot_state.get("balances", []):
                 if bal.get("coin") == "USDC":
                     spot_usdc = float(bal.get("total", 0.0))
                     break
-
-            if spot_usdc > 0.10:  # Only transfer if more than 10 cents
-                logger.info(f"Transferring ${spot_usdc:.2f} USDC from Spot to Perps...")
-                res = self.exchange.usd_class_transfer(spot_usdc, to_perp=True)
-                if res and res.get('status') == 'ok':
-                    logger.info(f"Transfer OK: ${spot_usdc:.2f} moved to perps margin")
-                    self._sync_balance()  # Refresh balance after transfer
-                else:
-                    logger.warning(f"Transfer response: {res}")
+                    
+            self.live_balance = perps_value + spot_usdc
+            logger.info(f"Balance: ${self.live_balance:.2f} (Perps: ${perps_value:.2f}, Spot: ${spot_usdc:.2f})")
         except Exception as e:
-            logger.warning(f"Spot->Perps transfer failed (may already be unified): {e}")
+            logger.error(f"Failed to sync balance: {e}")
 
     def _sync_from_exchange(self):
         """On startup, validate bot state against real Hyperliquid position."""
