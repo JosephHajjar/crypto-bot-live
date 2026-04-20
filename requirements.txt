@@ -1,17 +1,11 @@
-ccxt
 pandas
 numpy
 ta
-scikit-learn
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch
-tqdm
-matplotlib
 flask
 requests
 gunicorn
 hyperliquid-python-sdk
 python-dotenv
 eth-account
-optuna
-yfinance
