@@ -57,8 +57,9 @@ CONFIG_SHORT_PATH = 'models_short/holy_grail_short_config.json'
 SCALER_PATH = 'models/BTC_USDT_15m_scaler.json'
 
 NTFY_TOPIC = 'https://ntfy.sh/TradeBot5234'
-STATE_FILE = 'data_storage/live_state_alt.json'
-TRADES_FILE = 'data_storage/live_trades_alt.json'
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATE_FILE = os.path.join(_SCRIPT_DIR, 'data_storage', 'live_state_alt.json')
+TRADES_FILE = os.path.join(_SCRIPT_DIR, 'data_storage', 'live_trades_alt.json')
 
 
 class AltOnlyTrader:
