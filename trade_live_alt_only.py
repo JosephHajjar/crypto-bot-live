@@ -110,7 +110,6 @@ class AltOnlyTrader:
         self.model_short.load_state_dict(torch.load(MODEL_SHORT_PATH, map_location=self.device, weights_only=True))
         self.model_short.eval()
 
-        # Position state
         self.position = None  # 'long' or 'short'
         self.entry_price = 0.0
         self.bars_held = 0
@@ -118,6 +117,8 @@ class AltOnlyTrader:
         self.active_sl = 0.0
         self.trade_size_in_btc = 0.0
         self.live_balance = 0.0
+        self.last_bull_prob = 0.0
+        self.last_bear_prob = 0.0
         self.last_error = None
 
         # Restore state from disk
@@ -417,6 +418,29 @@ class AltOnlyTrader:
             # Close on exchange
             self._sync_exchange_position(live_price, 'flat', 0.0)
             self._reset_position()
+            return
+
+        # TIME BARRIER CHECK (failsafe — also runs here every 5s so it can't be missed)
+        max_hold = self.long_max_hold if self.position == 'long' else self.short_max_hold
+        if self.bars_held >= max_hold:
+            is_heavy = (self.position == 'long' and self.last_bull_prob >= self.long_threshold) or \
+                       (self.position == 'short' and self.last_bear_prob >= 0.50)
+
+            if not is_heavy:
+                logger.info(f"TIME BARRIER (from TP/SL poller): {self.position.upper()} held {self.bars_held} bars, signal weak. Closing.")
+                trade = self._record_trade(self.position.upper(), self.entry_price, live_price, self.bars_held, "Time Barrier")
+                self._notify(f"CLOSED {self.position.upper()}: Time Barrier ({self.bars_held} bars) | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                self._sync_exchange_position(live_price, 'flat', 0.0)
+                self._reset_position()
+                return
+
+            # HARD FAILSAFE: if held 5x max_hold bars, force close no matter what
+            if self.bars_held >= max_hold * 5:
+                logger.warning(f"HARD FAILSAFE: {self.position.upper()} held {self.bars_held} bars (5x max). Force closing.")
+                trade = self._record_trade(self.position.upper(), self.entry_price, live_price, self.bars_held, "Hard Failsafe")
+                self._notify(f"FORCE CLOSED {self.position.upper()}: {self.bars_held} bars | PnL: {trade['return_pct']:+.2f}% | ${trade['pnl_usd']:+.2f}")
+                self._sync_exchange_position(live_price, 'flat', 0.0)
+                self._reset_position()
     def step(self, execute_trades=True):
         try:
             df = self.fetch_recent_data()
@@ -467,6 +491,10 @@ class AltOnlyTrader:
                     # Safety: clamp NaN outputs to 0 (refuse to trade on garbage)
                     if np.isnan(bull_prob): bull_prob = 0.0
                     if np.isnan(bear_prob): bear_prob = 0.0
+
+                # Cache latest probs so check_tp_sl() can use them for time barrier
+                self.last_bull_prob = bull_prob
+                self.last_bear_prob = bear_prob
 
                 if execute_trades:
                     logger.info(f"AI -> Bull: {bull_prob*100:.2f}% | Bear: {bear_prob*100:.2f}%")
