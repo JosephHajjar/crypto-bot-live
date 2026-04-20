@@ -355,6 +355,7 @@
             <div class="card">
                 <h3>Open P&L</h3>
                 <div class="value neutral" id="live-pnl">$0.00</div>
+                <div id="live-pnl-pct" style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">0.00%</div>
             </div>
             <div class="card">
                 <h3 id="live-winrate-header">Win Rate (0)</h3>
@@ -680,14 +681,21 @@
                     live_pnl = state.trade_amount_usd * ret;
                 }
 
-                // Sync Open PnL badge — just $ amount, no confusing %
+                // Sync Open PnL badge — $ amount + trade return %
                 var pnlEl = document.getElementById('live-pnl');
+                var pnlPctEl = document.getElementById('live-pnl-pct');
                 if (state.in_trade && state.entry_price > 0) {
+                    var openPct = ((live_price - state.entry_price) / state.entry_price) * 100;
+                    if (!isLong) openPct = -openPct;
                     pnlEl.innerText = (live_pnl >= 0 ? '+$' : '-$') + Math.abs(live_pnl).toFixed(2);
                     pnlEl.className = 'value ' + (live_pnl > 0 ? 'positive' : (live_pnl < 0 ? 'negative' : 'neutral'));
+                    pnlPctEl.innerText = (openPct >= 0 ? '+' : '') + openPct.toFixed(2) + '%';
+                    pnlPctEl.style.color = openPct > 0 ? 'var(--accent-green)' : (openPct < 0 ? 'var(--accent-red)' : 'var(--text-secondary)');
                 } else {
                     pnlEl.innerText = '$0.00';
                     pnlEl.className = 'value neutral';
+                    pnlPctEl.innerText = '0.00%';
+                    pnlPctEl.style.color = 'var(--text-secondary)';
                 }
 
                 // Sync Multi-Timeframe UI & Total Equity
