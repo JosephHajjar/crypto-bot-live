@@ -38,7 +38,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ─── CONFIG ───
-COIN = 'BTC'
+COIN = 'ETH'  # ETH has $0.23 min order (BTC needs $78). Uses BTC regime signal.
+BTC_MIN_NOTIONAL = 78  # Auto-switch to BTC when balance exceeds this
 LEVERAGE = 1  # 1x ONLY — no leverage
 CHECK_INTERVAL = 900  # Check regime every 15 minutes (minimizes execution delay)
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data_storage', 'regime_state.json')
@@ -55,13 +56,6 @@ class RegimeBot:
         self.info = Info(constants.MAINNET_API_URL, skip_ws=True)
         self.exchange = Exchange(self.account, constants.MAINNET_API_URL, account_address=self.wallet_address)
 
-        # Set leverage to 1x
-        try:
-            self.exchange.update_leverage(LEVERAGE, COIN, is_cross=True)
-            logger.info(f"Set {COIN} leverage to {LEVERAGE}x (cross)")
-        except Exception as e:
-            logger.warning(f"Could not set leverage: {e}")
-
         self.current_regime = None  # 'BULL', 'NEUTRAL', 'BEAR'
         self.current_position = None  # 'long', 'short', None
         self.entry_price = 0.0
@@ -70,14 +64,31 @@ class RegimeBot:
         self.last_score = 0.0
 
         self._sync_balance()
+        self._auto_select_coin()
         self._sync_from_exchange()
 
         logger.info("=" * 60)
         logger.info("  REGIME BOT INITIALIZED — 1x LEVERAGE, NO ML")
+        logger.info(f"  Trading: {COIN} (auto-upgrades to BTC at ${BTC_MIN_NOTIONAL}+)")
         logger.info(f"  Balance: ${self.balance:.2f}")
         logger.info(f"  Current position: {self.current_position or 'FLAT'}")
-        logger.info(f"  Check interval: {CHECK_INTERVAL}s ({CHECK_INTERVAL//3600}h)")
+        logger.info(f"  Check interval: {CHECK_INTERVAL}s ({CHECK_INTERVAL//60}m)")
         logger.info("=" * 60)
+
+    def _auto_select_coin(self):
+        """Auto-switch to BTC if balance is high enough, otherwise ETH."""
+        global COIN
+        if self.balance >= BTC_MIN_NOTIONAL:
+            COIN = 'BTC'
+            logger.info(f"Balance ${self.balance:.2f} >= ${BTC_MIN_NOTIONAL}: trading BTC")
+        else:
+            COIN = 'ETH'
+            logger.info(f"Balance ${self.balance:.2f} < ${BTC_MIN_NOTIONAL}: trading ETH (BTC regime signal)")
+        try:
+            self.exchange.update_leverage(LEVERAGE, COIN, is_cross=True)
+            logger.info(f"Set {COIN} leverage to {LEVERAGE}x (cross)")
+        except Exception as e:
+            logger.warning(f"Could not set leverage: {e}")
 
     # ─── EXCHANGE ───
 
@@ -151,10 +162,26 @@ class RegimeBot:
         self._sync_balance()
 
         # Calculate target size (1x leverage = full balance / price)
+        # Get coin's size decimals from exchange meta
+        try:
+            meta = self.info.meta()
+            sz_dec = 5  # default
+            for asset in meta.get('universe', []):
+                if asset['name'] == COIN:
+                    sz_dec = asset.get('szDecimals', 5)
+                    break
+        except:
+            sz_dec = 3 if COIN == 'ETH' else 5
+
         if target_position == 'flat':
             target_size = 0.0
         else:
-            target_size = max(0.0001, round(self.balance / current_price, 5))
+            # Use coin's own price for sizing, not BTC
+            coin_mids = self.info.all_mids()
+            coin_price = float(coin_mids.get(COIN, current_price))
+            target_size = round(self.balance / coin_price, sz_dec)
+            min_sz = 10 ** (-sz_dec)
+            target_size = max(min_sz, target_size)
 
         target_szi = target_size if target_position == 'long' else (-target_size if target_position == 'short' else 0.0)
 
@@ -243,6 +270,7 @@ class RegimeBot:
         state = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "strategy": "QUANT_REGIME",
+            "coin": COIN,
             "leverage": LEVERAGE,
             "balance": round(self.balance, 2),
             "current_price": current_price,
@@ -271,7 +299,7 @@ class RegimeBot:
         logger.info("REGIME CHECK")
         logger.info("=" * 50)
 
-        # Fetch daily data
+        # Fetch daily data (always BTC for regime scoring)
         df = self.fetch_daily_data()
         if len(df) < 201:
             logger.error(f"Not enough daily data: {len(df)} bars (need 201+)")
@@ -279,6 +307,11 @@ class RegimeBot:
 
         current_price = df['close'].iloc[-1]
         logger.info(f"BTC: ${current_price:,.2f} | {len(df)} daily bars")
+
+        # Auto-select coin based on current balance
+        self._sync_balance()
+        self._auto_select_coin()
+        logger.info(f"Trading: {COIN} at 1x leverage")
 
         # Score regime
         result = score_regime(df)
