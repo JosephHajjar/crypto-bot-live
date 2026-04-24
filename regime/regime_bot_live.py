@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 # ─── CONFIG ───
 COIN = 'ETH'  # ETH has $0.23 min order (BTC needs $78). Uses BTC regime signal.
 BTC_MIN_NOTIONAL = 78  # Auto-switch to BTC when balance exceeds this
-LEVERAGE = 1  # 1x ONLY — no leverage
+LEVERAGE = 3  # 3x leverage required to meet Hyperliquid $10 minimum order with $4.63
 CHECK_INTERVAL = 900  # Check regime every 15 minutes (minimizes execution delay)
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data_storage', 'regime_state.json')
 
@@ -136,22 +136,8 @@ class RegimeBot:
             logger.error(f"Exchange sync failed: {e}")
 
     def _ensure_perps_funded(self):
-        """Transfer spot USDC to perps if needed."""
-        try:
-            spot_state = self.info.spot_user_state(self.wallet_address)
-            spot_usdc = 0.0
-            for bal in spot_state.get("balances", []):
-                if bal.get("coin") == "USDC":
-                    spot_usdc = float(bal.get("total", 0.0))
-                    break
-            if spot_usdc > 1.0:
-                transfer_amt = round(spot_usdc - 0.50, 2)
-                if transfer_amt > 0:
-                    self.exchange.usd_class_transfer(transfer_amt, True)  # spot -> perps
-                    logger.info(f"Transferred ${transfer_amt:.2f} from spot to perps")
-                    time.sleep(1)
-        except Exception as e:
-            logger.warning(f"Perps funding failed: {e}")
+        """Unified margin automatically uses Spot USDC. No transfer needed."""
+        pass
 
     def _execute_position(self, target_position, current_price):
         """
@@ -161,7 +147,7 @@ class RegimeBot:
         self._ensure_perps_funded()
         self._sync_balance()
 
-        # Calculate target size (1x leverage = full balance / price)
+        # Calculate target size
         # Get coin's size decimals from exchange meta
         try:
             meta = self.info.meta()
@@ -179,7 +165,10 @@ class RegimeBot:
             # Use coin's own price for sizing, not BTC
             coin_mids = self.info.all_mids()
             coin_price = float(coin_mids.get(COIN, current_price))
-            target_size = round(self.balance / coin_price, sz_dec)
+            
+            # Size = (balance * leverage) / price
+            target_notional = self.balance * LEVERAGE
+            target_size = round(target_notional / coin_price, sz_dec)
             min_sz = 10 ** (-sz_dec)
             target_size = max(min_sz, target_size)
 

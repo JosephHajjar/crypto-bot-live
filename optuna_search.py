@@ -496,7 +496,7 @@ def main():
     print("=" * 60 + "\n")
     
     # 4. Run indefinitely
-    study.optimize(objective, n_trials=2000, show_progress_bar=False)
+    study.optimize(objective, n_trials=None, show_progress_bar=False)
     
     # 5. Print summary
     print("\n" + "=" * 60)

@@ -3,12 +3,12 @@ ALT-ONLY Live Trading Bot — Pure Threshold Strategy on Hyperliquid.
 No PROP commander, no model switcher.
 
 Models:
-  - Long Model: Trial 107 (holy_grail.pth) — enters when bull_prob >= 55%
-  - Short Model: Trial 270 (holy_grail_short.pth) — enters when bear_prob >= 50%
+  - Long Model: Trial 107 (holy_grail.pth) — enters when bull_prob >= 52%
+  - Short Model: Trial 294 (holy_grail_short.pth) — enters when bear_prob >= 51%
 
 Exits:
-  - Long: 1.9% TP, 1.6% SL, 20 bar max hold (walk-forward optimized, 4/5 overfit tests passed)
-  - Short: 1.75% TP, 3.75% SL, 12 bar max hold
+  - Long: 1.8% TP, 2.8% SL, 30 bar max hold (walk-forward optimized on 374 days)
+  - Short: 2.1% TP, 3.5% SL, 16 bar max hold (walk-forward optimized on 374 days)
   - Catastrophe: 7.5% hard stop on all trades
   - Dynamic hold extension: if edge is still heavy at time barrier, keep holding
 """
@@ -99,9 +99,10 @@ class AltOnlyTrader:
         with open(CONFIG_SHORT_PATH, 'r') as f:
             cfg_short = json.load(f)
         self.seq_len_short = cfg_short.get('seq_len', 128)
-        self.short_tp = 0.0175
-        self.short_sl = 0.0375
-        self.short_max_hold = 12
+        self.short_tp = 0.021
+        self.short_sl = 0.035
+        self.short_max_hold = 16
+        self.short_threshold = 0.51
 
         self.model_short = AttentionLSTMModel(
             input_dim=cfg_short['input_dim'], hidden_dim=cfg_short['hidden_dim'],
@@ -439,7 +440,7 @@ class AltOnlyTrader:
             max_hold = self.long_max_hold if self.position == 'long' else self.short_max_hold
             if self.bars_held >= max_hold:
                 is_heavy = (self.position == 'long' and self.last_bull_prob >= self.long_threshold) or \
-                           (self.position == 'short' and self.last_bear_prob >= 0.50)
+                           (self.position == 'short' and self.last_bear_prob >= self.short_threshold)
 
                 logger.info(f"TIME BARRIER CHECK: bars={self.bars_held}/{max_hold}, "
                             f"bull={self.last_bull_prob:.4f}, bear={self.last_bear_prob:.4f}, heavy={is_heavy}")
@@ -534,7 +535,7 @@ class AltOnlyTrader:
                 if self.bars_held >= max_hold:
                     # Dynamic hold extension if edge is still heavy
                     is_heavy = (self.position == 'long' and bull_prob >= self.long_threshold) or \
-                               (self.position == 'short' and bear_prob >= 0.50)
+                               (self.position == 'short' and bear_prob >= self.short_threshold)
 
                     if is_heavy:
                         logger.info(f"Time barrier hit but edge still HEAVY ({bull_prob*100:.1f}%/{bear_prob*100:.1f}%). Extending hold.")
@@ -550,7 +551,7 @@ class AltOnlyTrader:
 
             # ─── ENTRY / FLIP LOGIC ───
             wants_long = bull_prob >= self.long_threshold
-            wants_short = bear_prob >= 0.50
+            wants_short = bear_prob >= self.short_threshold
 
             if wants_long:
                 if self.position != 'long':

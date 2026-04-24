@@ -11,12 +11,12 @@ class TimeSeriesDataset(Dataset):
     PyTorch Dataset for Time-Series forecasting.
     Dynamically reads feature columns from the canonical list.
     """
-    def __init__(self, data_path, seq_length=60):
+    def __init__(self, data_path, seq_length=60, feature_cols=None):
         print(f"Loading engineered dataset from {data_path}...")
         self.df = pd.read_csv(data_path, index_col=0, parse_dates=True)
         self.seq_length = seq_length
         
-        self.feature_cols = get_feature_cols()
+        self.feature_cols = feature_cols if feature_cols is not None else get_feature_cols()
         
         # Filter to only columns that exist in the dataframe
         available = [c for c in self.feature_cols if c in self.df.columns]

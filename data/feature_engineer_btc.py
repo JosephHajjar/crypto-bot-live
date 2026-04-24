@@ -136,18 +136,22 @@ def engineer_features(csv_path, take_profit=0.015, stop_loss=0.0075, max_hold_ba
     # ================================================================
     # 2. MULTI-TIMEFRAME INDICATORS (1h, 4h)
     # ================================================================
-    print("Computing 1h indicators...")
+    print("Computing 1h indicators (causal: shifted by 1 period to avoid look-ahead)...")
     df_1h = _resample_ohlcv(df[['open', 'high', 'low', 'close', 'volume']], '1h')
     indicators_1h = _compute_indicators(df_1h, prefix='1h_')
     df_1h_features = pd.DataFrame(indicators_1h, index=df_1h.index)
-    # Forward-fill 1h features onto 15m index (no look-ahead: each 15m bar gets the LAST completed 1h value)
+    # SHIFT by 1: each 15m bar gets the LAST COMPLETED 1h bar's indicators.
+    # Without this shift, the current (partially-formed) 1h bar leaks future data.
+    df_1h_features = df_1h_features.shift(1)
     df = df.join(df_1h_features, how='left')
     df[list(indicators_1h.keys())] = df[list(indicators_1h.keys())].ffill()
     
-    print("Computing 4h indicators...")
+    print("Computing 4h indicators (causal: shifted by 1 period to avoid look-ahead)...")
     df_4h = _resample_ohlcv(df[['open', 'high', 'low', 'close', 'volume']], '4h')
     indicators_4h = _compute_indicators(df_4h, prefix='4h_')
     df_4h_features = pd.DataFrame(indicators_4h, index=df_4h.index)
+    # SHIFT by 1: each 15m bar gets the LAST COMPLETED 4h bar's indicators.
+    df_4h_features = df_4h_features.shift(1)
     df = df.join(df_4h_features, how='left')
     df[list(indicators_4h.keys())] = df[list(indicators_4h.keys())].ffill()
     
@@ -269,16 +273,18 @@ def compute_live_features(df, scaler_path="data_storage/BTC_USDT_15m_scaler.json
     for col_name, col_data in base_indicators.items():
         df[col_name] = col_data
         
-    # 2. MULTI-TIMEFRAME INDICATORS (1h, 4h)
+    # 2. MULTI-TIMEFRAME INDICATORS (1h, 4h) — causal, shifted by 1 period
     df_1h = _resample_ohlcv(df[['open', 'high', 'low', 'close', 'volume']], '1h')
     indicators_1h = _compute_indicators(df_1h, prefix='1h_')
     df_1h_features = pd.DataFrame(indicators_1h, index=df_1h.index)
+    df_1h_features = df_1h_features.shift(1)  # Use LAST COMPLETED 1h bar only
     df = df.join(df_1h_features, how='left')
     df[list(indicators_1h.keys())] = df[list(indicators_1h.keys())].ffill()
     
     df_4h = _resample_ohlcv(df[['open', 'high', 'low', 'close', 'volume']], '4h')
     indicators_4h = _compute_indicators(df_4h, prefix='4h_')
     df_4h_features = pd.DataFrame(indicators_4h, index=df_4h.index)
+    df_4h_features = df_4h_features.shift(1)  # Use LAST COMPLETED 4h bar only
     df = df.join(df_4h_features, how='left')
     df[list(indicators_4h.keys())] = df[list(indicators_4h.keys())].ffill()
     
