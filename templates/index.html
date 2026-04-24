@@ -333,7 +333,7 @@
     <h1>Autonomous Execution Terminal</h1>
 
     <div class="nav-tabs">
-        <div class="nav-tab active" style="pointer-events:none;">ALT Bot Live</div>
+        <div class="nav-tab active" style="pointer-events:none;">Regime Bot Live</div>
     </div>
 
     <!-- ===== MAIN VIEW 1: AUTONOMOUS AI LIVE TRADER ===== -->
@@ -362,50 +362,51 @@
                 <h3 id="live-winrate-header">Win Rate (0)</h3>
                 <div class="value neutral" id="live-winrate">0.0%</div>
             </div>
-            <!-- AI Signal Engine Card (ALT-Only) -->
+            <!-- Regime Signal Card -->
             <div class="card" style="grid-column:span 2; padding-bottom:14px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                    <h3 style="margin-bottom:0;">AI Signal</h3>
+                    <h3 style="margin-bottom:0;">Regime Signal</h3>
                     <div id="ai-status-badge"
                         style="font-size:0.6rem; padding:4px 10px; border-radius:8px; font-weight:700; letter-spacing:0.8px; background:rgba(255,255,255,0.06); color:var(--text-secondary); text-transform:uppercase; transition:all 0.3s ease;">
-                        ANALYZING</div>
+                        LOADING</div>
                 </div>
 
                 <div class="edge-values"
                     style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:12px; gap:16px;">
                     <div>
                         <div class="edge-label"
-                            style="font-size:0.6rem; color:var(--accent-green); font-weight:700; letter-spacing:1px; margin-bottom:2px;">
-                            LONG PROB</div>
-                        <div class="edge-num value neutral" id="live-bull-edge" style="font-size:1.1rem;">--%</div>
+                            style="font-size:0.6rem; color:var(--accent-purple); font-weight:700; letter-spacing:1px; margin-bottom:2px;">
+                            REGIME SCORE</div>
+                        <div class="edge-num value neutral" id="regime-score-display" style="font-size:1.4rem;">--</div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="edge-label"
+                            style="font-size:0.6rem; color:var(--text-secondary); font-weight:700; letter-spacing:1px; margin-bottom:2px;">
+                            REGIME</div>
+                        <div class="edge-num value neutral" id="regime-name-display" style="font-size:1.1rem;">--</div>
                     </div>
                     <div style="text-align:right;">
                         <div class="edge-label"
-                            style="font-size:0.6rem; color:var(--accent-red); font-weight:700; letter-spacing:1px; margin-bottom:2px;">
-                            SHORT PROB</div>
-                        <div class="edge-num value neutral" id="live-bear-edge" style="font-size:1.1rem;">--%</div>
+                            style="font-size:0.6rem; color:var(--accent-cyan); font-weight:700; letter-spacing:1px; margin-bottom:2px;">
+                            POSITION</div>
+                        <div class="edge-num value neutral" id="regime-position-display" style="font-size:1.1rem;">--</div>
                     </div>
                 </div>
 
-                <!-- ALT Threshold Meters: Bull >= 55% or Bear >= 50% -->
+                <!-- Regime Score Meter: -100 to +100 -->
                 <div style="margin-bottom:6px;">
                     <div style="display:flex; justify-content:space-between; font-size:0.55rem; color:var(--text-muted); font-weight:600; letter-spacing:0.5px; margin-bottom:3px;">
-                        <span style="color:var(--accent-green);">LONG</span>
-                        <span>55% TRIGGER</span>
+                        <span style="color:var(--accent-red);">BEAR</span>
+                        <span>NEUTRAL</span>
+                        <span style="color:var(--accent-green);">BULL</span>
                     </div>
-                    <div style="position:relative; width:100%; height:5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
-                        <div id="bull-meter-fill" style="position:absolute; top:0; left:0; height:100%; width:0%; border-radius:3px; background:linear-gradient(90deg, #34d399, #22d3ee); transition: width 0.6s ease;"></div>
-                    </div>
-                </div>
-                <div>
-                    <div style="display:flex; justify-content:space-between; font-size:0.55rem; color:var(--text-muted); font-weight:600; letter-spacing:0.5px; margin-bottom:3px;">
-                        <span style="color:var(--accent-red);">SHORT</span>
-                        <span>50% TRIGGER</span>
-                    </div>
-                    <div style="position:relative; width:100%; height:5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
-                        <div id="bear-meter-fill" style="position:absolute; top:0; left:0; height:100%; width:0%; border-radius:3px; background:linear-gradient(90deg, #f87171, #fb923c); transition: width 0.6s ease;"></div>
+                    <div style="position:relative; width:100%; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden;">
+                        <div id="regime-meter-fill" style="position:absolute; top:0; height:100%; border-radius:4px; transition: all 0.6s ease;"></div>
+                        <div style="position:absolute; top:0; left:50%; width:2px; height:100%; background:rgba(255,255,255,0.15);"></div>
                     </div>
                 </div>
+                <div id="regime-breakdown" style="font-size:0.65rem; color:var(--text-muted); margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;"></div>
+                <div id="regime-last-check" style="font-size:0.6rem; color:var(--text-muted); margin-top:6px;"></div>
             </div>
         </div>
 
@@ -748,63 +749,98 @@
                 var winE = document.getElementById('live-winrate');
                 if (winE) winE.innerText = winRate;
 
-                var bullEl = document.getElementById('live-bull-edge');
-                var bearEl = document.getElementById('live-bear-edge');
-                var gapEl = document.getElementById('live-edge-gap');
-                var meterFill = document.getElementById('gap-meter-fill');
-                var statusBadge = document.getElementById('ai-status-badge');
-
-                if (bullEl && bearEl && state.bull_prob !== undefined && state.bear_prob !== undefined) {
-                    if (state.bull_prob !== null && state.bear_prob !== null) {
-                        bullEl.innerText = state.bull_prob.toFixed(4) + '%';
-                        bullEl.className = 'value ' + (state.bull_prob >= 55 ? 'positive' : 'neutral');
-                        bearEl.innerText = state.bear_prob.toFixed(4) + '%';
-                        bearEl.className = 'value ' + (state.bear_prob >= 50 ? 'negative' : 'neutral');
-
-                        // ALT threshold meters: bull fills to 55%, bear fills to 50%
-                        var bullFill = document.getElementById('bull-meter-fill');
-                        var bearFillEl = document.getElementById('bear-meter-fill');
-                        if (bullFill) {
-                            var bullPct = Math.min((state.bull_prob / 55) * 100, 100);
-                            bullFill.style.width = bullPct + '%';
-                            bullFill.style.background = state.bull_prob >= 55
-                                ? 'linear-gradient(90deg, #34d399, #22d3ee)'
-                                : 'linear-gradient(90deg, rgba(52,211,153,0.3), rgba(52,211,153,0.5))';
+                // Fetch and display regime data
+                try {
+                    var regimeRes = await fetch('/api/regime');
+                    var regimeData = await regimeRes.json();
+                    
+                    var scoreEl = document.getElementById('regime-score-display');
+                    var nameEl = document.getElementById('regime-name-display');
+                    var posEl = document.getElementById('regime-position-display');
+                    var statusBadge = document.getElementById('ai-status-badge');
+                    var meterFill = document.getElementById('regime-meter-fill');
+                    var breakdownEl = document.getElementById('regime-breakdown');
+                    var lastCheckEl = document.getElementById('regime-last-check');
+                    
+                    if (regimeData && regimeData.regime && regimeData.regime !== 'UNKNOWN') {
+                        var score = regimeData.regime_score || 0;
+                        var regime = regimeData.regime;
+                        var position = regimeData.position || 'FLAT';
+                        
+                        // Score display
+                        if (scoreEl) {
+                            scoreEl.innerText = (score >= 0 ? '+' : '') + score.toFixed(0);
+                            scoreEl.className = 'edge-num value ' + (score > 25 ? 'positive' : (score < -25 ? 'negative' : 'neutral'));
                         }
-                        if (bearFillEl) {
-                            var bearPct = Math.min((state.bear_prob / 50) * 100, 100);
-                            bearFillEl.style.width = bearPct + '%';
-                            bearFillEl.style.background = state.bear_prob >= 50
-                                ? 'linear-gradient(90deg, #f87171, #fb923c)'
-                                : 'linear-gradient(90deg, rgba(248,113,113,0.3), rgba(248,113,113,0.5))';
+                        
+                        // Regime name
+                        if (nameEl) {
+                            nameEl.innerText = regime;
+                            nameEl.style.color = regime === 'BULL' ? '#34d399' : (regime === 'BEAR' ? '#f87171' : '#a78bfa');
                         }
-
+                        
+                        // Position
+                        if (posEl) {
+                            posEl.innerText = position;
+                            posEl.style.color = position === 'LONG' ? '#34d399' : (position === 'SHORT' ? '#f87171' : '#71717a');
+                        }
+                        
+                        // Status badge
                         if (statusBadge) {
-                            if (state.bull_prob >= 55) {
-                                statusBadge.innerText = "SIGNAL: LONG";
-                                statusBadge.style.color = "#34d399";
-                                statusBadge.style.background = "rgba(52, 211, 153, 0.15)";
-                            } else if (state.bear_prob >= 50) {
-                                statusBadge.innerText = "SIGNAL: SHORT";
-                                statusBadge.style.color = "#f87171";
-                                statusBadge.style.background = "rgba(248, 113, 113, 0.15)";
+                            if (regime === 'BULL') {
+                                statusBadge.innerText = 'BULLISH — LONG';
+                                statusBadge.style.color = '#34d399';
+                                statusBadge.style.background = 'rgba(52, 211, 153, 0.15)';
+                            } else if (regime === 'BEAR') {
+                                statusBadge.innerText = 'BEARISH — SHORT';
+                                statusBadge.style.color = '#f87171';
+                                statusBadge.style.background = 'rgba(248, 113, 113, 0.15)';
                             } else {
-                                statusBadge.innerText = "ANALYZING";
-                                statusBadge.style.color = "#a78bfa";
-                                statusBadge.style.background = "rgba(167, 139, 250, 0.12)";
+                                statusBadge.innerText = 'NEUTRAL — LONG';
+                                statusBadge.style.color = '#a78bfa';
+                                statusBadge.style.background = 'rgba(167, 139, 250, 0.12)';
                             }
                         }
+                        
+                        // Meter fill (score -100 to +100 mapped to 0-100% width)
+                        if (meterFill) {
+                            var pct = ((score + 100) / 200) * 100;
+                            var width = Math.abs(score) / 100 * 50;
+                            if (score >= 0) {
+                                meterFill.style.left = '50%';
+                                meterFill.style.width = width + '%';
+                                meterFill.style.background = 'linear-gradient(90deg, #a78bfa, #34d399)';
+                            } else {
+                                meterFill.style.left = (50 - width) + '%';
+                                meterFill.style.width = width + '%';
+                                meterFill.style.background = 'linear-gradient(90deg, #f87171, #a78bfa)';
+                            }
+                        }
+                        
+                        // Breakdown signals
+                        if (breakdownEl && regimeData.breakdown) {
+                            var bHtml = '';
+                            for (var key in regimeData.breakdown) {
+                                var val = regimeData.breakdown[key];
+                                var color = val > 0 ? '#34d399' : (val < 0 ? '#f87171' : '#71717a');
+                                bHtml += '<span style="color:' + color + '; font-weight:600;">' + key + ':' + (val >= 0 ? '+' : '') + val + '</span>';
+                            }
+                            breakdownEl.innerHTML = bHtml;
+                        }
+                        
+                        // Last check time
+                        if (lastCheckEl && regimeData.last_check) {
+                            lastCheckEl.innerText = 'Last check: ' + regimeData.last_check;
+                        }
                     } else {
-                        bullEl.innerText = '--%';
-                        bullEl.className = 'value neutral';
-                        bearEl.innerText = '--%';
-                        bearEl.className = 'value neutral';
-                        var bullFill = document.getElementById('bull-meter-fill');
-                        var bearFillEl = document.getElementById('bear-meter-fill');
-                        if (bullFill) bullFill.style.width = '0%';
-                        if (bearFillEl) bearFillEl.style.width = '0%';
-                        if (statusBadge) { statusBadge.innerText = 'OFFLINE'; statusBadge.style.color = '#52525b'; statusBadge.style.background = 'rgba(255,255,255,0.06)'; }
+                        if (statusBadge) {
+                            statusBadge.innerText = 'OFFLINE';
+                            statusBadge.style.color = '#52525b';
+                            statusBadge.style.background = 'rgba(255,255,255,0.06)';
+                        }
                     }
+                } catch(regimeErr) {
+                    // Regime fetch failed silently
                 }
 
                 // Build the scrolling explicit Trade Log

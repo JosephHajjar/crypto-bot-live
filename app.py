@@ -507,13 +507,13 @@ def get_bot_signals():
             entry_price = 0
             bars_held = 0
             
-            LONG_TP = cfg_l.get('take_profit', 0.019)
-            LONG_SL = cfg_l.get('stop_loss', 0.016)
-            LONG_MAX_BARS = cfg_l.get('max_hold_bars', 20)
-            LONG_ENTRY_THRESHOLD = cfg_l.get('entry_threshold', 0.55)
-            SHORT_TP = cfg_s.get('take_profit', 0.015)
-            SHORT_SL = cfg_s.get('stop_loss', 0.008)
-            SHORT_MAX_BARS = cfg_s.get('max_hold_bars', 8)
+            LONG_TP = cfg_l.get('take_profit', 0.018)
+            LONG_SL = cfg_l.get('stop_loss', 0.028)
+            LONG_MAX_BARS = cfg_l.get('max_hold_bars', 30)
+            LONG_ENTRY_THRESHOLD = cfg_l.get('entry_threshold', 0.52)
+            SHORT_TP = cfg_s.get('take_profit', 0.021)
+            SHORT_SL = cfg_s.get('stop_loss', 0.035)
+            SHORT_MAX_BARS = cfg_s.get('max_hold_bars', 16)
             
             for idx in range(len(all_bull)):
                 prob_bull = all_bull[idx]
@@ -541,7 +541,7 @@ def get_bot_signals():
                         # but we still append the short signal if both fire, or just prioritize.
                         # For chart drawing simplicity, we'll let it switch to short if both fire,
                         # or we can just do independent flat checks. (Since this is just for the chart overlay)
-                        if prob_bear >= 0.50 and can_trade and position == 'flat':
+                        if prob_bear >= 0.51 and can_trade and position == 'flat':
                             signals.append({'time': time_val, 'prob': round(prob_bear*100, 6), 'signal': 'SELL', 'price': round(close_price, 2)})
                             position = 'short'
                             entry_price = close_price
@@ -589,7 +589,7 @@ def get_bot_signals():
 _bot_thread_started = False
 
 def _run_bot_in_background():
-    """Run the ALT-only trading bot in a background thread."""
+    """Run the Regime trading bot in a background thread."""
     import threading
     global _bot_thread_started
     if _bot_thread_started:
@@ -598,32 +598,46 @@ def _run_bot_in_background():
 
     def bot_worker():
         try:
-            print("[BOT THREAD] Importing AltOnlyTrader...")
-            from trade_live_alt_only import AltOnlyTrader
-            print("[BOT THREAD] Creating trader instance...")
-            trader = AltOnlyTrader()
-            print("[BOT THREAD] Running initial step...")
-            trader.step()
-            print("[BOT THREAD] Entering main loop...")
-            trader.run_forever()
+            import sys
+            sys.path.insert(0, 'regime')
+            print("[REGIME BOT] Importing RegimeBot...")
+            from regime_bot_live import RegimeBot
+            print("[REGIME BOT] Creating bot instance...")
+            bot = RegimeBot()
+            print("[REGIME BOT] Starting main loop...")
+            bot.run_forever()
         except Exception as e:
             import traceback
-            crash_msg = f"[BOT THREAD] FATAL: {e}\n{traceback.format_exc()}"
+            crash_msg = f"[REGIME BOT] FATAL: {e}\n{traceback.format_exc()}"
             print(crash_msg)
             try:
-                with open('alt_bot_crash.log', 'w') as f:
+                with open('regime_bot_crash.log', 'w') as f:
                     f.write(crash_msg)
             except Exception:
                 pass
 
     t = threading.Thread(target=bot_worker, daemon=True)
     t.start()
-    print("[BOT THREAD] Background trading bot thread started.")
+    print("[REGIME BOT] Background regime bot thread started.")
 
 # ---- Health Check Endpoint (for keep-alive pings) ----
 @app.route('/health')
 def health():
     return jsonify({"status": "alive", "uptime": time.time()})
+
+# ---- Regime Bot Status ----
+@app.route('/api/regime')
+def get_regime():
+    """Return current regime bot state for dashboard display."""
+    regime_file = 'data_storage/regime_state.json'
+    if os.path.exists(regime_file):
+        try:
+            with open(regime_file, 'r') as f:
+                return jsonify(json.load(f))
+        except Exception as e:
+            return jsonify({"error": str(e)})
+    return jsonify({"regime": "UNKNOWN", "regime_score": 0, "position": "OFFLINE"})
+
 
 @app.route('/api/debug')
 def debug_info():
