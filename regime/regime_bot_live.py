@@ -38,10 +38,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ─── CONFIG ───
-COIN = 'ETH'  # ETH has $0.23 min order (BTC needs $78). Uses BTC regime signal.
-BTC_MIN_NOTIONAL = 78  # Auto-switch to BTC when balance exceeds this
-LEVERAGE = 3  # 3x leverage required to meet Hyperliquid $10 minimum order with $4.63
-CHECK_INTERVAL = 900  # Check regime every 15 minutes (minimizes execution delay)
+COIN = 'BTC'  # V2 regime performs best on BTC (no negative years)
+LEVERAGE = 3  # 3x leverage
+CHECK_INTERVAL = 900  # Check regime every 15 minutes
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data_storage', 'regime_state.json')
 
 class RegimeBot:
@@ -69,21 +68,14 @@ class RegimeBot:
 
         logger.info("=" * 60)
         logger.info("  REGIME BOT INITIALIZED — 1x LEVERAGE, NO ML")
-        logger.info(f"  Trading: {COIN} (auto-upgrades to BTC at ${BTC_MIN_NOTIONAL}+)")
+        logger.info(f"  Trading: {COIN}")
         logger.info(f"  Balance: ${self.balance:.2f}")
         logger.info(f"  Current position: {self.current_position or 'FLAT'}")
         logger.info(f"  Check interval: {CHECK_INTERVAL}s ({CHECK_INTERVAL//60}m)")
         logger.info("=" * 60)
 
     def _auto_select_coin(self):
-        """Auto-switch to BTC if balance is high enough, otherwise ETH."""
-        global COIN
-        if self.balance >= BTC_MIN_NOTIONAL:
-            COIN = 'BTC'
-            logger.info(f"Balance ${self.balance:.2f} >= ${BTC_MIN_NOTIONAL}: trading BTC")
-        else:
-            COIN = 'ETH'
-            logger.info(f"Balance ${self.balance:.2f} < ${BTC_MIN_NOTIONAL}: trading ETH (BTC regime signal)")
+        """Set up coin and leverage."""
         try:
             self.exchange.update_leverage(LEVERAGE, COIN, is_cross=True)
             logger.info(f"Set {COIN} leverage to {LEVERAGE}x (cross)")
@@ -113,6 +105,15 @@ class RegimeBot:
     def _sync_from_exchange(self):
         try:
             user_state = self.info.user_state(self.wallet_address)
+            
+            # Log any positions in other coins (user manages those manually)
+            for pos in user_state.get("assetPositions", []):
+                coin = pos['position']['coin']
+                size = float(pos['position']['szi'])
+                if coin != COIN and abs(size) >= 0.00001:
+                    logger.info(f"Note: found {coin} position ({size}) — managed separately")
+            
+            # Sync the target coin position
             exchange_pos = None
             for pos in user_state.get("assetPositions", []):
                 if pos['position']['coin'] == COIN:
@@ -125,7 +126,7 @@ class RegimeBot:
                     self.current_position = 'long' if size > 0 else 'short'
                     self.entry_price = float(exchange_pos['entryPx'])
                     self.position_size = abs(size)
-                    logger.info(f"Exchange position: {self.current_position.upper()} {self.position_size} BTC @ ${self.entry_price:.2f}")
+                    logger.info(f"Exchange position: {self.current_position.upper()} {self.position_size} {COIN} @ ${self.entry_price:.2f}")
                     return
 
             self.current_position = None
